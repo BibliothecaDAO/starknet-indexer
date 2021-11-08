@@ -1,4 +1,5 @@
 import { ApolloServer } from 'apollo-server-express';
+import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import Express from 'express';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
@@ -27,7 +28,10 @@ const main = async () => {
   const mongoose = await connect('mongodb://localhost:27017/test');
   await mongoose.connection;
 
-  const server = new ApolloServer({ schema });
+  const server = new ApolloServer({
+    schema,
+    plugins: [ ApolloServerPluginLandingPageGraphQLPlayground ],
+  });
 
   const app = Express();
 
