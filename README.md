@@ -1,6 +1,7 @@
 # StarkNet Indexer
 
 This app aims to index all events relevant to the Loot ecosystem running on StarkNet.
+http://starknet.events/redoc
 
 ---
 
