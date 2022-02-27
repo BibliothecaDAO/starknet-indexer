@@ -25,13 +25,12 @@ export class UserResolver {
 
   @Mutation(() => User)
   async createUser(
-    @Arg('data') { username, email, cart_id }: UserInput
+    @Arg('data') { username, email }: UserInput
   ): Promise<User> {
     const user = (
       await UserModel.create({
         username,
-        email,
-        cart_id,
+        email
       })
     ).save();
     return user;

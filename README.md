@@ -1,24 +1,43 @@
-# Integrating TypeScript with GraphQL using Type-Graphl, a modern framework for building GraphQL APIs in Node.js
+# StarkNet Indexer
 
-Tutorial: https://blog.logrocket.com/integrating-typescript-graphql/
+This app aims to index all events relevant to the Loot ecosystem running on StarkNet.
+
+---
+
+## How it works
+
+1. Poll StarkNet for specific events.
+2. Pipe events into mongodb
+3. Exposes a graphql endpoint for the client to consume
+
+---
 
 ## Requirements
 
 - A recent version of Node.js and npm
 - A running MongoDB instance
 
+---
+
 ## Setup
 
-- Install dependencies with `npm install`.
-- Compile the application by running `npm run build-ts`.
-- Make sure MongoDB is running at `http://localhost:27017`.
-- Start the server with `npm start`.
-- Visit http://localhost:3333/graphql in your web browser.
+```
+yarn
 
-## Dependencies
+yarn build-ts
 
-- Typgoose, `@typegoose/typegoose` A library for defining Mongoose models using TypeScript classes.
-- Type-Graphl, A library for creating GraphQL schema and resolvers with TypeScript, using `classes` and `decorators magic` :)!
-- Apollo-server-express, `apollo-server-express`, A library for quickly bootstrapping graphql servers with Apollo and Express
+// Check MongoDB is running at `http://localhost:27017`
 
-For a note on other dependencies, please have a look at the `package.json` file.
+yarn start
+
+```
+
+Visit http://localhost:3333/graphql in your web browser.
+
+---
+
+### TODO in order of priority:
+
+1. Index Marketplace
+2. Define game schema
+3. Index game schema

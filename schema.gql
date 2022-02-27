@@ -3,17 +3,6 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-"""The  Cart model"""
-type Cart {
-  id: ID!
-  product: Product!
-  products: String!
-}
-
-input CartInput {
-  products: ID!
-}
-
 """The Categories model"""
 type Categories {
   description: String!
@@ -21,42 +10,9 @@ type Categories {
   name: String!
 }
 
-input CategoriesInput {
-  description: String!
-  name: String!
-}
-
-"""
-The javascript `Date` as string. Type represents date and time as the ISO Date string.
-"""
-scalar DateTime
-
 type Mutation {
-  createCart(data: CartInput!): Cart!
-  createCategory(data: CategoriesInput!): Categories!
-  createOrder(data: OrderInput!): Order!
   createProduct(data: ProductInput!): Product!
-  createUser(data: UserInput!): User!
-  deleteCart(id: String!): Boolean!
-  deleteCategory(id: String!): Boolean!
-  deleteOrder(id: String!): Boolean!
   deleteProduct(id: String!): Boolean!
-  deleteUser(id: String!): Boolean!
-}
-
-"""The Order model"""
-type Order {
-  date: DateTime!
-  id: ID!
-  payde: Boolean!
-  products: Product!
-  user_id: String!
-}
-
-input OrderInput {
-  date: DateTime!
-  payde: Boolean!
-  user_id: String!
 }
 
 """The Product model"""
@@ -81,28 +37,6 @@ input ProductInput {
 }
 
 type Query {
-  returnAllCart: [Cart!]!
-  returnAllCategories: [Categories!]!
-  returnAllOrder: [Order!]!
   returnAllProduct: [Product!]!
-  returnAllUsers: [User!]!
-  returnSingleCart(id: String!): Cart!
-  returnSingleCategory(id: String!): Categories!
-  returnSingleProduct(id: String!): Order!
-  returnSingleUser(id: String!): User!
-}
-
-"""The User model"""
-type User {
-  cart: Cart!
-  cart_id: String!
-  email: String!
-  id: ID!
-  username: String!
-}
-
-input UserInput {
-  cart_id: ID!
-  email: String!
-  username: String!
+  returnSingleProduct(id: String!): Product!
 }

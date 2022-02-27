@@ -5,20 +5,13 @@ import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { connect } from 'mongoose';
 
-import { UserResolver } from './resolvers/User';
 import { ProductResolver } from './resolvers/Product';
-import { CategoriesResolver } from './resolvers/Categories';
-import { CartResolver } from './resolvers/Cart';
-import { OrderResolver } from './resolvers/Order';
+import { Starknet } from './indexer/Starknet';
 
 const main = async () => {
   const schema = await buildSchema({
     resolvers: [
-      CategoriesResolver,
       ProductResolver,
-      UserResolver,
-      CartResolver,
-      OrderResolver,
     ],
     emitSchemaFile: true,
     validate: false,
@@ -30,7 +23,7 @@ const main = async () => {
 
   const server = new ApolloServer({
     schema,
-    plugins: [ ApolloServerPluginLandingPageGraphQLPlayground ],
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground, Starknet],
   });
 
   const app = Express();
