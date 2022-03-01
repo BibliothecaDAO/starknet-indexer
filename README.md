@@ -3,12 +3,19 @@
 This app aims to index all events relevant to the Loot ecosystem running on StarkNet.
 http://starknet.events/redoc
 
+### Tech stack
+
+- Apollo server
+- typescript
+- prisma
+- postgres
+
 ---
 
 ## How it works
 
 1. Poll StarkNet for specific events.
-2. Pipe events into mongodb
+2. Pipe events into postgres
 3. Exposes a graphql endpoint for the client to consume
 
 ---
@@ -25,9 +32,10 @@ http://starknet.events/redoc
 ```
 yarn
 
+// run this after every change
 yarn build-ts
 
-// Check MongoDB is running at `http://localhost:27017`
+docker-compose up
 
 yarn start
 

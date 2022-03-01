@@ -1,12 +1,12 @@
 import fetch from 'node-fetch';
-import { UserResolver } from '../resolvers/User';
-
+import { RealmResolver } from '../resolvers/Realm';
+import { context } from '../context'
 const StarkNetUrl = "http://starknet.events/api/v1/"
 
-const User = new UserResolver()
+const Realm = new RealmResolver()
 
 const FetchStarknet = async () => {
-    await User.createUser({ username: "test", email: "gmail" })
+    await Realm.createRealm({ name: "test" }, context)
     const response = await fetch(StarkNetUrl + 'get_events?from_block=59100&name=FillOrder');
     const x = await response.json();
     console.log(x);
@@ -16,7 +16,7 @@ const FetchStarknet = async () => {
 export const Starknet = () => {
     return {
         async serverWillStart() {
-            setInterval(await FetchStarknet, 1000);
+            setInterval(await FetchStarknet, 20000);
         },
     };
 };

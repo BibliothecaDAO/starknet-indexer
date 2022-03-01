@@ -1,2 +1,1 @@
-MONGODB_URI_LOCAL=mongodb://localhost:27017/<database>
-PORT=3333
+DATABASE_URL="postgresql://test-user:test-password@localhost:5432/my-blog?schema=public"

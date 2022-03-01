@@ -3,26 +3,23 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-co
 import Express from 'express';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
-import { connect } from 'mongoose';
-
-import { ProductResolver } from './resolvers/Product';
+import { context } from './context'
+import { RealmResolver } from './resolvers/Realm';
 import { Starknet } from './indexer/Starknet';
 
 const main = async () => {
   const schema = await buildSchema({
     resolvers: [
-      ProductResolver,
+      RealmResolver,
     ],
     emitSchemaFile: true,
     validate: false,
   });
 
-  // create mongoose connection
-  const mongoose = await connect('mongodb://localhost:27017/test');
-  await mongoose.connection;
 
   const server = new ApolloServer({
     schema,
+    context: context,
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground, Starknet],
   });
 

@@ -3,40 +3,21 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-"""The Categories model"""
-type Categories {
-  description: String!
-  id: ID!
-  name: String!
-}
-
 type Mutation {
-  createProduct(data: ProductInput!): Product!
-  deleteProduct(id: String!): Boolean!
-}
-
-"""The Product model"""
-type Product {
-  category: Categories!
-  category_id: String!
-  color: String!
-  description: String!
-  id: ID!
-  name: String!
-  price: Int!
-  stock: Int!
-}
-
-input ProductInput {
-  category_id: String!
-  color: String!
-  description: String!
-  name: String!
-  price: Float!
-  stock: Float!
+  createRealm(data: RealmInput!): Realm!
 }
 
 type Query {
-  returnAllProduct: [Product!]!
-  returnSingleProduct(id: String!): Product!
+  returnAllRealms: [Realm!]!
+  returnSingleRealm(id: Float!): Realm!
+}
+
+"""The Realm Model"""
+type Realm {
+  id: ID!
+  name: String!
+}
+
+input RealmInput {
+  name: String!
 }
