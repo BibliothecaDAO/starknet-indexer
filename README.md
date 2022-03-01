@@ -39,6 +39,9 @@ docker-compose up
 
 yarn start
 
+// to update db schema
+npx prisma migrate dev
+
 ```
 
 Visit http://localhost:3333/graphql in your web browser.
@@ -50,3 +53,8 @@ Visit http://localhost:3333/graphql in your web browser.
 1. Index Marketplace
 2. Define game schema
 3. Index game schema
+
+### Utils
+
+http://starknet.events/docs#/events/get_events_api_v1_get_events_get
+https://www.prisma.io/docs/concepts/components/prisma-client/crud

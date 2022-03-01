@@ -5,7 +5,7 @@ import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { context } from './context'
 import { RealmResolver } from './resolvers/Realm';
-import { Starknet } from './indexer/Starknet';
+import { StarkNet } from './indexer/Starknet';
 
 const main = async () => {
   const schema = await buildSchema({
@@ -20,7 +20,7 @@ const main = async () => {
   const server = new ApolloServer({
     schema,
     context: context,
-    plugins: [ApolloServerPluginLandingPageGraphQLPlayground, Starknet],
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground, StarkNet],
   });
 
   const app = Express();
