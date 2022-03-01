@@ -22,8 +22,8 @@ http://starknet.events/redoc
 
 ## Requirements
 
-- A recent version of Node.js and npm
-- A running MongoDB instance
+- A recent version of Node.js
+- prisma cli
 
 ---
 
@@ -32,21 +32,30 @@ http://starknet.events/redoc
 ```
 yarn
 
-// run this after every change
+// build first time and run this after every change
 yarn build-ts
 
+// start postgres docker. You will have to terminate a local postgres if it is running.
 docker-compose up
 
-yarn start
-
-// to update db schema
+// run first time then after schema change
 npx prisma migrate dev
+
+// start server
+yarn start
 
 ```
 
 Visit http://localhost:3333/graphql in your web browser.
 
 ---
+
+### Adding new model
+
+1. Add schema to prisma/schema.prisma
+2. Add new resolver
+3. Add entitie & types
+4. Run migration
 
 ### TODO in order of priority:
 
