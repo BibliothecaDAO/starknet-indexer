@@ -25,8 +25,9 @@ const name = (names: string) => {
 };
 
 const FetchStarkNet = async () => {
-    await Desiege.createDesiegeGame(
+    await Desiege.createOrUpdateDesiegeGame(
         {
+            id: 1,
             winner: 1,
             attackedTokens: 1,
             defendedTokens: 1,

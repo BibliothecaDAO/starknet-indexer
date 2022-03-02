@@ -16,19 +16,21 @@ type Desiege {
 input DesiegeInput {
   attackedTokens: Float!
   defendedTokens: Float!
+  id: Float!
   totalDamage: Float!
   totalShieldBoost: Float!
   winner: Float!
 }
 
 type Mutation {
-  createDesiegeGame(data: DesiegeInput!): Desiege!
+  createOrUpdateDesiegeGame(data: DesiegeInput!): Desiege!
   createRealm(data: RealmInput!): Realm!
 }
 
 type Query {
   returnAllDesiegeGames: [Desiege!]!
   returnAllRealms: [Realm!]!
+  returnSingleDesiege(id: Float!): Desiege!
   returnSingleRealm(id: Float!): Realm!
 }
 
