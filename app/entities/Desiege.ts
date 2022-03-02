@@ -6,6 +6,8 @@ export class Desiege {
     @Field(() => ID)
     id: number;
     @Field()
+    gameId: number;
+    @Field()
     winner: number;
     @Field()
     attackedTokens: number;

@@ -26,29 +26,20 @@ export class DesiegeResolver {
     ) {
         return ctx.prisma.desiege.upsert({
             where: {
-                id: data.id,
+                gameId: data.gameId,
             },
             update: {
-                winner: data.winner,
                 attackedTokens: {
                     increment: data.attackedTokens,
                 },
                 defendedTokens: {
                     increment: data.defendedTokens,
-                },
-                totalDamage: {
-                    increment: data.totalDamage
-                },
-                totalShieldBoost: {
-                    increment: data.totalShieldBoost
-                },
+                }
             },
             create: {
-                winner: data.winner,
+                gameId: data.gameId,
                 attackedTokens: data.attackedTokens,
                 defendedTokens: data.defendedTokens,
-                totalDamage: data.totalDamage,
-                totalShieldBoost: data.totalShieldBoost,
             },
         });
     }

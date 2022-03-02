@@ -63,6 +63,7 @@ model Realm {
 
 model Desiege {
   id               Int  @id @default(autoincrement())
+  gameId           Int  @unique
   winner           Int?
   attackedTokens   Int?
   defendedTokens   Int?

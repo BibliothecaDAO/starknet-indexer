@@ -1,10 +1,10 @@
 import { InputType, Field } from 'type-graphql';
-import { Desiege } from '../../entities/Desiege';
+// import { Desiege } from '../../entities/Desiege';
 
 @InputType()
-export class DesiegeInput implements Partial<Desiege> {
+export class DesiegeInput {
     @Field()
-    id: number;
+    gameId: number;
     @Field()
     winner: number;
     @Field()

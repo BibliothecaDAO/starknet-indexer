@@ -6,7 +6,7 @@ const StarkNetUrl = "http://starknet.events/api/v1/get_events";
 const Desiege = new DesiegeResolver();
 
 const DesiegeAddress =
-    "0x7970474671fdc6139e7a519f3c8efd869e559c02833a805dd5358bdf0af4dcb";
+    "0x40098a0012c879cf85e0909ca10108197d9bf3970e6c2188641697f49aca134";
 
 const contract = (addr: string) => {
     return "?contract=" + addr;
@@ -20,28 +20,33 @@ const contract = (addr: string) => {
 //     return '?to_block=' + to
 // }
 
-const name = (names: string) => {
-    return "?name=" + names;
-};
+// const name = (names: string) => {
+//     return "?name=" + names;
+// };
 
 const FetchStarkNet = async () => {
-    await Desiege.createOrUpdateDesiegeGame(
-        {
-            id: 1,
-            winner: 1,
-            attackedTokens: 1,
-            defendedTokens: 1,
-            totalDamage: 1,
-            totalShieldBoost: 1,
-        },
-        context
-    );
-    const response = await fetch(
-        StarkNetUrl + contract(DesiegeAddress) + name("attack")
-    );
-    const x = await response.json();
-    console.log(x);
-    return x;
+    try {
+        const response = await fetch(
+            StarkNetUrl + contract(DesiegeAddress)
+        );
+
+        console.log(response)
+
+        await Desiege.createOrUpdateDesiegeGame(
+            {
+                gameId: 1,
+                winner: 1,
+                attackedTokens: 1,
+                defendedTokens: 1,
+                totalDamage: 1,
+                totalShieldBoost: 1,
+            },
+            context
+        );
+
+    } catch (e) {
+        console.log(e)
+    }
 };
 
 export const StarkNet = () => {
