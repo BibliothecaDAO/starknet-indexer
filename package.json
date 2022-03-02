@@ -4,7 +4,7 @@
   "description": "Opensource StarkNet indexer using apollo server, typescript, prisma & graphql",
   "main": "server.js",
   "scripts": {
-    "start": "npm run serve",
+    "start": "yarn build-ts && npm run serve",
     "serve": "node dist/server.js",
     "watch-node": "nodemon dist/server.js",
     "build-ts": "tsc",

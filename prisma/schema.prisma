@@ -10,7 +10,58 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Wallet {
+  id      Int     @id @default(autoincrement())
+  address String?
+  // realms  Realm[]
+  // sRealms    SRealm[]
+  // characters Character[]
+  // lootItems  LootItem[]
+}
+
 model Realm {
-  id   Int    @id @default(autoincrement())
-  name String
+  id      Int     @id @default(autoincrement())
+  realmId Int?
+  name    String?
+  // wallet  Wallet @relation(fields: [realmId], references: [id])
+}
+
+// model SRealm {
+//   id      Int    @id @default(autoincrement())
+//   realmId Int
+//   name    String
+//   wallet  Wallet @relation(fields: [realmId], references: [id])
+// }
+
+// model Character {
+//   id        Int        @id @default(autoincrement())
+//   name      String
+//   sex       String
+//   race      String
+//   orderId   Int?
+//   wallet    Wallet     @relation(fields: [id], references: [id])
+//   lootItems LootItem[]
+// }
+
+// model LootItem {
+//   id              Int        @id @default(autoincrement())
+//   characterId     Int
+//   name            String
+//   equipmentId     Int? // 1 = head, 2 = body etc TODO
+//   orderId         Int?
+//   prefixId        Int?
+//   suffixId        Int?
+//   greatnessLevel  Int?
+//   locationFoundId Int? // Do we set locations like 011111 = 01 = realms  | 1111 = realm id
+//   wallet          Wallet?    @relation(fields: [id], references: [id])
+//   character       Character? @relation(fields: [characterId], references: [id])
+// }
+
+model Desiege {
+  id               Int  @id @default(autoincrement())
+  winner           Int?
+  attackedTokens   Int?
+  defendedTokens   Int?
+  totalDamage      Int?
+  totalShieldBoost Int?
 }

@@ -5,12 +5,14 @@ import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { context } from './context'
 import { RealmResolver } from './resolvers/Realm';
+import { DesiegeResolver } from './resolvers/Desiege';
 import { StarkNet } from './indexer/Starknet';
 
 const main = async () => {
   const schema = await buildSchema({
     resolvers: [
       RealmResolver,
+      DesiegeResolver
     ],
     emitSchemaFile: true,
     validate: false,

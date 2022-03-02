@@ -1,35 +1,47 @@
-import fetch from 'node-fetch';
-import { RealmResolver } from '../resolvers/Realm';
-import { context } from '../context'
-const StarkNetUrl = "http://starknet.events/api/v1/get_events"
+import fetch from "node-fetch";
+import { DesiegeResolver } from "../resolvers/Desiege";
+import { context } from "../context";
+const StarkNetUrl = "http://starknet.events/api/v1/get_events";
 
-const Realm = new RealmResolver()
+const Desiege = new DesiegeResolver();
 
-const Desiege = '0x26fb3d6ae270ee3c2fedd8d6d0576b15edd6abe6afa93c9e847a306648e9e95'
+const DesiegeAddress =
+    "0x7970474671fdc6139e7a519f3c8efd869e559c02833a805dd5358bdf0af4dcb";
 
 const contract = (addr: string) => {
-    return '?contract=' + addr
-}
+    return "?contract=" + addr;
+};
 
-const fromBlock = (from: number) => {
-    return '?from_block=' + from
-}
+// const fromBlock = (from: number) => {
+//     return '?from_block=' + from
+// }
 
-const toBlock = (to: number) => {
-    return '?to_block=' + to
-}
+// const toBlock = (to: number) => {
+//     return '?to_block=' + to
+// }
 
 const name = (names: string) => {
-    return '?name=' + names
-}
+    return "?name=" + names;
+};
 
 const FetchStarkNet = async () => {
-    await Realm.createRealm({ name: "test" }, context)
-    const response = await fetch(StarkNetUrl + contract(Desiege) + name('attack'));
+    await Desiege.createDesiegeGame(
+        {
+            winner: 1,
+            attackedTokens: 1,
+            defendedTokens: 1,
+            totalDamage: 1,
+            totalShieldBoost: 1,
+        },
+        context
+    );
+    const response = await fetch(
+        StarkNetUrl + contract(DesiegeAddress) + name("attack")
+    );
     const x = await response.json();
     console.log(x);
-    return x
-}
+    return x;
+};
 
 export const StarkNet = () => {
     return {

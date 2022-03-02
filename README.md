@@ -36,6 +36,7 @@ yarn
 yarn build-ts
 
 // start postgres docker. You will have to terminate a local postgres if it is running.
+sudo service postgresql stop
 docker-compose up
 
 // run first time then after schema change

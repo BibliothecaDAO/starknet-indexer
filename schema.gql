@@ -3,11 +3,31 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+"""The Desiege Model"""
+type Desiege {
+  attackedTokens: Float!
+  defendedTokens: Float!
+  id: ID!
+  totalDamage: Float!
+  totalShieldBoost: Float!
+  winner: Float!
+}
+
+input DesiegeInput {
+  attackedTokens: Float!
+  defendedTokens: Float!
+  totalDamage: Float!
+  totalShieldBoost: Float!
+  winner: Float!
+}
+
 type Mutation {
+  createDesiegeGame(data: DesiegeInput!): Desiege!
   createRealm(data: RealmInput!): Realm!
 }
 
 type Query {
+  returnAllDesiegeGames: [Desiege!]!
   returnAllRealms: [Realm!]!
   returnSingleRealm(id: Float!): Realm!
 }
