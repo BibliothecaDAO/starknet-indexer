@@ -37,6 +37,7 @@
     "express": "^4.17.1",
     "graphql": "^15.7.1",
     "node-fetch": "2",
+    "prisma-docs-generator": "^0.5.0",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1"
   }
