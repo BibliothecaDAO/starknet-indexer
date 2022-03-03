@@ -7,19 +7,23 @@ import { DesiegeInput } from "./types/desiege-input";
 @Resolver((_of) => Desiege)
 export class DesiegeResolver {
     @Query((_returns) => Desiege, { nullable: false })
-    async returnSingleDesiege(@Arg('id') id: number, @Ctx() ctx: Context) {
+    async desiege(@Arg('id') id: number, @Ctx() ctx: Context) {
         return await ctx.prisma.desiege.findUnique({
             where: { id },
         })
     }
 
     @Query(() => [Desiege])
-    async returnAllDesiegeGames(@Ctx() ctx: Context) {
-        return await ctx.prisma.desiege.findMany();
+    async allDesiege(@Ctx() ctx: Context) {
+        return await ctx.prisma.desiege.findMany({
+            orderBy: {
+                gameId: "desc",
+            },
+        });
     }
 
     @Mutation(() => Desiege)
-    async createOrUpdateDesiegeGame(
+    async createOrUpdateDesiege(
         @Arg("data")
         data: DesiegeInput,
         @Ctx() ctx: Context
@@ -34,12 +38,14 @@ export class DesiegeResolver {
                 },
                 defendedTokens: {
                     increment: data.defendedTokens,
-                }
+                },
+                blockIndexed: data.blockIndexed
             },
             create: {
                 gameId: data.gameId,
                 attackedTokens: data.attackedTokens,
                 defendedTokens: data.defendedTokens,
+                blockIndexed: data.blockIndexed
             },
         });
     }

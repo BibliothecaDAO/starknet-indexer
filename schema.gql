@@ -6,31 +6,30 @@
 """The Desiege Model"""
 type Desiege {
   attackedTokens: Float!
+  blockIndexed: Float!
   defendedTokens: Float!
+  gameId: Float!
   id: ID!
-  totalDamage: Float!
-  totalShieldBoost: Float!
   winner: Float!
 }
 
 input DesiegeInput {
   attackedTokens: Float!
+  blockIndexed: Float!
   defendedTokens: Float!
-  id: Float!
-  totalDamage: Float!
-  totalShieldBoost: Float!
+  gameId: Float!
   winner: Float!
 }
 
 type Mutation {
-  createOrUpdateDesiegeGame(data: DesiegeInput!): Desiege!
+  createOrUpdateDesiege(data: DesiegeInput!): Desiege!
   createRealm(data: RealmInput!): Realm!
 }
 
 type Query {
-  returnAllDesiegeGames: [Desiege!]!
+  allDesiege: [Desiege!]!
+  desiege(id: Float!): Desiege!
   returnAllRealms: [Realm!]!
-  returnSingleDesiege(id: Float!): Desiege!
   returnSingleRealm(id: Float!): Realm!
 }
 

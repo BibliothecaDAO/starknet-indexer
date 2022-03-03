@@ -1,8 +1,8 @@
 import { InputType, Field } from 'type-graphql';
-// import { Desiege } from '../../entities/Desiege';
+import { Desiege } from '../../entities/Desiege';
 
 @InputType()
-export class DesiegeInput {
+export class DesiegeInput implements Partial<Desiege>  {
     @Field()
     gameId: number;
     @Field()
@@ -12,7 +12,5 @@ export class DesiegeInput {
     @Field()
     defendedTokens: number;
     @Field()
-    totalDamage: number;
-    @Field()
-    totalShieldBoost: number;
+    blockIndexed: number;
 }

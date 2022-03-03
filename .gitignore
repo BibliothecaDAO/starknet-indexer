@@ -8,3 +8,6 @@ node_modules
 # build sources
 build
 dist
+
+# prisma
+prisma/migrations

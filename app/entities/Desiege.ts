@@ -6,7 +6,7 @@ export class Desiege {
     @Field(() => ID)
     id: number;
     @Field()
-    gameId: number;
+    gameId: Number;
     @Field()
     winner: number;
     @Field()
@@ -14,8 +14,6 @@ export class Desiege {
     @Field()
     defendedTokens: number;
     @Field()
-    totalDamage: number;
-    @Field()
-    totalShieldBoost: number;
+    blockIndexed: number;
 }
 
