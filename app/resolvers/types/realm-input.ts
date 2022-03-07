@@ -1,8 +1,13 @@
 import { InputType, Field } from 'type-graphql';
-import { Realm } from '../../entities/Realm';
 
 @InputType()
-export class RealmInput implements Partial<Realm> {
+export class RealmInput {
   @Field()
   name: string;
+
+  @Field()
+  realmId: number;
+
+  @Field()
+  owner: string;
 }

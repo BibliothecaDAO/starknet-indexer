@@ -6,7 +6,6 @@ import {
   Ctx,
 } from 'type-graphql';
 import { Context } from '../context'
-
 import { Realm } from '../entities/Realm';
 import { RealmInput } from './types/realm-input';
 
@@ -33,6 +32,10 @@ export class RealmResolver {
     return ctx.prisma.realm.create({
       data: {
         name: data.name,
+        realmId: data.realmId,
+        wallet: {
+          connect: { address: data.owner }
+        }
       },
     })
   }

@@ -15,27 +15,28 @@ datasource db {
 }
 
 model Wallet {
-  id      Int     @id @default(autoincrement())
-  address String?
-  // realms  Realm[]
-  // sRealms    SRealm[]
+  id      Int      @id @default(autoincrement())
+  address String   @unique
+  realms  Realm[]  @relation()
+  sRealms SRealm[] @relation()
   // characters Character[]
   // lootItems  LootItem[]
 }
 
 model Realm {
   id      Int     @id @default(autoincrement())
-  realmId Int?
+  realmId Int     @unique
   name    String?
-  // wallet  Wallet @relation(fields: [realmId], references: [id])
+  wallet  Wallet? @relation(fields: [owner], references: [address])
+  owner   String?
 }
 
-// model SRealm {
-//   id      Int    @id @default(autoincrement())
-//   realmId Int
-//   name    String
-//   wallet  Wallet @relation(fields: [realmId], references: [id])
-// }
+model SRealm {
+  id      Int    @id @default(autoincrement())
+  realmId Int    @unique
+  wallet  Wallet @relation(fields: [owner], references: [address])
+  owner   String
+}
 
 // model Character {
 //   id        Int        @id @default(autoincrement())
@@ -49,7 +50,7 @@ model Realm {
 
 // model LootItem {
 //   id              Int        @id @default(autoincrement())
-//   characterId     Int
+//   characterId     Int        @unique
 //   name            String
 //   equipmentId     Int? // 1 = head, 2 = body etc TODO
 //   orderId         Int?

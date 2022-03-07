@@ -24,21 +24,41 @@ input DesiegeInput {
 type Mutation {
   createOrUpdateDesiege(data: DesiegeInput!): Desiege!
   createRealm(data: RealmInput!): Realm!
+  createWallet(data: WalletInput!): Wallet!
 }
 
 type Query {
   allDesiege: [Desiege!]!
   desiege(id: Float!): Desiege!
   returnAllRealms: [Realm!]!
+  returnAllWallets: [Wallet!]!
   returnSingleRealm(id: Float!): Realm!
+  returnSingleWallet(address: String!): Wallet!
 }
 
 """The Realm Model"""
 type Realm {
   id: ID!
-  name: String!
+  name: String
+  owner: String
+  realmId: Float
+  wallet: Wallet!
 }
 
 input RealmInput {
   name: String!
+  owner: String!
+  realmId: Float!
+}
+
+"""The Wallet Model"""
+type Wallet {
+  address: String!
+  id: ID!
+  realms: [Realm!]!
+}
+
+input WalletInput {
+  address: String!
+  realms: RealmInput
 }

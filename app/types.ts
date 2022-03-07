@@ -12,7 +12,7 @@ export interface Item {
     keys?: Array<string>
     name?: string
     parameters?: Array<StarkNetEvent>
-    timestramp?: Date
+    timestamp?: Date
     tx_hash?: string
 }
 
