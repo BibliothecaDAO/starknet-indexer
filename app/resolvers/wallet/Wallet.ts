@@ -12,14 +12,14 @@ import { WalletInput } from '../types/wallet-input';
 @Resolver((_of) => Wallet)
 export class WalletResolver {
     @Query((_returns) => Wallet, { nullable: false })
-    async returnSingleWallet(@Arg('address') address: string, @Ctx() ctx: Context) {
+    async getWallet(@Arg('address') address: string, @Ctx() ctx: Context) {
         return await ctx.prisma.wallet.findUnique({
             where: { address },
         })
     }
 
     @Query(() => [Wallet])
-    async returnAllWallets(@Ctx() ctx: Context) {
+    async getWallets(@Ctx() ctx: Context) {
         return await ctx.prisma.wallet.findMany({
             include: {
                 realms: true,
@@ -28,7 +28,7 @@ export class WalletResolver {
     }
 
     @Mutation(() => Wallet)
-    async createWallet(
+    async createOrUpdateWallet(
         @Arg('data')
         data: WalletInput,
         @Ctx() ctx: Context

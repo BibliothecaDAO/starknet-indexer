@@ -12,19 +12,19 @@ import { RealmInput } from '../types';
 @Resolver((_of) => Realm)
 export class RealmResolver {
   @Query((_returns) => Realm, { nullable: false })
-  async returnSingleRealm(@Arg('id') id: number, @Ctx() ctx: Context) {
+  async getRealm(@Arg('id') id: number, @Ctx() ctx: Context) {
     return await ctx.prisma.realm.findUnique({
       where: { id },
     })
   }
 
   @Query(() => [Realm])
-  async returnAllRealms(@Ctx() ctx: Context) {
+  async getRealms(@Ctx() ctx: Context) {
     return await ctx.prisma.realm.findMany();
   }
 
   @Mutation(() => Realm)
-  async createRealm(
+  async createOrUpdateRealm(
     @Arg('data')
     data: RealmInput,
     @Ctx() ctx: Context
