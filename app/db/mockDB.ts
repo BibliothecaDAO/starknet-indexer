@@ -10,14 +10,14 @@ const prisma = new PrismaClient();
 
 async function main() {
     try {
-        await Wallet.createWallet(
+        await Wallet.createOrUpdateWallet(
             {
                 address: wallet.address,
             },
             context
         );
 
-        await Realm.createRealm(
+        await Realm.createOrUpdateRealm(
             {
                 name: realm.name,
                 realmId: realm.realmId,

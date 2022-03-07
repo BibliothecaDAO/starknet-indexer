@@ -23,17 +23,17 @@ input DesiegeInput {
 
 type Mutation {
   createOrUpdateDesiege(data: DesiegeInput!): Desiege!
-  createRealm(data: RealmInput!): Realm!
-  createWallet(data: WalletInput!): Wallet!
+  createOrUpdateRealm(data: RealmInput!): Realm!
+  createOrUpdateWallet(data: WalletInput!): Wallet!
 }
 
 type Query {
-  allDesiege: [Desiege!]!
-  desiege(id: Float!): Desiege!
-  returnAllRealms: [Realm!]!
-  returnAllWallets: [Wallet!]!
-  returnSingleRealm(id: Float!): Realm!
-  returnSingleWallet(address: String!): Wallet!
+  getDesiege(id: Float!): Desiege!
+  getDesiegeGames: [Desiege!]!
+  getRealm(id: Float!): Realm!
+  getRealms: [Realm!]!
+  getWallet(address: String!): Wallet!
+  getWallets: [Wallet!]!
 }
 
 """The Realm Model"""

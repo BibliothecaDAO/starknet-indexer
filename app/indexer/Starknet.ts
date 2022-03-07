@@ -73,14 +73,7 @@ const mockDB = async () => {
 
     try {
 
-        await Wallet.createWallet(
-            {
-                address: wallet.address
-            },
-            context
-        );
-
-        await Wallet.createWallet(
+        await Wallet.createOrUpdateWallet(
             {
                 address: wallet.address
             },

@@ -7,14 +7,14 @@ import { DesiegeInput } from "../types/desiege-input";
 @Resolver((_of) => Desiege)
 export class DesiegeResolver {
     @Query((_returns) => Desiege, { nullable: false })
-    async desiege(@Arg('id') id: number, @Ctx() ctx: Context) {
+    async getDesiege(@Arg('id') id: number, @Ctx() ctx: Context) {
         return await ctx.prisma.desiege.findUnique({
             where: { id },
         })
     }
 
     @Query(() => [Desiege])
-    async allDesiege(@Ctx() ctx: Context) {
+    async getDesiegeGames(@Ctx() ctx: Context) {
         return await ctx.prisma.desiege.findMany({
             orderBy: {
                 gameId: "desc",
