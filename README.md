@@ -32,15 +32,15 @@ http://starknet.events/redoc
 ```
 yarn
 
-// build first time and run this after every change
-yarn build-ts
-
 // start postgres docker. You will have to terminate a local postgres if it is running.
 sudo service postgresql stop
 docker-compose up
 
 // run first time then after schema change
 npx prisma migrate dev
+
+// init test DB data. You will need to install ts-node
+ts-node app/db/mockDB.ts
 
 // start server
 yarn start

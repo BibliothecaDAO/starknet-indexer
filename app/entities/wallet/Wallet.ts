@@ -1,6 +1,6 @@
 import { ObjectType, Field, ID } from 'type-graphql';
 import { __Type } from 'graphql';
-import { Realm } from './Realm';
+import { Realm } from '../settling/Realm';
 
 @ObjectType({ description: 'The Wallet Model' })
 export class Wallet {

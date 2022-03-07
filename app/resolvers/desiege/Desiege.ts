@@ -1,8 +1,8 @@
 import { Resolver, Arg, Mutation, Query, Ctx } from "type-graphql";
-import { Context } from "../context";
+import { Context } from "../../context";
 
-import { Desiege } from "../entities/Desiege";
-import { DesiegeInput } from "./types/desiege-input";
+import { Desiege } from "../../entities/desiege/Desiege";
+import { DesiegeInput } from "../types/desiege-input";
 
 @Resolver((_of) => Desiege)
 export class DesiegeResolver {

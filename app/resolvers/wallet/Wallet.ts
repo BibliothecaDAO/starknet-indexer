@@ -5,10 +5,9 @@ import {
     Query,
     Ctx,
 } from 'type-graphql';
-import { Context } from '../context'
-
-import { Wallet } from '../entities/Wallet';
-import { WalletInput } from './types/wallet-input';
+import { Context } from '../../context'
+import { Wallet } from '../../entities/wallet/Wallet';
+import { WalletInput } from '../types/wallet-input';
 
 @Resolver((_of) => Wallet)
 export class WalletResolver {

@@ -1,6 +1,6 @@
-import { WalletResolver } from "./Wallet"
-import { RealmResolver } from "./Realm"
-import { DesiegeResolver } from "./Desiege"
+import { WalletResolver } from "./wallet/Wallet"
+import { RealmResolver } from "./settling/Realm"
+import { DesiegeResolver } from "./desiege/Desiege"
 
 export {
     WalletResolver,

@@ -5,9 +5,9 @@ import {
   Query,
   Ctx,
 } from 'type-graphql';
-import { Context } from '../context'
-import { Realm } from '../entities/Realm';
-import { RealmInput } from './types/realm-input';
+import { Context } from '../../context'
+import { Realm } from '../../entities';
+import { RealmInput } from '../types';
 
 @Resolver((_of) => Realm)
 export class RealmResolver {
@@ -29,8 +29,18 @@ export class RealmResolver {
     data: RealmInput,
     @Ctx() ctx: Context
   ) {
-    return ctx.prisma.realm.create({
-      data: {
+    return ctx.prisma.realm.upsert({
+      where: {
+        realmId: data.realmId
+      },
+      update: {
+        name: data.name,
+        realmId: data.realmId,
+        wallet: {
+          connect: { address: data.owner }
+        }
+      },
+      create: {
         name: data.name,
         realmId: data.realmId,
         wallet: {
@@ -39,16 +49,4 @@ export class RealmResolver {
       },
     })
   }
-
-  // @Mutation(() => Boolean)
-  // async deleteProduct(@Arg('id') id: string) {
-  //   await ProductModel.deleteOne({ id });
-  //   return true;
-  // }
-
-  // @FieldResolver((_type) => Categories)
-  // async category(@Root() product: Product): Promise<Categories> {
-  //   console.log(product, 'product!');
-  //   return (await CategoriesModel.findById(product._doc.category_id))!;
-  // }
 }

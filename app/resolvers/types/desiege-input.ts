@@ -1,5 +1,5 @@
 import { InputType, Field } from 'type-graphql';
-import { Desiege } from '../../entities/Desiege';
+import { Desiege } from '../../entities/desiege/Desiege';
 
 @InputType()
 export class DesiegeInput implements Partial<Desiege>  {

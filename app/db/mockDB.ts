@@ -1,37 +1,39 @@
-// import { PrismaClient, Prisma } from '@prisma/client'
+import 'reflect-metadata'
+import { PrismaClient } from "@prisma/client";
+import { context } from "../context";
+import { WalletResolver, RealmResolver } from "../resolvers";
+import { wallet, realm } from "../db/testDB";
 
-// const prisma = new PrismaClient()
+const Wallet = new WalletResolver();
+const Realm = new RealmResolver();
+const prisma = new PrismaClient();
 
-// async function main() {
-//     let includePosts: boolean = false
-//     let user: Prisma.UserCreateInput
+async function main() {
+    try {
+        await Wallet.createWallet(
+            {
+                address: wallet.address,
+            },
+            context
+        );
 
-//     // Check if posts should be included in the query
-//     if (includePosts) {
-//         user = {
-//             email: 'elsa@prisma.io',
-//             name: 'Elsa Prisma',
-//             posts: {
-//                 create: {
-//                     title: 'Include this post!',
-//                 },
-//             },
-//         }
-//     } else {
-//         user = {
-//             email: 'elsa@prisma.io',
-//             name: 'Elsa Prisma',
-//         }
-//     }
+        await Realm.createRealm(
+            {
+                name: realm.name,
+                realmId: realm.realmId,
+                owner: realm.owner,
+            },
+            context
+        );
+    } catch (e) {
+        console.log(e);
+    }
+}
 
-//     // Pass 'user' object into query
-//     const createUser = await prisma.user.create({ data: user })
-// }
-
-// main()
-//     .catch((e) => {
-//         throw e
-//     })
-//     .finally(async () => {
-//         await prisma.$disconnect()
-//     })
+main()
+    .catch((e) => {
+        throw e;
+    })
+    .finally(async () => {
+        await prisma.$disconnect();
+    });
