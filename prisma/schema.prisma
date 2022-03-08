@@ -19,23 +19,50 @@ model Wallet {
   address String   @unique
   realms  Realm[]  @relation()
   sRealms SRealm[] @relation()
-  // characters Character[]
-  // lootItems  LootItem[]
 }
 
 model Realm {
+  id           Int         @id @default(autoincrement())
+  realmId      Int         @unique
+  name         String?
+  wallet       Wallet?     @relation(fields: [owner], references: [address])
+  owner        String?
+  offenceSquad Squad[]     @relation("offenceSquad")
+  defenceSquad Squad[]     @relation("defenceSquad")
+  buildings    Buildings?
+  resources    Resources[]
+}
+
+model SRealm {
   id      Int     @id @default(autoincrement())
   realmId Int     @unique
-  name    String?
   wallet  Wallet? @relation(fields: [owner], references: [address])
   owner   String?
 }
 
-model SRealm {
-  id      Int    @id @default(autoincrement())
-  realmId Int    @unique
-  wallet  Wallet @relation(fields: [owner], references: [address])
-  owner   String
+model Squad {
+  id             Int    @id @default(autoincrement())
+  realmId        Int    @unique
+  realmOffence   Realm? @relation(name: "offenceSquad", fields: [realmOffenceId], references: [realmId])
+  realmDefence   Realm? @relation(name: "defenceSquad", fields: [realmDefenceId], references: [realmId])
+  realmOffenceId Int?
+  realmDefenceId Int?
+}
+
+model Buildings {
+  id       Int    @id @default(autoincrement())
+  realmId  Int?   @unique
+  realm    Realm? @relation(fields: [realmId], references: [realmId])
+  barracks Int?
+}
+
+model Resources {
+  id            Int    @id @default(autoincrement())
+  resourceId    Int    @unique
+  realm         Realm  @relation(fields: [realmId], references: [realmId])
+  realmId       Int
+  resourceName  String
+  resourceLevel Int
 }
 
 // model Character {

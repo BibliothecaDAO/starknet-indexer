@@ -3,6 +3,18 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+"""The Buildings Model"""
+type Buildings {
+  barracks: Float
+  id: ID!
+  realmId: Float!
+}
+
+input BuildingsInput {
+  barracks: Float!
+  realmId: Float!
+}
+
 """The Desiege Model"""
 type Desiege {
   attackedTokens: Float!
@@ -22,12 +34,15 @@ input DesiegeInput {
 }
 
 type Mutation {
+  createOrUpdateBuildings(data: BuildingsInput!): Buildings!
   createOrUpdateDesiege(data: DesiegeInput!): Desiege!
   createOrUpdateRealm(data: RealmInput!): Realm!
   createOrUpdateWallet(data: WalletInput!): Wallet!
 }
 
 type Query {
+  getAllBuildings: [Buildings!]!
+  getBuildings(id: Float!): Buildings!
   getDesiege(id: Float!): Desiege!
   getDesiegeGames: [Desiege!]!
   getRealm(id: Float!): Realm!
@@ -38,8 +53,11 @@ type Query {
 
 """The Realm Model"""
 type Realm {
+  buildings: Buildings
+  defenceSquad: Squad
   id: ID!
   name: String
+  offenceSquad: Squad
   owner: String
   realmId: Float
   wallet: Wallet!
@@ -48,6 +66,12 @@ type Realm {
 input RealmInput {
   name: String!
   owner: String!
+  realmId: Float!
+}
+
+"""The Squad Model"""
+type Squad {
+  id: ID!
   realmId: Float!
 }
 

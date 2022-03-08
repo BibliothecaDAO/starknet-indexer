@@ -20,7 +20,11 @@ export class RealmResolver {
 
   @Query(() => [Realm])
   async getRealms(@Ctx() ctx: Context) {
-    return await ctx.prisma.realm.findMany();
+    return await ctx.prisma.realm.findMany({
+      include: {
+        buildings: true,
+      },
+    });
   }
 
   @Mutation(() => Realm)

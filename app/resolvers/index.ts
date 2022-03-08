@@ -1,9 +1,10 @@
 import { WalletResolver } from "./wallet/Wallet"
-import { RealmResolver } from "./settling/Realm"
+import { RealmResolver, BuildingsResolver } from "./settling"
 import { DesiegeResolver } from "./desiege/Desiege"
 
 export {
     WalletResolver,
     RealmResolver,
+    BuildingsResolver,
     DesiegeResolver
 }

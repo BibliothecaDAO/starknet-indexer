@@ -4,12 +4,22 @@ import Express from "express";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { context } from "./context";
-import { DesiegeResolver, WalletResolver, RealmResolver } from "./resolvers";
+import {
+  DesiegeResolver,
+  WalletResolver,
+  RealmResolver,
+  BuildingsResolver,
+} from "./resolvers";
 // import { StarkNet } from "./indexer/Starknet";
 
 const main = async () => {
   const schema = await buildSchema({
-    resolvers: [RealmResolver, DesiegeResolver, WalletResolver],
+    resolvers: [
+      RealmResolver,
+      DesiegeResolver,
+      WalletResolver,
+      BuildingsResolver,
+    ],
     emitSchemaFile: true,
     validate: false,
   });
