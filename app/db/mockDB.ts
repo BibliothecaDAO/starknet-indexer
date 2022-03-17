@@ -1,12 +1,13 @@
 import 'reflect-metadata'
 import { PrismaClient } from "@prisma/client";
 import { context } from "../context";
-import { WalletResolver, RealmResolver, BuildingsResolver } from "../resolvers";
-import { wallet, realm, buildings } from "../db/testDB";
+import { WalletResolver, RealmResolver, BuildingsResolver, ResourceResolver } from "../resolvers";
+import { wallet, realm, buildings, resource } from "../db/testDB";
 
 const Wallet = new WalletResolver();
 const Realm = new RealmResolver();
 const Buildings = new BuildingsResolver();
+const Resource = new ResourceResolver();
 
 const prisma = new PrismaClient();
 
@@ -34,6 +35,15 @@ async function main() {
             {
                 barracks: buildings.barracks,
                 realmId: buildings.realmId,
+            },
+            context
+        );
+
+        await Resource.createOrUpdateResources(
+            {
+                resourceId: resource.resourceId,
+                realmId: resource.realmId,
+                resourceName: resource.resourceName
             },
             context
         );

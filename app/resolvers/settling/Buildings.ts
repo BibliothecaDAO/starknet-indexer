@@ -35,9 +35,6 @@ export class BuildingsResolver {
             },
             update: {
                 barracks: data.barracks,
-                realm: {
-                    connect: { realmId: data.realmId }
-                }
             },
             create: {
                 barracks: data.barracks,

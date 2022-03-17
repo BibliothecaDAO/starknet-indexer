@@ -1,6 +1,5 @@
-import { BuildingsInput } from "../resolvers/types"
-import { RealmInput } from "../resolvers/types/realm-input"
-import { WalletInput } from "../resolvers/types/wallet-input"
+import { BuildingsInput, ResourceInput, RealmInput, WalletInput } from "../resolvers/types"
+
 
 const walletAddress = "0xE417496166b097A05e1B0A4117C8Ad1d204aDb91"
 const realmId = 3
@@ -18,5 +17,11 @@ export const wallet: WalletInput = {
 
 export const buildings: BuildingsInput = {
     barracks: 1,
+    realmId: realmId
+}
+
+export const resource: ResourceInput = {
+    resourceId: 1,
+    resourceName: "Wood",
     realmId: realmId
 }

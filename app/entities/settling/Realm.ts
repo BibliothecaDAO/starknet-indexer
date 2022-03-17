@@ -3,6 +3,7 @@ import { __Type } from 'graphql';
 import { Wallet } from '../wallet/Wallet';
 import { Squad } from './Squad'
 import { Buildings } from './Buildings';
+import { Resource } from './Resource';
 
 @ObjectType({ description: 'The Realm Model' })
 export class Realm {
@@ -29,5 +30,8 @@ export class Realm {
 
   @Field(() => Buildings, { nullable: true })
   buildings!: Buildings;
+
+  @Field(() => [Resource], { nullable: true })
+  resources!: [Resource];
 }
 

@@ -23,6 +23,7 @@ export class RealmResolver {
     return await ctx.prisma.realm.findMany({
       include: {
         buildings: true,
+        ResourcesOnRealms: true
       },
     });
   }

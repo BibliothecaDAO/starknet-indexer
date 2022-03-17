@@ -9,6 +9,7 @@ import {
   WalletResolver,
   RealmResolver,
   BuildingsResolver,
+  ResourceResolver,
 } from "./resolvers";
 // import { StarkNet } from "./indexer/Starknet";
 
@@ -19,6 +20,7 @@ const main = async () => {
       DesiegeResolver,
       WalletResolver,
       BuildingsResolver,
+      ResourceResolver
     ],
     emitSchemaFile: true,
     validate: false,

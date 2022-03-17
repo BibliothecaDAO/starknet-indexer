@@ -37,16 +37,19 @@ type Mutation {
   createOrUpdateBuildings(data: BuildingsInput!): Buildings!
   createOrUpdateDesiege(data: DesiegeInput!): Desiege!
   createOrUpdateRealm(data: RealmInput!): Realm!
+  createOrUpdateResources(data: ResourceInput!): Resource!
   createOrUpdateWallet(data: WalletInput!): Wallet!
 }
 
 type Query {
   getAllBuildings: [Buildings!]!
+  getAllResources: [Resource!]!
   getBuildings(id: Float!): Buildings!
   getDesiege(id: Float!): Desiege!
   getDesiegeGames: [Desiege!]!
   getRealm(id: Float!): Realm!
   getRealms: [Realm!]!
+  getResource(resourceId: Float!): Resource!
   getWallet(address: String!): Wallet!
   getWallets: [Wallet!]!
 }
@@ -60,6 +63,7 @@ type Realm {
   offenceSquad: Squad
   owner: String
   realmId: Float
+  resources: [Resource!]
   wallet: Wallet!
 }
 
@@ -67,6 +71,21 @@ input RealmInput {
   name: String!
   owner: String!
   realmId: Float!
+}
+
+"""The Resource Model"""
+type Resource {
+  id: ID!
+  realmId: Float!
+  resourceId: Float
+  resourceLevel: Float
+  resourceName: String
+}
+
+input ResourceInput {
+  realmId: Float!
+  resourceId: Float
+  resourceName: String
 }
 
 """The Squad Model"""

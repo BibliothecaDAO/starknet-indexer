@@ -14,6 +14,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// MILSTONE 1
 model Wallet {
   id      Int      @id @default(autoincrement())
   address String   @unique
@@ -21,18 +22,79 @@ model Wallet {
   sRealms SRealm[] @relation()
 }
 
+// MILSTONE 1
 model Realm {
-  id           Int         @id @default(autoincrement())
-  realmId      Int         @unique
-  name         String?
-  wallet       Wallet?     @relation(fields: [owner], references: [address])
-  owner        String?
-  offenceSquad Squad[]     @relation("offenceSquad")
-  defenceSquad Squad[]     @relation("defenceSquad")
-  buildings    Buildings?
-  resources    Resources[]
+  id                Int                 @id @default(autoincrement())
+  realmId           Int                 @unique
+  name              String?
+  wallet            Wallet?             @relation(fields: [owner], references: [address])
+  owner             String?
+  offenceSquad      Squad?              @relation("offenceSquad")
+  defenceSquad      Squad?              @relation("defenceSquad")
+  buildings         Buildings?
+  resourceIds       Int[]
+  ResourcesOnRealms ResourcesOnRealms[]
 }
 
+// TODO
+// MILSTONE 1
+// Need to Map all the buildings into their own model so their data can be stored for each Realm. The constraint for these is the Realms Traits. Eg: Realm has 6 Regions -> they can only build 6 castles.
+// barracks         Int?
+// Fairgrounds      Int?
+// RoyalReserve     Int?
+// GrandMarket      Int?
+// Castle           Int?
+// Guild            Int?
+// OfficerAcademy   Int?
+// Granary          Int?
+// Housing          Int?
+// Amphitheater     Int?
+// Carpenter        Int?
+// School           Int?
+// Symposium        Int?
+// LogisticsOffice  Int?
+// ExplorersGuild   Int?
+// ParadeGrounds    Int?
+// ResourceFacility Int?
+// Dock             Int?
+// Fishmonger       Int?
+// Farms            Int?
+// Hamlet           Int?
+
+// Overview model with nested buildings
+model Buildings {
+  id      Int    @id @default(autoincrement())
+  realmId Int?   @unique
+  realm   Realm? @relation(fields: [realmId], references: [realmId])
+}
+
+model Building {
+  id            Int   @id @default(autoincrement())
+  qty           Int?
+  resourceIds   Int[]
+  resourceCosts Int[]
+}
+
+// MILSTONE 1
+model Resource {
+  id                Int                 @id @default(autoincrement())
+  resourceId        Int                 @unique
+  resourceName      String
+  ResourcesOnRealms ResourcesOnRealms[]
+}
+
+// MILSTONE 1
+// TODO: WIP, Not working as expected
+model ResourcesOnRealms {
+  realms     Realm    @relation(fields: [realmId], references: [realmId])
+  realmId    Int
+  resources  Resource @relation(fields: [resourceId], references: [resourceId])
+  resourceId Int
+
+  @@id([realmId, resourceId])
+}
+
+// MILSTONE 1
 model SRealm {
   id      Int     @id @default(autoincrement())
   realmId Int     @unique
@@ -40,31 +102,37 @@ model SRealm {
   owner   String?
 }
 
+// MILSTONE 1
+// NOTE: Each Realm can have Two squads. One for offence and one for deffence. Unsure best way to model this....??
+// Watchman
+// Guard
+// Guard Captain
+// Squire
+// Knight
+// Knight Commander
+// Scout
+// Archer
+// Sniper
+// Scorpio
+// Ballista
+// Catapult
+// Shaman
+// Healer
+// Life Mage
+// Apprentice
+// Mage
+// Arcanist
+// Grand Marshal
 model Squad {
   id             Int    @id @default(autoincrement())
   realmId        Int    @unique
   realmOffence   Realm? @relation(name: "offenceSquad", fields: [realmOffenceId], references: [realmId])
   realmDefence   Realm? @relation(name: "defenceSquad", fields: [realmDefenceId], references: [realmId])
-  realmOffenceId Int?
-  realmDefenceId Int?
+  realmOffenceId Int?   @unique
+  realmDefenceId Int?   @unique
 }
 
-model Buildings {
-  id       Int    @id @default(autoincrement())
-  realmId  Int?   @unique
-  realm    Realm? @relation(fields: [realmId], references: [realmId])
-  barracks Int?
-}
-
-model Resources {
-  id            Int    @id @default(autoincrement())
-  resourceId    Int    @unique
-  realm         Realm  @relation(fields: [realmId], references: [realmId])
-  realmId       Int
-  resourceName  String
-  resourceLevel Int
-}
-
+///////////// MILSTONE 2 ///////////////
 // model Character {
 //   id        Int        @id @default(autoincrement())
 //   name      String
@@ -89,6 +157,7 @@ model Resources {
 //   character       Character? @relation(fields: [characterId], references: [id])
 // }
 
+// MILSTONE 2
 model Desiege {
   id             Int  @id @default(autoincrement())
   gameId         Int  @unique
