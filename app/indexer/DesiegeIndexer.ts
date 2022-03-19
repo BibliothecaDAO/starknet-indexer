@@ -3,9 +3,10 @@ import { Context } from "../context";
 import { Indexer, StarkNetEvent } from "./../types";
 
 export default class DesiegeIndexer implements Indexer {
-  readonly contract =
-    process.env.DESIEGE_CONTRACT ??
-    "0x40098a0012c879cf85e0909ca10108197d9bf3970e6c2188641697f49aca134";
+  readonly contracts = [
+    "0x40098a0012c879cf85e0909ca10108197d9bf3970e6c2188641697f49aca134",
+    "0x1fbec91116c1ced6bb392502adc191dd7978f2b066c674bf28f8710a9a52afd"
+  ];
   private lastIndexedBlock = 6000; // Start Block
   private context: Context;
   private resolver: DesiegeResolver;

@@ -25,7 +25,8 @@ const mockDB = async () => {
 };
 
 const contractEventFilter = (indexer: Indexer) => (event: StarkNetEvent) =>
-  event.contract === indexer.contract &&
+  event.contract &&
+  indexer.contracts.includes(event.contract) &&
   event.block_number > indexer.getLastBlockIndexed();
 
 class StarkNetIndexer {
@@ -43,20 +44,28 @@ class StarkNetIndexer {
 
   async pollEvents() {
     const contracts = this.indexers
-      .map((indexer) => indexer.contract)
-      .join(",");
-    const blockNumber = Math.min(
-      ...this.indexers.map((indexer) => indexer.getLastBlockIndexed())
-    );
+      .map((indexer) => indexer.contracts)
+      .flat()
+      .map((address) => contract(address))
+      .join("");
+    const blockNumber =
+      Math.min(
+        ...this.indexers.map((indexer) => indexer.getLastBlockIndexed())
+      ) + 1;
 
     const desiegeQuery: string =
-      StarkNetUrl + contract(contracts) + fromBlock(blockNumber);
+      StarkNetUrl + contracts + fromBlock(blockNumber);
     const response = await fetch(desiegeQuery);
 
     try {
-      const { items }: StarkNetResponse = await response.json();
+      const result: StarkNetResponse = await response.json();
+      if (!result.items) {
+        return;
+      }
       for (let indexer of this.indexers) {
-        await indexer.updateIndex(items.filter(contractEventFilter(indexer)));
+        await indexer.updateIndex(
+          result.items.filter(contractEventFilter(indexer))
+        );
       }
     } catch (e) {
       console.error(e);

@@ -39,6 +39,7 @@ type Mutation {
   createOrUpdateRealm(data: RealmInput!): Realm!
   createOrUpdateResources(data: ResourceInput!): Resource!
   createOrUpdateWallet(data: WalletInput!): Wallet!
+  reindexDesiege: Boolean!
 }
 
 type Query {
