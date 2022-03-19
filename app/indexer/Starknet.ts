@@ -24,10 +24,11 @@ const mockDB = async () => {
   }
 };
 
-const contractEventFilter = (indexer: Indexer) => (event: StarkNetEvent) =>
-  event.contract &&
-  indexer.contracts.includes(event.contract) &&
-  event.block_number > indexer.getLastBlockIndexed();
+const contractEventFilter =
+  (indexer: Indexer, lastIndexedBlock: number) => (event: StarkNetEvent) =>
+    event.contract &&
+    indexer.contracts.includes(event.contract) &&
+    event.block_number > lastIndexedBlock;
 
 class StarkNetIndexer {
   indexers: Array<Indexer>;
@@ -36,35 +37,29 @@ class StarkNetIndexer {
     this.indexers = [new DesiegeIndexer(context)];
   }
 
-  async init() {
-    for (let indexer of this.indexers) {
-      await indexer.init();
-    }
-  }
-
   async pollEvents() {
     const contracts = this.indexers
       .map((indexer) => indexer.contracts)
       .flat()
       .map((address) => contract(address))
       .join("");
-    const blockNumber =
-      Math.min(
-        ...this.indexers.map((indexer) => indexer.getLastBlockIndexed())
-      ) + 1;
-
+    const lastBlocksIndexed = await Promise.all(
+      this.indexers.map((indexer) => indexer.getLastBlockIndexed())
+    );
+    const blockNumber = Math.min(...lastBlocksIndexed) + 1;
     const desiegeQuery: string =
       StarkNetUrl + contracts + fromBlock(blockNumber);
-    const response = await fetch(desiegeQuery);
 
     try {
+      const response = await fetch(desiegeQuery);
       const result: StarkNetResponse = await response.json();
       if (!result.items) {
         return;
       }
       for (let indexer of this.indexers) {
+        const lastIndexedBlock = await indexer.getLastBlockIndexed();
         await indexer.updateIndex(
-          result.items.filter(contractEventFilter(indexer))
+          result.items.filter(contractEventFilter(indexer, lastIndexedBlock))
         );
       }
     } catch (e) {
@@ -79,7 +74,6 @@ export const StarkNet = () => {
       await mockDB;
 
       const indexer = new StarkNetIndexer(context);
-      await indexer.init();
       setInterval(async () => {
         await indexer.pollEvents();
       }, 5000);

@@ -23,7 +23,6 @@ export interface StarkNetEventParameter {
 
 export interface Indexer {
   contracts: string[];
-  init(): Promise<void>;
   updateIndex(events: StarkNetEvent[]): Promise<void>;
-  getLastBlockIndexed(): number;
+  getLastBlockIndexed(): Promise<number>;
 }

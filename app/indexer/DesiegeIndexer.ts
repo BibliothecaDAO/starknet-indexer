@@ -7,7 +7,7 @@ export default class DesiegeIndexer implements Indexer {
     "0x40098a0012c879cf85e0909ca10108197d9bf3970e6c2188641697f49aca134",
     "0x1fbec91116c1ced6bb392502adc191dd7978f2b066c674bf28f8710a9a52afd"
   ];
-  private lastIndexedBlock = 6000; // Start Block
+  private startBlock = 6000; // Start Block
   private context: Context;
   private resolver: DesiegeResolver;
 
@@ -16,22 +16,11 @@ export default class DesiegeIndexer implements Indexer {
     this.resolver = new DesiegeResolver();
   }
 
-  async init(): Promise<void> {
-    const desiege = await this.context.prisma.desiege.findFirst({
-      orderBy: {
-        blockIndexed: "desc"
-      }
-    });
-    if (desiege) {
-      this.lastIndexedBlock = desiege.blockIndexed;
-    }
-    return;
-  }
-
   async updateIndex(events: StarkNetEvent[]): Promise<void> {
+    let lastIndexedBlock = await this.getLastBlockIndexed();
     for (const event of events) {
       const blockIndex = event.block_number;
-      if (blockIndex < this.lastIndexedBlock) {
+      if (blockIndex <= lastIndexedBlock) {
         continue;
       }
       const parameters = event.parameters ?? [];
@@ -52,12 +41,20 @@ export default class DesiegeIndexer implements Indexer {
         },
         this.context
       );
-      this.lastIndexedBlock = blockIndex;
+      lastIndexedBlock = blockIndex;
     }
     return;
   }
 
-  getLastBlockIndexed(): number {
-    return this.lastIndexedBlock;
+  async getLastBlockIndexed(): Promise<number> {
+    const desiege = await this.context.prisma.desiege.findFirst({
+      orderBy: {
+        blockIndexed: "desc"
+      }
+    });
+    if (desiege) {
+      return desiege.blockIndexed;
+    }
+    return this.startBlock;
   }
 }
