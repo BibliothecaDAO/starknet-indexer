@@ -11,7 +11,7 @@ import {
   BuildingsResolver,
   ResourceResolver
 } from "./resolvers";
-// import { StarkNet } from "./indexer/Starknet";
+import { StarkNet } from "./indexer/Starknet";
 
 const main = async () => {
   const schema = await buildSchema({
@@ -38,7 +38,7 @@ const main = async () => {
 
   server.applyMiddleware({ app });
 
-  // await StarkNet().serverWillStart();
+  await StarkNet().serverWillStart();
 
   app.listen({ port: 3333 }, () =>
     console.log(
