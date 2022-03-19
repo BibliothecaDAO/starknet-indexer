@@ -1,22 +1,29 @@
 export interface StarkNetResponse {
-    items: Array<Item>
-    page: number
-    size: number
-    total: number
-}
-
-export interface Item {
-    block_number: number
-    chain_id?: string
-    contract?: string
-    keys?: Array<string>
-    name?: string
-    parameters?: Array<StarkNetEvent>
-    timestamp?: Date
-    tx_hash?: string
+  items: Array<StarkNetEvent>;
+  page: number;
+  size: number;
+  total: number;
 }
 
 export interface StarkNetEvent {
-    name?: string
-    value?: string
+  block_number: number;
+  chain_id?: string;
+  contract?: string;
+  keys?: Array<string>;
+  name?: string;
+  parameters?: Array<StarkNetEventParameter>;
+  timestamp?: Date;
+  tx_hash?: string;
+}
+
+export interface StarkNetEventParameter {
+  name?: string;
+  value?: string;
+}
+
+export interface Indexer {
+  contract: string;
+  init(): Promise<void>;
+  updateIndex(events: StarkNetEvent[]): Promise<void>;
+  getLastBlockIndexed(): number;
 }

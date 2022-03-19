@@ -78,7 +78,6 @@ type Resource {
   id: ID!
   realmId: Float!
   resourceId: Float
-  resourceLevel: Float
   resourceName: String
 }
 

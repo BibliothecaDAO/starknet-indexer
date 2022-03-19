@@ -9,7 +9,7 @@ import {
   WalletResolver,
   RealmResolver,
   BuildingsResolver,
-  ResourceResolver,
+  ResourceResolver
 } from "./resolvers";
 // import { StarkNet } from "./indexer/Starknet";
 
@@ -23,13 +23,13 @@ const main = async () => {
       ResourceResolver
     ],
     emitSchemaFile: true,
-    validate: false,
+    validate: false
   });
 
   const server = new ApolloServer({
     schema,
     context: context,
-    plugins: [ApolloServerPluginLandingPageGraphQLPlayground],
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground]
   });
 
   const app = Express();
@@ -37,6 +37,8 @@ const main = async () => {
   await server.start();
 
   server.applyMiddleware({ app });
+
+  // await StarkNet().serverWillStart();
 
   app.listen({ port: 3333 }, () =>
     console.log(
