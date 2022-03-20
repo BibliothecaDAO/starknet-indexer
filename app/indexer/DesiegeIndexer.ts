@@ -3,7 +3,7 @@ import { Context } from "../context";
 import { Indexer, StarkNetEvent } from "./../types";
 
 export default class DesiegeIndexer implements Indexer {
-  readonly contracts = [
+  private contracts = [
     "0x40098a0012c879cf85e0909ca10108197d9bf3970e6c2188641697f49aca134",
     "0x1fbec91116c1ced6bb392502adc191dd7978f2b066c674bf28f8710a9a52afd"
   ];
@@ -14,6 +14,10 @@ export default class DesiegeIndexer implements Indexer {
   constructor(context: Context) {
     this.context = context;
     this.resolver = new DesiegeResolver();
+  }
+
+  getContracts(): string[] {
+    return this.contracts;
   }
 
   async updateIndex(events: StarkNetEvent[]): Promise<void> {

@@ -1,13 +1,11 @@
-import fetch from "node-fetch";
 import { StarkNetEvent, StarkNetResponse } from "../types";
-import { contract, fromBlock } from "./utils";
+import StarknetApi from "./StarknetApi";
 import { Context, context } from "../context";
 
 import { WalletResolver } from "../resolvers";
 import { wallet } from "../db/testDB";
 import { Indexer } from "../types";
 import DesiegeIndexer from "./DesiegeIndexer";
-const StarkNetUrl = "http://starknet.events/api/v1/get_events?";
 
 const Wallet = new WalletResolver();
 
@@ -20,51 +18,117 @@ const mockDB = async () => {
       context
     );
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 };
 
 const contractEventFilter =
   (indexer: Indexer, lastIndexedBlock: number) => (event: StarkNetEvent) =>
     event.contract &&
-    indexer.contracts.includes(event.contract) &&
+    indexer.getContracts().includes(event.contract) &&
     event.block_number > lastIndexedBlock;
 
-class StarkNetIndexer {
+class StarkNetIndexer implements Indexer {
   indexers: Array<Indexer>;
+  isPolling: Boolean;
+  interval: NodeJS.Timer;
 
   constructor(context: Context) {
     this.indexers = [new DesiegeIndexer(context)];
+    this.isPolling = false;
   }
 
-  async pollEvents() {
-    const contracts = this.indexers
-      .map((indexer) => indexer.contracts)
-      .flat()
-      .map((address) => contract(address))
-      .join("");
+  getContracts(): string[] {
+    return this.indexers.map((indexer) => indexer.getContracts()).flat();
+  }
+
+  async updateIndex(events: StarkNetEvent[]): Promise<void> {
+    for (let indexer of this.indexers) {
+      const lastIndexedBlock = await indexer.getLastBlockIndexed();
+      await indexer.updateIndex(
+        events.filter(contractEventFilter(indexer, lastIndexedBlock))
+      );
+    }
+  }
+
+  async getLastBlockIndexed(): Promise<number> {
     const lastBlocksIndexed = await Promise.all(
       this.indexers.map((indexer) => indexer.getLastBlockIndexed())
     );
-    const blockNumber = Math.min(...lastBlocksIndexed) + 1;
-    const desiegeQuery: string =
-      StarkNetUrl + contracts + fromBlock(blockNumber);
+    return Math.min(...lastBlocksIndexed);
+  }
 
+  async pollEvents() {
+    if (this.isPolling) {
+      return;
+    }
+
+    this.isPolling = true;
+    const size = 100;
+    const minLastBlockIndexed = await this.getLastBlockIndexed();
+    const blockNumber = minLastBlockIndexed + 1;
+
+    let events: StarkNetEvent[] = [];
     try {
-      const response = await fetch(desiegeQuery);
-      const result: StarkNetResponse = await response.json();
-      if (!result.items) {
+      let response: StarkNetResponse = await StarknetApi()
+        .contract(this.getContracts())
+        .fromBlock(blockNumber)
+        .size(size)
+        .fetch();
+
+      if (!response.items) {
+        this.isPolling = false;
         return;
       }
-      for (let indexer of this.indexers) {
-        const lastIndexedBlock = await indexer.getLastBlockIndexed();
-        await indexer.updateIndex(
-          result.items.filter(contractEventFilter(indexer, lastIndexedBlock))
-        );
-      }
+      events = response.items;
     } catch (e) {
       console.error(e);
     }
+
+    // Sync remainder of last block
+    if (events.length === size) {
+      const lastBlockFound = events[events.length - 1].block_number;
+      let lastBlockEvents: StarkNetEvent[] = [];
+      let page = 1;
+      let searchMore = true;
+      do {
+        try {
+          let response: StarkNetResponse = await StarknetApi()
+            .contract(this.getContracts())
+            .fromBlock(lastBlockFound)
+            .toBlock(lastBlockFound)
+            .size(size)
+            .page(page)
+            .fetch();
+          page++;
+          if (response.items) {
+            lastBlockEvents = [...lastBlockEvents, ...response.items];
+            searchMore = response.total === size;
+          } else {
+            searchMore = false;
+          }
+        } catch (e) {
+          //TODO: Potential edge case if API goes down here
+          searchMore = false;
+        }
+      } while (searchMore);
+
+      events = [
+        ...events.filter((event) => event.block_number !== lastBlockFound),
+        ...lastBlockEvents
+      ];
+    }
+
+    this.updateIndex(events);
+    this.isPolling = false;
+  }
+
+  start() {
+    this.interval = setInterval(this.pollEvents.bind(this), 5000);
+  }
+
+  stop() {
+    clearInterval(this.interval);
   }
 }
 
@@ -74,9 +138,7 @@ export const StarkNet = () => {
       await mockDB;
 
       const indexer = new StarkNetIndexer(context);
-      setInterval(async () => {
-        await indexer.pollEvents();
-      }, 5000);
+      indexer.start();
     }
   };
 };
