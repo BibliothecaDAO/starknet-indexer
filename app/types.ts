@@ -9,6 +9,7 @@ export interface StarkNetEvent {
   block_number: number;
   chain_id?: string;
   contract?: string;
+  event_id?: number;
   keys?: Array<string>;
   name?: string;
   parameters?: Array<StarkNetEventParameter>;
@@ -22,7 +23,6 @@ export interface StarkNetEventParameter {
 }
 
 export interface Indexer {
-  getContracts(): string[];
-  updateIndex(events: StarkNetEvent[]): Promise<void>;
-  getLastBlockIndexed(): Promise<number>;
+  contracts(): string[];
+  index(items: StarkNetEvent[]): Promise<void>;
 }

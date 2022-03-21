@@ -166,3 +166,15 @@ model Desiege {
   defendedTokens Int?
   blockIndexed   Int // arbitray number
 }
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  eventId     Int      @unique
+  blockNumber Int
+  chainId     String
+  contract    String
+  name        String
+  parameters  Json[]
+  timestamp   DateTime
+  txHash      String
+}
