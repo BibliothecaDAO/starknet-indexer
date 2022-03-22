@@ -15,27 +15,37 @@ input BuildingsInput {
   realmId: Float!
 }
 
+"""
+The javascript `Date` as string. Type represents date and time as the ISO Date string.
+"""
+scalar DateTime
+
 """The Desiege Model"""
 type Desiege {
   attackedTokens: Float!
-  blockIndexed: Float!
   defendedTokens: Float!
+  eventIndexed: Float!
   gameId: Float!
   id: ID!
+  initialHealth: Float!
+  startedOn: DateTime!
   winner: Float!
 }
 
-input DesiegeInput {
-  attackedTokens: Float!
-  blockIndexed: Float!
-  defendedTokens: Float!
-  gameId: Float!
-  winner: Float!
+"""StarkNet Event Model"""
+type Event {
+  chainId: String!
+  contract: String!
+  eventId: Float!
+  id: ID!
+  name: String!
+  parameters: [Float!]!
+  timestamp: DateTime!
+  txHash: String!
 }
 
 type Mutation {
   createOrUpdateBuildings(data: BuildingsInput!): Buildings!
-  createOrUpdateDesiege(data: DesiegeInput!): Desiege!
   createOrUpdateRealm(data: RealmInput!): Realm!
   createOrUpdateResources(data: ResourceInput!): Resource!
   createOrUpdateWallet(data: WalletInput!): Wallet!
@@ -48,6 +58,8 @@ type Query {
   getBuildings(id: Float!): Buildings!
   getDesiege(id: Float!): Desiege!
   getDesiegeGames: [Desiege!]!
+  getEvent(id: Float!): Event!
+  getEvents: [Event!]!
   getRealm(id: Float!): Realm!
   getRealms: [Realm!]!
   getResource(resourceId: Float!): Resource!

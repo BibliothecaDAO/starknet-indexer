@@ -1,65 +1,73 @@
 // import { DesiegeResolver } from "../resolvers";
+import { Event } from "../entities/starknet/Event";
 import { Context } from "../context";
-import { Indexer, StarkNetEvent } from "./../types";
+import { Indexer } from "./../types";
 
-export default class DesiegeIndexer implements Indexer {
-  //   private startBlock = 6000; // Start Block
+export default class DesiegeIndexer implements Indexer<Event> {
+  private CONTRACTS = [
+    "0x40098a0012c879cf85e0909ca10108197d9bf3970e6c2188641697f49aca134",
+    "0x1fbec91116c1ced6bb392502adc191dd7978f2b066c674bf28f8710a9a52afd"
+  ];
   private context: Context;
-  //   private resolver: DesiegeResolver;
 
   constructor(context: Context) {
     this.context = context;
-    // this.resolver = new DesiegeResolver();
   }
 
   contracts(): string[] {
-    return [
-      "0x40098a0012c879cf85e0909ca10108197d9bf3970e6c2188641697f49aca134",
-      "0x1fbec91116c1ced6bb392502adc191dd7978f2b066c674bf28f8710a9a52afd"
-    ];
+    return this.CONTRACTS;
   }
 
-  async index(events: StarkNetEvent[]): Promise<void> {
-    console.log(events);
-    this.context;
-    // let lastIndexedBlock = await this.getLastBlockIndexed();
-    // for (const event of events) {
-    //   const blockIndex = event.block_number;
-    //   if (blockIndex <= lastIndexedBlock) {
-    //     continue;
-    //   }
-    //   const parameters = event.parameters ?? [];
+  async index(events: Event[]): Promise<void> {
+    let lastIndexedEventId = await this.lastIndexId();
+    for (const event of events) {
+      const eventId = event.eventId;
+      if (eventId <= lastIndexedEventId) {
+        continue;
+      }
+      const params = (event.parameters as any) ?? [];
+      const isGameAction = params.length === 5;
 
-    //   const param = (name: string) =>
-    //     Number(parameters.find((a) => a.name === name)?.value!) || 0;
+      const tokenOffset = isGameAction ? params[2] : 0;
+      const tokenAmount = isGameAction ? params[3] : 0;
+      // const actionType = isGameAction ? params[4] : 0;
+      const attackedTokens = tokenOffset === 1 ? tokenAmount : 0;
+      const defendedTokens = tokenOffset === 2 ? tokenAmount : 0;
+      const winner = 0;
+      await this.context.prisma.desiege.upsert({
+        where: {
+          gameId: params[0]
+        },
+        update: {
+          attackedTokens: { increment: attackedTokens },
+          defendedTokens: { increment: defendedTokens },
+          eventIndexed: event.eventId,
+          winner,
+          startedOn: !isGameAction ? event.timestamp : undefined,
+          initialHealth: !isGameAction ? params[1] : undefined
+        },
+        create: {
+          gameId: params[0],
+          attackedTokens,
+          defendedTokens,
+          eventIndexed: event.eventId,
+          winner,
+          startedOn: !isGameAction ? event.timestamp : new Date(0),
+          initialHealth: !isGameAction ? params[1] : undefined
+        }
+      });
 
-    //   const tokenOffset = param("token_offset");
-    //   const tokenAmount = param("amount");
-
-    //   await this.resolver.createOrUpdateDesiege(
-    //     {
-    //       gameId: param("game_idx"),
-    //       winner: 0,
-    //       attackedTokens: tokenOffset === 1 ? tokenAmount : 0,
-    //       defendedTokens: tokenOffset === 2 ? tokenAmount : 0,
-    //       blockIndexed: event.block_number
-    //     },
-    //     this.context
-    //   );
-    //   lastIndexedBlock = blockIndex;
-    // }
+      lastIndexedEventId = event.eventId;
+    }
     return;
   }
 
-  //   async getLastBlockIndexed(): Promise<number> {
-  //     const desiege = await this.context.prisma.desiege.findFirst({
-  //       orderBy: {
-  //         blockIndexed: "desc"
-  //       }
-  //     });
-  //     if (desiege) {
-  //       return desiege.blockIndexed;
-  //     }
-  //     return this.startBlock;
-  //   }
+  async lastIndexId(): Promise<number> {
+    const desiege = await this.context.prisma.desiege.findFirst({
+      orderBy: {
+        eventIndexed: "desc"
+      }
+    });
+    return desiege?.eventIndexed ?? 0;
+  }
 }

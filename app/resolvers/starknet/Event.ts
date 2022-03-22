@@ -2,7 +2,6 @@ import { Resolver, Arg, Query, Ctx } from "type-graphql";
 import { Context } from "../../context";
 
 import { Event } from "../../entities/starknet/Event";
-// import { EventInput } from "../types/event-input";
 
 @Resolver((_of) => Event)
 export class EventResolver {
@@ -21,18 +20,4 @@ export class EventResolver {
       }
     });
   }
-
-  // @Mutation(() => Event)
-  // async createOrUpdateEvent(
-  //   @Arg("data")
-  //   data: EventInput,
-  //   @Ctx() ctx: Context
-  // ) {
-  //   const { eventId, ...updates } = data;
-  //   return ctx.prisma.event.upsert({
-  //     where: { eventId },
-  //     update: { ...updates },
-  //     create: { eventId, ...updates }
-  //   });
-  // }
 }

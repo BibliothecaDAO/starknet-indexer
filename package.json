@@ -37,7 +37,6 @@
     "class-validator": "^0.13.1",
     "express": "^4.17.1",
     "graphql": "^15.7.1",
-    "graphql-type-json": "^0.3.2",
     "node-fetch": "2",
     "prisma-docs-generator": "^0.5.0",
     "reflect-metadata": "^0.1.13",

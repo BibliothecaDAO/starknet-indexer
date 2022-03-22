@@ -2,7 +2,6 @@ import { Resolver, Arg, Mutation, Query, Ctx } from "type-graphql";
 import { Context } from "../../context";
 
 import { Desiege } from "../../entities/desiege/Desiege";
-import { DesiegeInput } from "../types/desiege-input";
 
 @Resolver((_of) => Desiege)
 export class DesiegeResolver {
@@ -18,34 +17,6 @@ export class DesiegeResolver {
     return await ctx.prisma.desiege.findMany({
       orderBy: {
         gameId: "desc"
-      }
-    });
-  }
-
-  @Mutation(() => Desiege)
-  async createOrUpdateDesiege(
-    @Arg("data")
-    data: DesiegeInput,
-    @Ctx() ctx: Context
-  ) {
-    return ctx.prisma.desiege.upsert({
-      where: {
-        gameId: data.gameId
-      },
-      update: {
-        attackedTokens: {
-          increment: data.attackedTokens
-        },
-        defendedTokens: {
-          increment: data.defendedTokens
-        },
-        blockIndexed: data.blockIndexed
-      },
-      create: {
-        gameId: data.gameId,
-        attackedTokens: data.attackedTokens,
-        defendedTokens: data.defendedTokens,
-        blockIndexed: data.blockIndexed
       }
     });
   }

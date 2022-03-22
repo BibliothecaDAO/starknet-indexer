@@ -11,3 +11,6 @@ dist
 
 # prisma
 prisma/migrations
+
+# other
+.DS_Store

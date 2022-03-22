@@ -159,22 +159,24 @@ model Squad {
 
 // MILSTONE 2
 model Desiege {
-  id             Int  @id @default(autoincrement())
-  gameId         Int  @unique
+  id             Int       @id @default(autoincrement())
+  gameId         Int       @unique
   winner         Int?
   attackedTokens Int?
   defendedTokens Int?
-  blockIndexed   Int // arbitray number
+  eventIndexed   Int?
+  initialHealth  Int?      @default(0)
+  startedOn      DateTime?
 }
 
 model Event {
-  id          Int      @id @default(autoincrement())
-  eventId     Int      @unique
-  blockNumber Int
-  chainId     String
-  contract    String
-  name        String
-  parameters  Json[]
-  timestamp   DateTime
-  txHash      String
+  id         Int      @id @default(autoincrement())
+  eventId    Int      @unique
+  chainId    String
+  contract   String
+  name       String
+  parameters Int[]
+  timestamp  DateTime
+  txHash     String
+  status     Int      @default(0)
 }
