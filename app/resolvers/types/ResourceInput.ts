@@ -12,10 +12,4 @@ export class ResourceInput {
 
   @Field({ nullable: false })
   type: ResourceType;
-
-  @Field({ nullable: true })
-  qty?: number;
-
-  @Field({ nullable: true })
-  lvl?: number;
 }

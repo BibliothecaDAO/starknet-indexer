@@ -11,12 +11,6 @@ export class Resource {
   @Field({ nullable: false })
   type: ResourceType;
 
-  @Field({ nullable: false })
-  qty: number;
-
-  @Field({ nullable: false })
-  lvl: number;
-
   @Field({ nullable: true })
   realmId: number;
 

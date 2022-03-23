@@ -147,8 +147,6 @@ model BuildingCost {
 model Resource {
   id      Int          @id @default(autoincrement())
   type    ResourceType
-  qty     Int          @default(100) // CAN REMOVE as not tracked here
-  lvl     Int          @default(0)
   realmId Int?
   realm   Realm?       @relation(fields: [realmId], references: [realmId])
 

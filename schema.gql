@@ -131,8 +131,6 @@ input RealmTraitInput {
 """The Resource Model"""
 type Resource {
   id: ID!
-  lvl: Float!
-  qty: Float!
   realm: Realm!
   realmId: Float
   type: String!
@@ -140,8 +138,6 @@ type Resource {
 
 input ResourceInput {
   id: ID
-  lvl: Float
-  qty: Float
   realmId: Float!
   type: String!
 }
