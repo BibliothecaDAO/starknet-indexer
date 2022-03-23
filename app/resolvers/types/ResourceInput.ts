@@ -4,8 +4,8 @@ import { ResourceType } from "@prisma/client";
 
 @InputType()
 export class ResourceInput {
-  @Field(() => ID)
-  id: number;
+  @Field(() => ID, { nullable: true })
+  id?: number;
 
   @Field({ nullable: false })
   realmId: number;

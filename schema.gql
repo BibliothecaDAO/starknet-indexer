@@ -91,8 +91,12 @@ type Query {
 type Realm {
   buildings: [Building!]
   id: ID!
+  imageUrl: String
   name: String
+  orderType: String!
   owner: String
+  rarityRank: Float!
+  rarityScore: Float!
   realmId: Float!
   resources: [Resource!]
   traits: [RealmTrait!]
@@ -100,8 +104,12 @@ type Realm {
 }
 
 input RealmInput {
+  imageUrl: String
   name: String!
-  owner: String!
+  orderType: String
+  owner: String
+  rarityRank: Float
+  rarityScore: Float
   realmId: Float!
 }
 
@@ -131,7 +139,7 @@ type Resource {
 }
 
 input ResourceInput {
-  id: ID!
+  id: ID
   lvl: Float
   qty: Float
   realmId: Float!

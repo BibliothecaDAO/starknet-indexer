@@ -39,14 +39,16 @@ export class ResourceResolver {
   ) {
     return ctx.prisma.resource.upsert({
       where: {
-        id: data.id
+        type_realmId: {
+          realmId: data.realmId,
+          type: data.type
+        }
       },
       update: {
         type: data.type,
         realmId: data.realmId
       },
       create: {
-        id: data.id,
         type: data.type,
         realmId: data.realmId
       }

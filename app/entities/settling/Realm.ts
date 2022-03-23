@@ -5,6 +5,7 @@ import { Wallet } from "../wallet/Wallet";
 import { Building } from "./Building";
 import { Resource } from "./Resource";
 import { RealmTrait } from "./RealmTrait";
+import { OrderType } from "@prisma/client";
 
 @ObjectType({ description: "The Realm Model" })
 export class Realm {
@@ -18,10 +19,22 @@ export class Realm {
   name: string;
 
   @Field({ nullable: true })
-  owner: string;
+  owner?: string;
 
   @Field(() => Wallet, { nullable: true })
   wallet: Wallet;
+
+  @Field({ nullable: false })
+  rarityRank: number;
+
+  @Field({ nullable: false })
+  rarityScore: number;
+
+  @Field({ nullable: true })
+  imageUrl: string;
+
+  @Field({ nullable: false })
+  orderType: OrderType;
 
   // @Field(() => Squad, { nullable: true })
   // offenceSquad!: Squad;

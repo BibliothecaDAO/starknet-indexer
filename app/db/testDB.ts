@@ -1,25 +1,25 @@
 import {
   BuildingInput,
-  ResourceInput,
-  RealmInput,
-  WalletInput,
+  // ResourceInput,
+  // RealmInput,
+  // WalletInput,
   BuildingCostInput,
   RealmTraitInput
 } from "../resolvers/types";
 
-const walletAddress = "0xE417496166b097A05e1B0A4117C8Ad1d204aDb91";
+export const walletAddress = "0xE417496166b097A05e1B0A4117C8Ad1d204aDb91";
 const realmId = 3;
 
-export const realm: RealmInput = {
-  name: "Stolsli",
-  owner: walletAddress,
-  realmId: realmId
-};
+// export const realm: RealmInput = {
+//   name: "Stolsli",
+//   owner: walletAddress,
+//   realmId: realmId
+// };
 
-export const wallet: WalletInput = {
-  address: walletAddress,
-  realms: [realm]
-};
+// export const wallet: WalletInput = {
+//   address: walletAddress,
+//   realms: [realm]
+// };
 
 export const building: BuildingInput = {
   id: 1,
@@ -27,11 +27,11 @@ export const building: BuildingInput = {
   type: "Carpenter"
 };
 
-export const resource: ResourceInput = {
-  id: 1,
-  type: "Wood",
-  realmId: realmId
-};
+// export const resource: ResourceInput = {
+//   id: 1,
+//   type: "Wood",
+//   realmId: realmId
+// };
 
 export const buildingCosts: BuildingCostInput[] = [
   { buildingType: "Fairgrounds", resourceType: "Wood", qty: 100 },

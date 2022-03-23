@@ -12,7 +12,8 @@ export class RealmResolver {
       include: {
         buildings: true,
         traits: true,
-        resources: true
+        resources: true,
+        wallet: true
       }
     });
   }
@@ -23,7 +24,8 @@ export class RealmResolver {
       include: {
         buildings: true,
         traits: true,
-        resources: true
+        resources: true,
+        wallet: true
       }
     });
   }
@@ -34,23 +36,24 @@ export class RealmResolver {
     data: RealmInput,
     @Ctx() ctx: Context
   ) {
+    const updates = {
+      name: data.name,
+      realmId: data.realmId,
+      owner: data.owner,
+      rarityRank: data.rarityRank,
+      rarityScore: data.rarityScore,
+      orderType: data.orderType,
+      imageUrl: data.imageUrl
+    };
     return ctx.prisma.realm.upsert({
       where: {
         realmId: data.realmId
       },
       update: {
-        name: data.name,
-        realmId: data.realmId,
-        wallet: {
-          connect: { address: data.owner }
-        }
+        ...updates
       },
       create: {
-        name: data.name,
-        realmId: data.realmId,
-        wallet: {
-          connect: { address: data.owner }
-        }
+        ...updates
       }
     });
   }

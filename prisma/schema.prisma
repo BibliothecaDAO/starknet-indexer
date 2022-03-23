@@ -69,6 +69,25 @@ enum BuildingType {
   Hamlet
 }
 
+enum OrderType {
+  Power
+  Giants
+  Titans
+  Skill
+  Perfection
+  Brilliance
+  Enlightenment
+  Protection
+  Anger
+  Rage
+  Fury
+  Vitriol
+  the_Fox
+  Detection
+  Reflection
+  the_Twins
+}
+
 // MILSTONE 1
 model Wallet {
   id      Int             @id @default(autoincrement())
@@ -80,15 +99,19 @@ model Wallet {
 
 // MILSTONE 1
 model Realm {
-  id        Int          @id @default(autoincrement())
-  realmId   Int          @unique
-  name      String?
-  wallet    Wallet?      @relation(fields: [owner], references: [address])
-  owner     String?
+  id          Int        @id @default(autoincrement())
+  realmId     Int        @unique
+  name        String?
+  wallet      Wallet?    @relation(fields: [owner], references: [address])
+  owner       String?
+  rarityRank  Int        @default(0)
+  rarityScore Float      @default(0)
+  imageUrl    String     @default("")
+  orderType   OrderType?
+
   buildings Building[]
   resources Resource[]
   traits    RealmTrait[]
-
   // offenceSquad Squad?     @relation("offenceSquad")
   // defenceSquad Squad?     @relation("defenceSquad")
 
