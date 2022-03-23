@@ -1,18 +1,18 @@
 import { OrderType } from "@prisma/client";
-import { InputType, Field } from "type-graphql";
+import { InputType, Field, Int } from "type-graphql";
 
 @InputType()
 export class RealmInput {
   @Field()
   name: string;
 
-  @Field()
+  @Field(() => Int, { nullable: false })
   realmId: number;
 
   @Field({ nullable: true })
   owner?: string;
 
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   rarityRank?: number;
 
   @Field({ nullable: true })

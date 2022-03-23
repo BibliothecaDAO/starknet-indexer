@@ -6,9 +6,9 @@ import { RealmInput } from "../types";
 @Resolver((_of) => Realm)
 export class RealmResolver {
   @Query((_returns) => Realm, { nullable: false })
-  async getRealm(@Arg("id") id: number, @Ctx() ctx: Context) {
+  async getRealm(@Arg("realmId") realmId: number, @Ctx() ctx: Context) {
     return await ctx.prisma.realm.findUnique({
-      where: { id },
+      where: { realmId: realmId },
       include: {
         buildings: true,
         traits: true,
@@ -21,6 +21,24 @@ export class RealmResolver {
   @Query(() => [Realm])
   async getRealms(@Ctx() ctx: Context) {
     return await ctx.prisma.realm.findMany({
+      include: {
+        buildings: true,
+        traits: true,
+        resources: true,
+        wallet: true
+      }
+    });
+  }
+
+  @Query(() => [Realm])
+  async getRealmsByAddress(
+    @Ctx() ctx: Context,
+    @Arg("address") address: string
+  ) {
+    return await ctx.prisma.realm.findMany({
+      where: {
+        owner: address
+      },
       include: {
         buildings: true,
         traits: true,

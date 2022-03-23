@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field, Int } from "type-graphql";
 import { __Type } from "graphql";
 import { Wallet } from "../wallet/Wallet";
 // import { Squad } from "./Squad";
@@ -9,10 +9,7 @@ import { OrderType } from "@prisma/client";
 
 @ObjectType({ description: "The Realm Model" })
 export class Realm {
-  @Field(() => ID)
-  id: number;
-
-  @Field({ nullable: false })
+  @Field(() => Int, { nullable: false })
   realmId: number;
 
   @Field({ nullable: true })
@@ -24,7 +21,7 @@ export class Realm {
   @Field(() => Wallet, { nullable: true })
   wallet: Wallet;
 
-  @Field({ nullable: false })
+  @Field(() => Int, { nullable: false })
   rarityRank: number;
 
   @Field({ nullable: false })

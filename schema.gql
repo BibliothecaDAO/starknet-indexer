@@ -77,9 +77,10 @@ type Query {
   getDesiegeGames: [Desiege!]!
   getEvent(id: Float!): Event!
   getEvents: [Event!]!
-  getRealm(id: Float!): Realm!
+  getRealm(realmId: Float!): Realm!
   getRealmTraits: [RealmTrait!]!
   getRealms: [Realm!]!
+  getRealmsByAddress(address: String!): [Realm!]!
   getResource(id: Float!): Resource!
   getResources: [Resource!]!
   getResourcesByAddress(address: String!): [Resource!]!
@@ -90,14 +91,13 @@ type Query {
 """The Realm Model"""
 type Realm {
   buildings: [Building!]
-  id: ID!
   imageUrl: String
   name: String
   orderType: String!
   owner: String
-  rarityRank: Float!
+  rarityRank: Int!
   rarityScore: Float!
-  realmId: Float!
+  realmId: Int!
   resources: [Resource!]
   traits: [RealmTrait!]
   wallet: Wallet
@@ -108,9 +108,9 @@ input RealmInput {
   name: String!
   orderType: String
   owner: String
-  rarityRank: Float
+  rarityRank: Int
   rarityScore: Float
-  realmId: Float!
+  realmId: Int!
 }
 
 """Realm Trait Model"""
