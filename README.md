@@ -11,6 +11,7 @@ This app aims to index all events relevant to the Loot ecosystem running on Star
 http://starknet.events/redoc
 
 <details><summary> The Stack</summary>
+
 - Apollo server
 - typescript
 - prisma
@@ -19,6 +20,7 @@ http://starknet.events/redoc
 </details>
 
 <details><summary>How it works</summary>
+
 1. Poll StarkNet for specific events.
 2. Pipe events into postgres
 3. Exposes a graphql endpoint for the client to consume
