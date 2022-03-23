@@ -8,9 +8,11 @@ import {
   DesiegeResolver,
   WalletResolver,
   RealmResolver,
-  BuildingsResolver,
+  BuildingResolver,
   ResourceResolver,
-  EventResolver
+  EventResolver,
+  BuildingCostResolver,
+  RealmTraitResolver
 } from "./resolvers";
 import { StarkNet } from "./indexer/Starknet";
 
@@ -20,9 +22,11 @@ const main = async () => {
       RealmResolver,
       DesiegeResolver,
       WalletResolver,
-      BuildingsResolver,
+      BuildingResolver,
       ResourceResolver,
-      EventResolver
+      EventResolver,
+      BuildingCostResolver,
+      RealmTraitResolver
     ],
     emitSchemaFile: true,
     validate: false

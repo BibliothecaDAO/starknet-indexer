@@ -1,13 +1,21 @@
 import { WalletResolver } from "./wallet/Wallet";
-import { RealmResolver, BuildingsResolver, ResourceResolver } from "./settling";
+import {
+  RealmResolver,
+  BuildingResolver,
+  ResourceResolver,
+  BuildingCostResolver,
+  RealmTraitResolver
+} from "./settling";
 import { DesiegeResolver } from "./desiege/Desiege";
 import { EventResolver } from "./starknet/Event";
 
 export {
   WalletResolver,
   RealmResolver,
-  BuildingsResolver,
+  BuildingResolver,
   DesiegeResolver,
   ResourceResolver,
-  EventResolver
+  EventResolver,
+  BuildingCostResolver,
+  RealmTraitResolver
 };

@@ -1,50 +1,55 @@
-import {
-    Resolver,
-    Arg,
-    Mutation,
-    Query,
-    Ctx,
-} from 'type-graphql';
-import { Context } from '../../context'
-import { Resource } from '../../entities';
-import { ResourceInput } from '../types';
+import { Resolver, Arg, Mutation, Query, Ctx } from "type-graphql";
+import { Context } from "../../context";
+import { Resource } from "../../entities";
+import { ResourceInput } from "../types";
 
 @Resolver((_of) => Resource)
 export class ResourceResolver {
-    @Query((_returns) => Resource, { nullable: false })
-    async getResource(@Arg('resourceId') resourceId: number, @Ctx() ctx: Context) {
-        return await ctx.prisma.resource.findUnique({
-            where: { resourceId },
-        })
-    }
+  @Query((_returns) => Resource, { nullable: false })
+  async getResource(@Arg("id") id: number, @Ctx() ctx: Context) {
+    return await ctx.prisma.resource.findUnique({
+      where: { id }
+    });
+  }
 
-    @Query(() => [Resource])
-    async getAllResources(@Ctx() ctx: Context) {
-        return await ctx.prisma.resource.findMany();
-    }
-    // TODO: THIS IS NOT WORKING AS EXPECTED
-    @Mutation(() => Resource)
-    async createOrUpdateResources(
-        @Arg('data')
-        data: ResourceInput,
-        @Ctx() ctx: Context
-    ) {
-        return ctx.prisma.resource.upsert({
-            where: {
-                resourceId: data.resourceId
-            },
-            update: {
-                ResourcesOnRealms: {
-                    create: { realmId: data.realmId }
-                }
-            },
-            create: {
-                resourceName: data.resourceName,
-                resourceId: data.resourceId,
-                ResourcesOnRealms: {
-                    create: { realmId: data.realmId }
-                }
-            },
-        })
-    }
+  @Query(() => [Resource])
+  async getResources(@Ctx() ctx: Context) {
+    return await ctx.prisma.resource.findMany({});
+  }
+
+  @Query(() => [Resource])
+  async getResourcesByAddress(
+    @Ctx() ctx: Context,
+    @Arg("address") address: string
+  ) {
+    return await ctx.prisma.resource.findMany({
+      where: {
+        realm: {
+          owner: address
+        }
+      }
+    });
+  }
+
+  @Mutation(() => Resource)
+  async createOrUpdateResources(
+    @Arg("data")
+    data: ResourceInput,
+    @Ctx() ctx: Context
+  ) {
+    return ctx.prisma.resource.upsert({
+      where: {
+        id: data.id
+      },
+      update: {
+        type: data.type,
+        realmId: data.realmId
+      },
+      create: {
+        id: data.id,
+        type: data.type,
+        realmId: data.realmId
+      }
+    });
+  }
 }

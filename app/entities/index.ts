@@ -1,11 +1,11 @@
-import { Desiege } from "./desiege/Desiege"
-import { Realm, Buildings, Resource } from "./settling"
-import { Wallet } from "./wallet/Wallet"
+import { Desiege } from "./desiege/Desiege";
+import {
+  Realm,
+  Building,
+  Resource,
+  BuildingCost,
+  RealmTrait
+} from "./settling";
+import { Wallet } from "./wallet/Wallet";
 
-export {
-    Desiege,
-    Realm,
-    Wallet,
-    Buildings,
-    Resource
-}
+export { Desiege, Realm, Wallet, Building, Resource, BuildingCost, RealmTrait };

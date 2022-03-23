@@ -1,7 +1,17 @@
-import { DesiegeInput } from "./desiege-input";
-import { RealmInput } from "./realm-input";
-import { WalletInput } from "./wallet-input";
-import { BuildingsInput } from "./buildings-input";
-import { ResourceInput } from "./resource-input";
+import { DesiegeInput } from "./DesiegeInput";
+import { RealmInput } from "./RealmInput";
+import { WalletInput } from "./WalletInput";
+import { BuildingInput } from "./BuildingInput";
+import { ResourceInput } from "./ResourceInput";
+import { BuildingCostInput } from "./BuildingCostInput";
+import { RealmTraitInput } from "./RealmTraitInput";
 
-export { DesiegeInput, RealmInput, WalletInput, BuildingsInput, ResourceInput };
+export {
+  DesiegeInput,
+  RealmInput,
+  WalletInput,
+  BuildingInput,
+  ResourceInput,
+  BuildingCostInput,
+  RealmTraitInput
+};

@@ -1,16 +1,15 @@
-import { ObjectType, Field, ID } from 'type-graphql';
-import { __Type } from 'graphql';
-import { Realm } from '../settling/Realm';
+import { ObjectType, Field, ID } from "type-graphql";
+import { __Type } from "graphql";
+import { Realm } from "..";
 
-@ObjectType({ description: 'The Wallet Model' })
+@ObjectType({ description: "The Wallet Model" })
 export class Wallet {
-    @Field(() => ID)
-    id: number
+  @Field(() => ID)
+  id: number;
 
-    @Field()
-    address: string;
+  @Field()
+  address: string;
 
-    @Field(() => [Realm], { nullable: false })
-    realms!: [Realm]
+  @Field(() => [Realm], { nullable: false })
+  realms: [Realm];
 }
-

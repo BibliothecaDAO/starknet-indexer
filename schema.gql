@@ -4,15 +4,30 @@
 # -----------------------------------------------
 
 """The Buildings Model"""
-type Buildings {
-  barracks: Float
+type Building {
   id: ID!
+  realm: Realm
   realmId: Float!
+  type: String
 }
 
-input BuildingsInput {
-  barracks: Float!
+"""Building Cost Model"""
+type BuildingCost {
+  buildingType: String!
+  qty: Float!
+  resourceType: String!
+}
+
+input BuildingCostInput {
+  buildingType: String!
+  qty: Float!
+  resourceType: String!
+}
+
+input BuildingInput {
+  id: ID
   realmId: Float!
+  type: String!
 }
 
 """
@@ -45,39 +60,43 @@ type Event {
 }
 
 type Mutation {
-  createOrUpdateBuildings(data: BuildingsInput!): Buildings!
+  createOrUpdateBuildingCost(data: BuildingCostInput!): BuildingCost!
+  createOrUpdateBuildings(data: BuildingInput!): Building!
   createOrUpdateRealm(data: RealmInput!): Realm!
+  createOrUpdateRealmTrait(data: RealmTraitInput!): RealmTrait!
   createOrUpdateResources(data: ResourceInput!): Resource!
   createOrUpdateWallet(data: WalletInput!): Wallet!
   reindexDesiege: Boolean!
 }
 
 type Query {
-  getAllBuildings: [Buildings!]!
-  getAllResources: [Resource!]!
-  getBuildings(id: Float!): Buildings!
+  getAllBuildings: [Building!]!
+  getBuildingCosts: [BuildingCost!]!
+  getBuildings(id: Float!): Building!
   getDesiege(id: Float!): Desiege!
   getDesiegeGames: [Desiege!]!
   getEvent(id: Float!): Event!
   getEvents: [Event!]!
   getRealm(id: Float!): Realm!
+  getRealmTraits: [RealmTrait!]!
   getRealms: [Realm!]!
-  getResource(resourceId: Float!): Resource!
+  getResource(id: Float!): Resource!
+  getResources: [Resource!]!
+  getResourcesByAddress(address: String!): [Resource!]!
   getWallet(address: String!): Wallet!
   getWallets: [Wallet!]!
 }
 
 """The Realm Model"""
 type Realm {
-  buildings: Buildings
-  defenceSquad: Squad
+  buildings: [Building!]
   id: ID!
   name: String
-  offenceSquad: Squad
   owner: String
-  realmId: Float
+  realmId: Float!
   resources: [Resource!]
-  wallet: Wallet!
+  traits: [RealmTrait!]
+  wallet: Wallet
 }
 
 input RealmInput {
@@ -86,24 +105,37 @@ input RealmInput {
   realmId: Float!
 }
 
+"""Realm Trait Model"""
+type RealmTrait {
+  id: ID!
+  qty: Float!
+  realm: Realm
+  realmId: Float!
+  type: String!
+}
+
+input RealmTraitInput {
+  qty: Float!
+  realmId: Float!
+  type: String!
+}
+
 """The Resource Model"""
 type Resource {
   id: ID!
-  realmId: Float!
-  resourceId: Float
-  resourceName: String
+  lvl: Float!
+  qty: Float!
+  realm: Realm!
+  realmId: Float
+  type: String!
 }
 
 input ResourceInput {
-  realmId: Float!
-  resourceId: Float
-  resourceName: String
-}
-
-"""The Squad Model"""
-type Squad {
   id: ID!
+  lvl: Float
+  qty: Float
   realmId: Float!
+  type: String!
 }
 
 """The Wallet Model"""

@@ -14,84 +14,139 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ResourceType {
+  Wood
+  Stone
+  Coal
+  Copper
+  Obsidian
+  Silver
+  Ironwood
+  Cold_Iron
+  Gold
+  Hartwood
+  Diamonds
+  Sapphire
+  Deep_Crystal
+  Ruby
+  Ignium
+  Ethereal_Silica
+  True_Ice
+  Twilight_Quartz
+  Alchemical_Silver
+  Adamantine
+  Mithral
+  Dragonhide
+}
+
+enum RealmTraitType {
+  Region
+  City
+  Harbor
+  River
+}
+
+enum BuildingType {
+  Fairgrounds
+  Royal_Reserve
+  Grand_Market
+  Castle
+  Guild
+  Officer_Academy
+  Granary
+  Housing
+  Amphitheater
+  Carpenter
+  School
+  Symposium
+  Logistics_Office
+  Explorers_Guild
+  Parade_Grounds
+  Resource_Facility
+  Dock
+  Fishmonger
+  Farms
+  Hamlet
+}
+
 // MILSTONE 1
 model Wallet {
-  id      Int      @id @default(autoincrement())
-  address String   @unique
-  realms  Realm[]  @relation()
-  sRealms SRealm[] @relation()
+  id      Int             @id @default(autoincrement())
+  address String          @unique
+  realms  Realm[]         @relation()
+  sRealms SRealm[]        @relation()
+  tokens  ResourceToken[] @relation()
 }
 
 // MILSTONE 1
 model Realm {
-  id                Int                 @id @default(autoincrement())
-  realmId           Int                 @unique
-  name              String?
-  wallet            Wallet?             @relation(fields: [owner], references: [address])
-  owner             String?
-  offenceSquad      Squad?              @relation("offenceSquad")
-  defenceSquad      Squad?              @relation("defenceSquad")
-  buildings         Buildings?
-  resourceIds       Int[]
-  ResourcesOnRealms ResourcesOnRealms[]
+  id        Int          @id @default(autoincrement())
+  realmId   Int          @unique
+  name      String?
+  wallet    Wallet?      @relation(fields: [owner], references: [address])
+  owner     String?
+  buildings Building[]
+  resources Resource[]
+  traits    RealmTrait[]
+
+  // offenceSquad Squad?     @relation("offenceSquad")
+  // defenceSquad Squad?     @relation("defenceSquad")
+
+  // Squad     Squad[]    @relation("offenceSquad")
+  // Squad     Squad[]    @relation("defenceSquad")
 }
 
-// TODO
 // MILSTONE 1
-// Need to Map all the buildings into their own model so their data can be stored for each Realm. The constraint for these is the Realms Traits. Eg: Realm has 6 Regions -> they can only build 6 castles.
-// barracks         Int?
-// Fairgrounds      Int?
-// RoyalReserve     Int?
-// GrandMarket      Int?
-// Castle           Int?
-// Guild            Int?
-// OfficerAcademy   Int?
-// Granary          Int?
-// Housing          Int?
-// Amphitheater     Int?
-// Carpenter        Int?
-// School           Int?
-// Symposium        Int?
-// LogisticsOffice  Int?
-// ExplorersGuild   Int?
-// ParadeGrounds    Int?
-// ResourceFacility Int?
-// Dock             Int?
-// Fishmonger       Int?
-// Farms            Int?
-// Hamlet           Int?
-
-// Overview model with nested buildings
-model Buildings {
-  id      Int    @id @default(autoincrement())
-  realmId Int?   @unique
-  realm   Realm? @relation(fields: [realmId], references: [realmId])
+model Building {
+  id      Int          @id @default(autoincrement())
+  type    BuildingType
+  realmId Int?         @unique
+  realm   Realm?       @relation(fields: [realmId], references: [realmId])
 }
 
-model Building {
-  id            Int   @id @default(autoincrement())
-  qty           Int?
-  resourceIds   Int[]
-  resourceCosts Int[]
+model BuildingRealmTraitConstraint {
+  type      BuildingType
+  traitType RealmTraitType
+  max       Int            @default(5)
+
+  @@unique([type])
+}
+
+model BuildingCost {
+  buildingType BuildingType @id
+  resourceType ResourceType
+  qty          Int
+
+  @@unique([buildingType, resourceType])
 }
 
 // MILSTONE 1
 model Resource {
-  id                Int                 @id @default(autoincrement())
-  resourceId        Int                 @unique
-  resourceName      String
-  ResourcesOnRealms ResourcesOnRealms[]
+  id      Int          @id @default(autoincrement())
+  type    ResourceType
+  qty     Int          @default(100)
+  lvl     Int          @default(0)
+  realmId Int?
+  realm   Realm?       @relation(fields: [realmId], references: [realmId])
+
+  @@unique([type, realmId])
 }
 
-// MILSTONE 1
-// TODO: WIP, Not working as expected
-model ResourcesOnRealms {
-  realms     Realm    @relation(fields: [realmId], references: [realmId])
-  realmId    Int
-  resources  Resource @relation(fields: [resourceId], references: [resourceId])
-  resourceId Int
+model ResourceToken {
+  id      Int          @id @default(autoincrement())
+  type    ResourceType
+  qty     Int
+  address String
+  wallet  Wallet       @relation(fields: [address], references: [address])
+}
 
-  @@id([realmId, resourceId])
+model RealmTrait {
+  type    RealmTraitType
+  qty     Int
+  realmId Int
+  realm   Realm?         @relation(fields: [realmId], references: [realmId])
+
+  @@unique([type, realmId])
 }
 
 // MILSTONE 1
@@ -124,12 +179,12 @@ model SRealm {
 // Arcanist
 // Grand Marshal
 model Squad {
-  id             Int    @id @default(autoincrement())
-  realmId        Int    @unique
-  realmOffence   Realm? @relation(name: "offenceSquad", fields: [realmOffenceId], references: [realmId])
-  realmDefence   Realm? @relation(name: "defenceSquad", fields: [realmDefenceId], references: [realmId])
-  realmOffenceId Int?   @unique
-  realmDefenceId Int?   @unique
+  id             Int  @id @default(autoincrement())
+  realmId        Int  @unique
+  // realmOffence   Realm? @relation(name: "offenceSquad", fields: [realmOffenceId], references: [realmId])
+  // realmDefence   Realm? @relation(name: "defenceSquad", fields: [realmDefenceId], references: [realmId])
+  realmOffenceId Int? @unique
+  realmDefenceId Int? @unique
 }
 
 ///////////// MILSTONE 2 ///////////////

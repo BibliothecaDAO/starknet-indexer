@@ -1,8 +1,12 @@
-import { BuildingsResolver } from "./Buildings"
-import { RealmResolver } from "./Realm"
-import { ResourceResolver } from "./Resource"
+import { BuildingResolver } from "./Building";
+import { RealmResolver } from "./Realm";
+import { ResourceResolver } from "./Resource";
+import { BuildingCostResolver } from "./BuildingCost";
+import { RealmTraitResolver } from "./RealmTrait";
 export {
-    BuildingsResolver,
-    ResourceResolver,
-    RealmResolver
-}
+  BuildingResolver,
+  ResourceResolver,
+  RealmResolver,
+  BuildingCostResolver,
+  RealmTraitResolver
+};

@@ -1,7 +1,8 @@
 import { Resolver, Arg, Mutation, Query, Ctx } from "type-graphql";
 import { Context } from "../../context";
 
-import { Desiege } from "../../entities/desiege/Desiege";
+import { Desiege } from "../../entities";
+// import { DesiegeQueryOpts } from "../types/DesiegeInput";
 
 @Resolver((_of) => Desiege)
 export class DesiegeResolver {
@@ -13,7 +14,10 @@ export class DesiegeResolver {
   }
 
   @Query(() => [Desiege])
-  async getDesiegeGames(@Ctx() ctx: Context) {
+  async getDesiegeGames(
+    @Ctx() ctx: Context
+    // @Arg("opts", { nullable: true }) opts: DesiegeQueryOpts
+  ) {
     return await ctx.prisma.desiege.findMany({
       orderBy: {
         gameId: "desc"

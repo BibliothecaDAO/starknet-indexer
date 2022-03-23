@@ -1,62 +1,58 @@
-import 'reflect-metadata'
+import "reflect-metadata";
 import { PrismaClient } from "@prisma/client";
 import { context } from "../context";
-import { WalletResolver, RealmResolver, BuildingsResolver, ResourceResolver } from "../resolvers";
-import { wallet, realm, buildings, resource } from "../db/testDB";
+import {
+  WalletResolver,
+  RealmResolver,
+  BuildingResolver,
+  RealmTraitResolver,
+  BuildingCostResolver,
+  ResourceResolver
+} from "../resolvers";
+import {
+  wallet,
+  realm,
+  building,
+  resource,
+  buildingCosts,
+  realmTraits
+} from "../db/testDB";
 
 const Wallet = new WalletResolver();
 const Realm = new RealmResolver();
-const Buildings = new BuildingsResolver();
+const Building = new BuildingResolver();
 const Resource = new ResourceResolver();
+const RealmTrait = new RealmTraitResolver();
+const BuildingCost = new BuildingCostResolver();
 
 const prisma = new PrismaClient();
 
 async function main() {
-    try {
+  try {
+    await Wallet.createOrUpdateWallet(wallet, context);
 
+    await Realm.createOrUpdateRealm(realm, context);
 
-        await Wallet.createOrUpdateWallet(
-            {
-                address: wallet.address,
-            },
-            context
-        );
+    await Building.createOrUpdateBuildings(building, context);
 
-        await Realm.createOrUpdateRealm(
-            {
-                name: realm.name,
-                realmId: realm.realmId,
-                owner: realm.owner,
-            },
-            context
-        );
+    await Resource.createOrUpdateResources(resource, context);
 
-        await Buildings.createOrUpdateBuildings(
-            {
-                barracks: buildings.barracks,
-                realmId: buildings.realmId,
-            },
-            context
-        );
-
-        await Resource.createOrUpdateResources(
-            {
-                resourceId: resource.resourceId,
-                realmId: resource.realmId,
-                resourceName: resource.resourceName
-            },
-            context
-        );
-
-    } catch (e) {
-        console.log(e);
+    for (let cost of buildingCosts) {
+      await BuildingCost.createOrUpdateBuildingCost(cost, context);
     }
+    for (let trait of realmTraits) {
+      await RealmTrait.createOrUpdateRealmTrait(trait, context);
+    }
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 main()
-    .catch((e) => {
-        throw e;
-    })
-    .finally(async () => {
-        await prisma.$disconnect();
-    });
+  .catch((e) => {
+    throw e;
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+    console.log("done");
+  });

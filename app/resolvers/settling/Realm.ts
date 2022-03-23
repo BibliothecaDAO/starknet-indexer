@@ -1,21 +1,20 @@
-import {
-  Resolver,
-  Arg,
-  Mutation,
-  Query,
-  Ctx,
-} from 'type-graphql';
-import { Context } from '../../context'
-import { Realm } from '../../entities';
-import { RealmInput } from '../types';
+import { Resolver, Arg, Mutation, Query, Ctx } from "type-graphql";
+import { Context } from "../../context";
+import { Realm } from "../../entities";
+import { RealmInput } from "../types";
 
 @Resolver((_of) => Realm)
 export class RealmResolver {
   @Query((_returns) => Realm, { nullable: false })
-  async getRealm(@Arg('id') id: number, @Ctx() ctx: Context) {
+  async getRealm(@Arg("id") id: number, @Ctx() ctx: Context) {
     return await ctx.prisma.realm.findUnique({
       where: { id },
-    })
+      include: {
+        buildings: true,
+        traits: true,
+        resources: true
+      }
+    });
   }
 
   @Query(() => [Realm])
@@ -23,14 +22,15 @@ export class RealmResolver {
     return await ctx.prisma.realm.findMany({
       include: {
         buildings: true,
-        ResourcesOnRealms: true
-      },
+        traits: true,
+        resources: true
+      }
     });
   }
 
   @Mutation(() => Realm)
   async createOrUpdateRealm(
-    @Arg('data')
+    @Arg("data")
     data: RealmInput,
     @Ctx() ctx: Context
   ) {
@@ -51,7 +51,7 @@ export class RealmResolver {
         wallet: {
           connect: { address: data.owner }
         }
-      },
-    })
+      }
+    });
   }
 }
