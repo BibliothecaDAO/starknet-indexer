@@ -1,5 +1,5 @@
 import { InputType, Field } from "type-graphql";
-import { Event } from "../../entities/starknet/Event";
+import { Event } from "../../../entities/starknet/Event";
 
 @InputType()
 export class EventInput implements Partial<Event> {

@@ -27,7 +27,37 @@ input BuildingCostInput {
 input BuildingInput {
   id: ID
   realmId: Float!
-  type: String!
+  type: BuildingType!
+}
+
+enum BuildingType {
+  Amphitheater
+  Carpenter
+  Castle
+  Dock
+  Explorers_Guild
+  Fairgrounds
+  Farms
+  Fishmonger
+  Granary
+  Grand_Market
+  Guild
+  Hamlet
+  Housing
+  Logistics_Office
+  Officer_Academy
+  Parade_Grounds
+  Resource_Facility
+  Royal_Reserve
+  School
+  Symposium
+}
+
+input BuildingTypeInput {
+  equals: BuildingType
+  in: [BuildingType!]
+  not: [BuildingType!]
+  notIn: [BuildingType!]
 }
 
 """
@@ -59,6 +89,16 @@ type Event {
   txHash: String!
 }
 
+input IntFilterInput {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  notIn: [Int!]
+}
+
 type Mutation {
   createOrUpdateBuildingCost(data: BuildingCostInput!): BuildingCost!
   createOrUpdateBuildings(data: BuildingInput!): Building!
@@ -67,6 +107,38 @@ type Mutation {
   createOrUpdateResources(data: ResourceInput!): Resource!
   createOrUpdateWallet(data: WalletInput!): Wallet!
   reindexDesiege: Boolean!
+}
+
+"""Order By Direction"""
+enum OrderByDirectionInput {
+  asc
+  desc
+}
+
+enum OrderType {
+  Anger
+  Brilliance
+  Detection
+  Enlightenment
+  Fury
+  Giants
+  Perfection
+  Power
+  Protection
+  Rage
+  Reflection
+  Skill
+  Titans
+  Vitriol
+  the_Fox
+  the_Twins
+}
+
+input OrderTypeInput {
+  equals: OrderType
+  in: [OrderType!]
+  not: [OrderType!]
+  notIn: [OrderType!]
 }
 
 type Query {
@@ -81,7 +153,7 @@ type Query {
   getEvents: [Event!]!
   getRealm(realmId: Float!): Realm!
   getRealmTraits: [RealmTrait!]!
-  getRealms: [Realm!]!
+  getRealms(filter: RealmFilterInput, orderBy: RealmOrderByInput): [Realm!]!
   getRealmsByAddress(address: String!): [Realm!]!
   getResource(id: Float!): Resource!
   getResources: [Resource!]!
@@ -106,6 +178,20 @@ type Realm {
   wallet: Wallet
 }
 
+input RealmFilterInput {
+  buildingType: BuildingTypeInput
+  name: StringFilterInput
+  orderType: OrderTypeInput
+  owner: StringFilterInput
+  rarityRank: IntFilterInput
+  rarityScore: IntFilterInput
+  realmId: IntFilterInput
+  resourceType: ResourceTypeInput
+  squadAction: SquadActionInput
+  squadType: SquadTypeInput
+  traitType: RealmTraitTypeInput
+}
+
 input RealmInput {
   imageUrl: String
   name: String!
@@ -114,6 +200,12 @@ input RealmInput {
   rarityRank: Int
   rarityScore: Float
   realmId: Int!
+}
+
+input RealmOrderByInput {
+  rarityRank: OrderByDirectionInput
+  rarityScore: OrderByDirectionInput
+  realmId: OrderByDirectionInput
 }
 
 """Realm Trait Model"""
@@ -128,7 +220,21 @@ type RealmTrait {
 input RealmTraitInput {
   qty: Float!
   realmId: Float!
-  type: String!
+  type: RealmTraitType!
+}
+
+enum RealmTraitType {
+  City
+  Harbor
+  Region
+  River
+}
+
+input RealmTraitTypeInput {
+  equals: RealmTraitType
+  in: [RealmTraitType!]
+  not: [RealmTraitType!]
+  notIn: [RealmTraitType!]
 }
 
 """The Resource Model"""
@@ -142,7 +248,40 @@ type Resource {
 input ResourceInput {
   id: ID
   realmId: Float!
-  type: String!
+  type: ResourceType!
+}
+
+"""ResourceType"""
+enum ResourceType {
+  Adamantine
+  Alchemical_Silver
+  Coal
+  Cold_Iron
+  Copper
+  Deep_Crystal
+  Diamonds
+  Dragonhide
+  Ethereal_Silica
+  Gold
+  Hartwood
+  Ignium
+  Ironwood
+  Mithral
+  Obsidian
+  Ruby
+  Sapphire
+  Silver
+  Stone
+  True_Ice
+  Twilight_Quartz
+  Wood
+}
+
+input ResourceTypeInput {
+  equals: ResourceType
+  in: [ResourceType!]
+  not: [ResourceType!]
+  notIn: [ResourceType!]
 }
 
 """The Squad Model"""
@@ -151,6 +290,61 @@ type Squad {
   realm: Realm
   realmId: Int!
   type: String!
+}
+
+enum SquadAction {
+  Defence
+  Offence
+}
+
+input SquadActionInput {
+  equals: SquadAction
+  in: [SquadAction!]
+  not: [SquadAction!]
+  notIn: [SquadAction!]
+}
+
+enum SquadType {
+  Apprentice
+  Arcanist
+  Archer
+  Ballista
+  Catapult
+  Grand_Marshal
+  Guard
+  Guard_Captain
+  Healer
+  Knight
+  Knight_Commander
+  Life_Mage
+  Mage
+  Scorpio
+  Scout
+  Shaman
+  Sniper
+  Squire
+  Watchman
+}
+
+input SquadTypeInput {
+  equals: SquadType
+  in: [SquadType!]
+  not: [SquadType!]
+  notIn: [SquadType!]
+}
+
+input StringFilterInput {
+  contains: [String!]
+  endsWith: [String!]
+  equals: String
+  gt: [String!]
+  gte: [String!]
+  in: [String!]
+  lt: [String!]
+  lte: [String!]
+  not: [String!]
+  notIn: [String!]
+  startsWith: [String!]
 }
 
 """The Wallet Model"""

@@ -2,6 +2,7 @@ import { Resolver, Arg, Mutation, Query, Ctx } from "type-graphql";
 import { Context } from "../../context";
 import { Realm } from "../../entities";
 import { RealmInput } from "../types";
+import { RealmFilterInput, RealmOrderByInput } from "../types/settling";
 
 @Resolver((_of) => Realm)
 export class RealmResolver {
@@ -19,35 +20,58 @@ export class RealmResolver {
     });
   }
 
-  @Query(() => [Realm])
-  async getRealms(@Ctx() ctx: Context) {
-    return await ctx.prisma.realm.findMany({
-      include: {
-        buildings: true,
-        traits: true,
-        resources: true,
-        squads: true,
-        wallet: true
+  getRealmFilter(filter: RealmFilterInput) {
+    const where = {} as any;
+    const keys = Object.keys(filter);
+
+    for (let key of keys) {
+      const value = (filter as any)[key];
+      if (value) {
+        switch (key) {
+          case "buildingType":
+            where.buildings = { some: { type: filter.buildingType } };
+            break;
+          case "squadType":
+            where.squads = { some: { type: filter.squadType } };
+            break;
+          case "resourceType":
+            where.resources = { some: { type: filter.resourceType } };
+            break;
+          case "traitType":
+            where.traits = { some: { type: filter.traitType } };
+            break;
+          case "squadAction":
+            where.squads = { some: { type: filter.squadAction } };
+            break;
+          default:
+            where[key] = value;
+            break;
+        }
       }
-    });
+    }
+    return where;
   }
 
   @Query(() => [Realm])
-  async getRealmsByAddress(
+  async getRealms(
     @Ctx() ctx: Context,
-    @Arg("address") address: string
+    @Arg("filter", { nullable: true }) filter: RealmFilterInput,
+    @Arg("orderBy", { nullable: true }) orderBy: RealmOrderByInput
   ) {
     return await ctx.prisma.realm.findMany({
-      where: {
-        owner: address
-      },
+      where: this.getRealmFilter(filter),
       include: {
         buildings: true,
         traits: true,
         resources: true,
         squads: true,
         wallet: true
-      }
+      },
+      orderBy: orderBy
+        ? Object.keys(orderBy).map((key: any) => ({
+            [key]: (orderBy as any)[key]
+          }))
+        : undefined
     });
   }
 

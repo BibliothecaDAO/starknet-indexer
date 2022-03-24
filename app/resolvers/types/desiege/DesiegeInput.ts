@@ -1,6 +1,6 @@
 // import { Prisma } from "@prisma/client";
 import { InputType, Field } from "type-graphql";
-import { Desiege } from "../../entities";
+import { Desiege } from "../../../entities";
 
 @InputType()
 export class DesiegeInput implements Partial<Desiege> {
