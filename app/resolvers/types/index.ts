@@ -1,12 +1,12 @@
-import { DesiegeInput } from "./DesiegeInput";
-import { RealmInput } from "./RealmInput";
-import { WalletInput } from "./WalletInput";
-import { BuildingInput } from "./BuildingInput";
-import { ResourceInput } from "./ResourceInput";
-import { BuildingCostInput } from "./BuildingCostInput";
-import { RealmTraitInput } from "./RealmTraitInput";
-import { SquadInput } from "./SquadInput";
-import { SquadCostInput } from "./SquadCostInput";
+import { DesiegeInput } from "./desiege/DesiegeInput";
+import { RealmInput } from "./settling";
+import { WalletInput } from "./wallet/WalletInput";
+import { BuildingInput } from "./settling";
+import { ResourceInput } from "./settling";
+import { BuildingCostInput } from "./settling";
+import { RealmTraitInput } from "./settling";
+import { SquadInput } from "./settling";
+import { SquadCostInput } from "./settling";
 
 export {
   DesiegeInput,
