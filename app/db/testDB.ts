@@ -1,25 +1,12 @@
+import { SquadCost } from "@prisma/client";
 import {
   BuildingInput,
-  // ResourceInput,
-  // RealmInput,
-  // WalletInput,
   BuildingCostInput,
-  RealmTraitInput
+  SquadInput
 } from "../resolvers/types";
 
-export const walletAddress = "0xE417496166b097A05e1B0A4117C8Ad1d204aDb91";
-const realmId = 3;
-
-// export const realm: RealmInput = {
-//   name: "Stolsli",
-//   owner: walletAddress,
-//   realmId: realmId
-// };
-
-// export const wallet: WalletInput = {
-//   address: walletAddress,
-//   realms: [realm]
-// };
+export const walletAddress = "0xcdfe3d7ebfa793675426f150e928cd395469ca53";
+const realmId = 1009;
 
 export const building: BuildingInput = {
   id: 1,
@@ -27,11 +14,17 @@ export const building: BuildingInput = {
   type: "Carpenter"
 };
 
-// export const resource: ResourceInput = {
-//   id: 1,
-//   type: "Wood",
-//   realmId: realmId
-// };
+export const offenceSquad: SquadInput = {
+  realmId: realmId,
+  action: "Offence",
+  type: "Apprentice"
+};
+
+export const defenceSquad: SquadInput = {
+  realmId: realmId,
+  action: "Defence",
+  type: "Healer"
+};
 
 export const buildingCosts: BuildingCostInput[] = [
   { buildingType: "Fairgrounds", resourceType: "Wood", qty: 100 },
@@ -59,9 +52,25 @@ export const buildingCosts: BuildingCostInput[] = [
   { buildingType: "Hamlet", resourceType: "Wood", qty: 100 }
 ];
 
-export const realmTraits: RealmTraitInput[] = [
-  { realmId, qty: 2, type: "Region" },
-  { realmId, qty: 5, type: "City" },
-  { realmId, qty: 3, type: "Harbor" },
-  { realmId, qty: 3, type: "River" }
+export const squadCosts: SquadCost[] = [
+  { squadType: "Watchman", resourceType: "Wood", qty: 100 },
+  { squadType: "Watchman", resourceType: "Silver", qty: 80 },
+  { squadType: "Guard", resourceType: "Wood", qty: 60 },
+  { squadType: "Guard_Captain", resourceType: "Wood", qty: 30 },
+  { squadType: "Squire", resourceType: "Wood", qty: 100 },
+  { squadType: "Knight", resourceType: "Wood", qty: 60 },
+  { squadType: "Knight_Commander", resourceType: "Wood", qty: 30 },
+  { squadType: "Scout", resourceType: "Wood", qty: 100 },
+  { squadType: "Archer", resourceType: "Wood", qty: 60 },
+  { squadType: "Sniper", resourceType: "Wood", qty: 30 },
+  { squadType: "Scorpio", resourceType: "Wood", qty: 100 },
+  { squadType: "Ballista", resourceType: "Wood", qty: 50 },
+  { squadType: "Catapult", resourceType: "Wood", qty: 110 },
+  { squadType: "Shaman", resourceType: "Wood", qty: 40 },
+  { squadType: "Healer", resourceType: "Copper", qty: 110 },
+  { squadType: "Life_Mage", resourceType: "Wood", qty: 10 },
+  { squadType: "Apprentice", resourceType: "Wood", qty: 20 },
+  { squadType: "Mage", resourceType: "Wood", qty: 10 },
+  { squadType: "Arcanist", resourceType: "Wood", qty: 70 },
+  { squadType: "Grand_Marshal", resourceType: "Wood", qty: 120 }
 ];

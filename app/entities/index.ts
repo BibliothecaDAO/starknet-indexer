@@ -4,8 +4,20 @@ import {
   Building,
   Resource,
   BuildingCost,
-  RealmTrait
+  RealmTrait,
+  Squad,
+  SquadCost
 } from "./settling";
 import { Wallet } from "./wallet/Wallet";
 
-export { Desiege, Realm, Wallet, Building, Resource, BuildingCost, RealmTrait };
+export {
+  Desiege,
+  Realm,
+  Wallet,
+  Building,
+  Resource,
+  BuildingCost,
+  RealmTrait,
+  Squad,
+  SquadCost
+};

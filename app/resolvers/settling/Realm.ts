@@ -13,6 +13,7 @@ export class RealmResolver {
         buildings: true,
         traits: true,
         resources: true,
+        squads: true,
         wallet: true
       }
     });
@@ -25,6 +26,7 @@ export class RealmResolver {
         buildings: true,
         traits: true,
         resources: true,
+        squads: true,
         wallet: true
       }
     });
@@ -43,6 +45,7 @@ export class RealmResolver {
         buildings: true,
         traits: true,
         resources: true,
+        squads: true,
         wallet: true
       }
     });

@@ -70,9 +70,11 @@ type Mutation {
 }
 
 type Query {
-  getAllBuildings: [Building!]!
+  getBuilding(id: Float!): Building!
   getBuildingCosts: [BuildingCost!]!
-  getBuildings(id: Float!): Building!
+  getBuildings: [Building!]!
+  getBuildingsByAddress(address: String!): [Building!]!
+  getBuildingsByRealm(realmId: Float!): [Building!]!
   getDesiege(id: Float!): Desiege!
   getDesiegeGames: [Desiege!]!
   getEvent(id: Float!): Event!
@@ -99,6 +101,7 @@ type Realm {
   rarityScore: Float!
   realmId: Int!
   resources: [Resource!]
+  squads: [Squad!]
   traits: [RealmTrait!]
   wallet: Wallet
 }
@@ -139,6 +142,14 @@ type Resource {
 input ResourceInput {
   id: ID
   realmId: Float!
+  type: String!
+}
+
+"""The Squad Model"""
+type Squad {
+  action: String!
+  realm: Realm
+  realmId: Int!
   type: String!
 }
 

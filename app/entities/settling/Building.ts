@@ -15,5 +15,5 @@ export class Building {
   realmId: number;
 
   @Field(() => Realm, { nullable: true })
-  realm: Realm;
+  realm?: Realm;
 }

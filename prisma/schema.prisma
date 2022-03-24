@@ -88,6 +88,33 @@ enum OrderType {
   the_Twins
 }
 
+enum SquadType {
+  Watchman
+  Guard
+  Guard_Captain
+  Squire
+  Knight
+  Knight_Commander
+  Scout
+  Archer
+  Sniper
+  Scorpio
+  Ballista
+  Catapult
+  Shaman
+  Healer
+  Life_Mage
+  Apprentice
+  Mage
+  Arcanist
+  Grand_Marshal
+}
+
+enum SquadAction {
+  Offence
+  Defence
+}
+
 // MILSTONE 1
 model Wallet {
   id      Int             @id @default(autoincrement())
@@ -112,11 +139,7 @@ model Realm {
   buildings Building[]
   resources Resource[]
   traits    RealmTrait[]
-  // offenceSquad Squad?     @relation("offenceSquad")
-  // defenceSquad Squad?     @relation("defenceSquad")
-
-  // Squad     Squad[]    @relation("offenceSquad")
-  // Squad     Squad[]    @relation("defenceSquad")
+  squads    Squad[]
 }
 
 // MILSTONE 1
@@ -179,33 +202,23 @@ model SRealm {
 }
 
 // MILSTONE 1
-// NOTE: Each Realm can have Two squads. One for offence and one for deffence. Unsure best way to model this....??
-// Watchman
-// Guard
-// Guard Captain
-// Squire
-// Knight
-// Knight Commander
-// Scout
-// Archer
-// Sniper
-// Scorpio
-// Ballista
-// Catapult
-// Shaman
-// Healer
-// Life Mage
-// Apprentice
-// Mage
-// Arcanist
-// Grand Marshal
+
 model Squad {
-  id             Int  @id @default(autoincrement())
-  realmId        Int  @unique
-  // realmOffence   Realm? @relation(name: "offenceSquad", fields: [realmOffenceId], references: [realmId])
-  // realmDefence   Realm? @relation(name: "defenceSquad", fields: [realmDefenceId], references: [realmId])
-  realmOffenceId Int? @unique
-  realmDefenceId Int? @unique
+  id      Int         @id @default(autoincrement())
+  realmId Int
+  action  SquadAction
+  type    SquadType
+
+  realm Realm @relation(fields: [realmId], references: [realmId])
+  @@unique([realmId, action])
+}
+
+model SquadCost {
+  squadType    SquadType    @id
+  resourceType ResourceType
+  qty          Int
+
+  @@unique([squadType, resourceType])
 }
 
 ///////////// MILSTONE 2 ///////////////
