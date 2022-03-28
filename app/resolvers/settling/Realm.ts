@@ -22,7 +22,7 @@ export class RealmResolver {
 
   getRealmFilter(filter: RealmFilterInput) {
     const where = {} as any;
-    const keys = Object.keys(filter);
+    const keys = Object.keys(filter ?? {});
 
     for (let key of keys) {
       const value = (filter as any)[key];
@@ -43,6 +43,21 @@ export class RealmResolver {
           case "squadAction":
             where.squads = { some: { type: filter.squadAction } };
             break;
+          case "AND":
+            where.AND = filter.AND?.map((filter) =>
+              this.getRealmFilter(filter)
+            );
+            break;
+          case "OR":
+            where.AND = filter.AND?.map((filter) =>
+              this.getRealmFilter(filter)
+            );
+            break;
+          case "NOT":
+            where.AND = filter.AND?.map((filter) =>
+              this.getRealmFilter(filter)
+            );
+            break;
           default:
             where[key] = value;
             break;
@@ -56,7 +71,9 @@ export class RealmResolver {
   async getRealms(
     @Ctx() ctx: Context,
     @Arg("filter", { nullable: true }) filter: RealmFilterInput,
-    @Arg("orderBy", { nullable: true }) orderBy: RealmOrderByInput
+    @Arg("orderBy", { nullable: true }) orderBy: RealmOrderByInput,
+    @Arg("take", { nullable: true, defaultValue: 100 }) take: number,
+    @Arg("skip", { nullable: true, defaultValue: 0 }) skip: number
   ) {
     return await ctx.prisma.realm.findMany({
       where: this.getRealmFilter(filter),
@@ -71,7 +88,9 @@ export class RealmResolver {
         ? Object.keys(orderBy).map((key: any) => ({
             [key]: (orderBy as any)[key]
           }))
-        : undefined
+        : undefined,
+      take,
+      skip
     });
   }
 

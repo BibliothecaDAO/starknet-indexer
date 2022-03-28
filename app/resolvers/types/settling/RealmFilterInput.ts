@@ -32,4 +32,10 @@ export class RealmFilterInput implements Partial<Prisma.RealmWhereInput> {
   traitType?: object;
   @Field(() => SquadActionInput, { nullable: true })
   squadAction?: object;
+  @Field(() => [RealmFilterInput], { nullable: true })
+  AND?: [RealmFilterInput];
+  @Field(() => [RealmFilterInput], { nullable: true })
+  OR?: [RealmFilterInput];
+  @Field(() => [RealmFilterInput], { nullable: true })
+  NOT?: [RealmFilterInput];
 }

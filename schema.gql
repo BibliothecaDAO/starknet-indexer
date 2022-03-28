@@ -153,8 +153,7 @@ type Query {
   getEvents: [Event!]!
   getRealm(realmId: Float!): Realm!
   getRealmTraits: [RealmTrait!]!
-  getRealms(filter: RealmFilterInput, orderBy: RealmOrderByInput): [Realm!]!
-  getRealmsByAddress(address: String!): [Realm!]!
+  getRealms(filter: RealmFilterInput, orderBy: RealmOrderByInput, skip: Float = 0, take: Float = 100): [Realm!]!
   getResource(id: Float!): Resource!
   getResources: [Resource!]!
   getResourcesByAddress(address: String!): [Resource!]!
@@ -179,6 +178,9 @@ type Realm {
 }
 
 input RealmFilterInput {
+  AND: [RealmFilterInput!]
+  NOT: [RealmFilterInput!]
+  OR: [RealmFilterInput!]
   buildingType: BuildingTypeInput
   name: StringFilterInput
   orderType: OrderTypeInput
