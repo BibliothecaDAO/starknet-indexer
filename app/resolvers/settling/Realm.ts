@@ -37,8 +37,8 @@ export class RealmResolver {
           case "resourceType":
             where.resources = { some: { type: filter.resourceType } };
             break;
-          case "traitType":
-            where.traits = { some: { type: filter.traitType } };
+          case "trait":
+            where.traits = { some: filter.trait };
             break;
           case "squadAction":
             where.squads = { some: { type: filter.squadAction } };

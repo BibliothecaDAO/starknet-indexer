@@ -191,7 +191,7 @@ input RealmFilterInput {
   resourceType: ResourceTypeInput
   squadAction: SquadActionInput
   squadType: SquadTypeInput
-  traitType: RealmTraitTypeInput
+  trait: RealmTraitFilterInput
 }
 
 input RealmInput {
@@ -219,6 +219,11 @@ type RealmTrait {
   type: String!
 }
 
+input RealmTraitFilterInput {
+  qty: IntFilterInput
+  type: RealmTraitType!
+}
+
 input RealmTraitInput {
   qty: Float!
   realmId: Float!
@@ -230,13 +235,6 @@ enum RealmTraitType {
   Harbor
   Region
   River
-}
-
-input RealmTraitTypeInput {
-  equals: RealmTraitType
-  in: [RealmTraitType!]
-  not: [RealmTraitType!]
-  notIn: [RealmTraitType!]
 }
 
 """The Resource Model"""
