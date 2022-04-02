@@ -49,12 +49,10 @@ export class RealmResolver {
             );
             break;
           case "OR":
-            where.AND = filter.AND?.map((filter) =>
-              this.getRealmFilter(filter)
-            );
+            where.OR = filter.OR?.map((filter) => this.getRealmFilter(filter));
             break;
           case "NOT":
-            where.AND = filter.AND?.map((filter) =>
+            where.NOT = filter.NOT?.map((filter) =>
               this.getRealmFilter(filter)
             );
             break;
@@ -106,6 +104,7 @@ export class RealmResolver {
       owner: data.owner,
       rarityRank: data.rarityRank,
       rarityScore: data.rarityScore,
+      bridgedOwner: data.bridgedOwner,
       orderType: data.orderType,
       imageUrl: data.imageUrl
     };

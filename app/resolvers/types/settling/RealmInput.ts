@@ -12,6 +12,9 @@ export class RealmInput {
   @Field({ nullable: true })
   owner?: string;
 
+  @Field({ nullable: true })
+  bridgedOwner?: string;
+
   @Field(() => Int, { nullable: true })
   rarityRank?: number;
 

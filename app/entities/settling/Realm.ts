@@ -18,6 +18,9 @@ export class Realm {
   @Field({ nullable: true })
   owner?: string;
 
+  @Field({ nullable: true })
+  bridgedOwner?: string;
+
   @Field(() => Wallet, { nullable: true })
   wallet: Wallet;
 
@@ -32,12 +35,6 @@ export class Realm {
 
   @Field({ nullable: false })
   orderType: OrderType;
-
-  // @Field(() => Squad, { nullable: true })
-  // offenceSquad!: Squad;
-
-  // @Field(() => Squad, { nullable: true })
-  // defenceSquad!: Squad;
 
   @Field(() => [Building], { nullable: true })
   buildings: [Building];

@@ -163,6 +163,7 @@ type Query {
 
 """The Realm Model"""
 type Realm {
+  bridgedOwner: String
   buildings: [Building!]
   imageUrl: String
   name: String
@@ -181,6 +182,7 @@ input RealmFilterInput {
   AND: [RealmFilterInput!]
   NOT: [RealmFilterInput!]
   OR: [RealmFilterInput!]
+  bridgedOwner: StringFilterInput
   buildingType: BuildingTypeInput
   name: StringFilterInput
   orderType: OrderTypeInput
@@ -195,6 +197,7 @@ input RealmFilterInput {
 }
 
 input RealmInput {
+  bridgedOwner: String
   imageUrl: String
   name: String!
   orderType: String
