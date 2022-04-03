@@ -18,7 +18,7 @@ function getTraitsDb() {
 }
 
 const subgraphUrl =
-  "https://api.thegraph.com/subgraphs/name/bibliothecaforadventurers/loot-ecosystem";
+  "https://api.thegraph.com/subgraphs/name/bibliothecaforadventurers/realms";
 
 async function getRealms(first: number, last: string) {
   const response = await fetch(subgraphUrl, {
@@ -31,7 +31,9 @@ async function getRealms(first: number, last: string) {
                   id
                   rarityScore
                   rarityRank
+                  wonder
                   bridgedOwner {address}
+                  bridgedV2Owner {address}
                   currentOwner {address}
               }
           }
@@ -70,6 +72,8 @@ async function main() {
         ? realm.currentOwner.address
         : undefined;
 
+      const bridgedOwner = realm.bridgedOwner || realm.bridgedV2Owner;
+
       // Update Wallet
       await Wallet.createOrUpdateWallet({ address: realmOwner }, context);
 
@@ -79,10 +83,9 @@ async function main() {
           realmId: parseInt(realm.id),
           name: realm.name,
           owner: realmOwner,
-          bridgedOwner: realm.bridgedOwner
-            ? realm.bridgedOwner.address
-            : undefined,
+          bridgedOwner: bridgedOwner ? bridgedOwner.address : undefined,
           imageUrl: realm.image,
+          wonder: realm.wonder,
           rarityRank: parseInt(realm.rarityRank),
           rarityScore: parseFloat(realm.rarityScore),
           orderType: realm.attributes

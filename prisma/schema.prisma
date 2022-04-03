@@ -132,6 +132,7 @@ model Realm {
   wallet       Wallet?    @relation(fields: [owner], references: [address])
   owner        String?
   bridgedOwner String?
+  wonder       String?
   stakedOwner  String?
   rarityRank   Int        @default(0)
   rarityScore  Float      @default(0)

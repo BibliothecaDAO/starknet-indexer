@@ -105,6 +105,7 @@ export class RealmResolver {
       rarityRank: data.rarityRank,
       rarityScore: data.rarityScore,
       bridgedOwner: data.bridgedOwner,
+      wonder: data.wonder,
       orderType: data.orderType,
       imageUrl: data.imageUrl
     };

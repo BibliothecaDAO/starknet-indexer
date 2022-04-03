@@ -176,6 +176,7 @@ type Realm {
   squads: [Squad!]
   traits: [RealmTrait!]
   wallet: Wallet
+  wonder: String!
 }
 
 input RealmFilterInput {
@@ -194,6 +195,7 @@ input RealmFilterInput {
   squadAction: SquadActionInput
   squadType: SquadTypeInput
   trait: RealmTraitFilterInput
+  wonder: StringFilterInput
 }
 
 input RealmInput {
@@ -205,6 +207,7 @@ input RealmInput {
   rarityRank: Int
   rarityScore: Float
   realmId: Int!
+  wonder: String
 }
 
 input RealmOrderByInput {

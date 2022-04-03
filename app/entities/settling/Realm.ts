@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int } from "type-graphql";
+import { ObjectType, Field, Int, Float } from "type-graphql";
 import { __Type } from "graphql";
 import { Wallet } from "../wallet/Wallet";
 import { Building } from "./Building";
@@ -12,13 +12,13 @@ export class Realm {
   @Field(() => Int, { nullable: false })
   realmId: number;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   name: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   owner?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   bridgedOwner?: string;
 
   @Field(() => Wallet, { nullable: true })
@@ -27,14 +27,17 @@ export class Realm {
   @Field(() => Int, { nullable: false })
   rarityRank: number;
 
-  @Field({ nullable: false })
+  @Field(() => Float, { nullable: false })
   rarityScore: number;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   imageUrl: string;
 
   @Field({ nullable: false })
   orderType: OrderType;
+
+  @Field(() => String, { nullable: false })
+  wonder: String;
 
   @Field(() => [Building], { nullable: true })
   buildings: [Building];
