@@ -36,8 +36,8 @@ export class Realm {
   @Field({ nullable: false })
   orderType: OrderType;
 
-  @Field(() => String, { nullable: false })
-  wonder: String;
+  @Field(() => String, { nullable: true })
+  wonder?: String;
 
   @Field(() => [Building], { nullable: true })
   buildings: [Building];
