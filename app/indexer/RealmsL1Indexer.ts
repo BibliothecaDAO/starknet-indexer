@@ -52,6 +52,14 @@ export class RealmsL1Indexer {
         this.context
       );
 
+      // Update BridgedOwner Wallet
+      if (bridgedOwner) {
+        await this.wallet.createOrUpdateWallet(
+          { address: bridgedOwner },
+          this.context
+        );
+      }
+
       // Update Realm
       await this.realm.createOrUpdateRealm(
         {
@@ -117,6 +125,14 @@ export class RealmsL1Indexer {
         this.context
       );
 
+      // Update BridgedOwner Wallet
+      if (bridgedOwner) {
+        await this.wallet.createOrUpdateWallet(
+          { address: bridgedOwner },
+          this.context
+        );
+      }
+
       // Update Owner
       await this.context.prisma.realm.update({
         where: { realmId: parseInt(realm.id) },
@@ -179,6 +195,9 @@ export class RealmsL1Indexer {
       if (to === JOURNEY_1_ADDRESS || to === JOURNEY_2_ADDRESS) {
         bridgedOwner = from;
       }
+
+      // Update Wallet
+      await this.wallet.createOrUpdateWallet({ address: to }, this.context);
 
       await this.context.prisma.realm.update({
         where: { realmId },
