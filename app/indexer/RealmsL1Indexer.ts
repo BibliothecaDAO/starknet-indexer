@@ -53,9 +53,9 @@ export class RealmsL1Indexer {
       );
 
       // Update BridgedOwner Wallet
-      if (bridgedOwner) {
+      if (bridgedOwner && bridgedOwner.address) {
         await this.wallet.createOrUpdateWallet(
-          { address: bridgedOwner },
+          { address: bridgedOwner.address },
           this.context
         );
       }
@@ -126,9 +126,9 @@ export class RealmsL1Indexer {
       );
 
       // Update BridgedOwner Wallet
-      if (bridgedOwner) {
+      if (bridgedOwner && bridgedOwner.address) {
         await this.wallet.createOrUpdateWallet(
-          { address: bridgedOwner },
+          { address: bridgedOwner.address },
           this.context
         );
       }
