@@ -176,7 +176,7 @@ type Realm {
   squads: [Squad!]
   traits: [RealmTrait!]
   wallet: Wallet
-  wonder: String!
+  wonder: String
 }
 
 input RealmFilterInput {

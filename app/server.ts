@@ -1,7 +1,7 @@
+import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import Express from "express";
-import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { context } from "./context";
 import {
@@ -15,6 +15,7 @@ import {
   RealmTraitResolver
 } from "./resolvers";
 import { StarkNet } from "./indexer/Starknet";
+import { RealmsL1Indexer } from "./indexer/RealmsL1Indexer";
 
 const main = async () => {
   const schema = await buildSchema({
@@ -45,6 +46,9 @@ const main = async () => {
   server.applyMiddleware({ app });
 
   await StarkNet().serverWillStart();
+
+  const realmsL1Indexer = new RealmsL1Indexer(context);
+  realmsL1Indexer.start();
 
   app.listen({ port: 3333 }, () =>
     console.log(
