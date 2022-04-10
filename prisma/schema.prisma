@@ -269,3 +269,60 @@ model Event {
   txHash     String
   status     Int      @default(0)
 }
+
+// LORE
+model LoreScroll {
+  id          Int        @id // from blockchain
+  owner       String?
+
+  revisions   LoreScrollRevision[]
+}
+
+model LoreScrollRevision {
+  id          Int        @id // from blockchain
+  title       String?
+  markdown    String?
+  createdAt   DateTime
+
+  scroll LoreScroll @relation(fields: [scrollId], references: [id])
+  scrollId   Int
+
+  pois        LorePoisOnScrolls[]
+  props       LorePropsOnScrolls[]
+}
+
+model LorePOI {
+  id          Int        @id
+  name        String
+
+  scrolls LorePoisOnScrolls[]
+}
+
+model LoreProp {
+  id          Int        @id
+  name        String
+
+  scrolls LorePropsOnScrolls[]
+}
+
+model LorePoisOnScrolls {
+  scrollRevision      LoreScrollRevision     @relation(fields: [scrollRevisionId], references: [id])
+  scrollRevisionId    Int 
+  poi                 LorePOI        @relation(fields: [poiId], references: [id])
+  poiId               Int 
+
+  assetId             String? // uint256
+
+  @@id([scrollRevisionId, poiId])
+}
+
+model LorePropsOnScrolls {
+  scrollRevision     LoreScrollRevision     @relation(fields: [scrollRevisionId], references: [id])
+  scrollRevisionId   Int // relation scalar field (used in the `@relation` attribute above)
+  prop       LoreProp       @relation(fields: [propId], references: [id])
+  propId     Int // relation scalar field (used in the `@relation` attribute above)
+
+  value      String?
+
+  @@id([scrollRevisionId, propId])
+}
