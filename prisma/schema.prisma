@@ -126,15 +126,18 @@ model Wallet {
 
 // MILSTONE 1
 model Realm {
-  id          Int        @id @default(autoincrement())
-  realmId     Int        @unique
-  name        String?
-  wallet      Wallet?    @relation(fields: [owner], references: [address])
-  owner       String?
-  rarityRank  Int        @default(0)
-  rarityScore Float      @default(0)
-  imageUrl    String     @default("")
-  orderType   OrderType?
+  id           Int        @id @default(autoincrement())
+  realmId      Int        @unique
+  name         String?
+  wallet       Wallet?    @relation(fields: [owner], references: [address])
+  owner        String?
+  bridgedOwner String?
+  wonder       String?
+  stakedOwner  String?
+  rarityRank   Int        @default(0)
+  rarityScore  Float      @default(0)
+  imageUrl     String     @default("")
+  orderType    OrderType?
 
   buildings Building[]
   resources Resource[]

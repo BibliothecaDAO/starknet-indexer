@@ -153,8 +153,7 @@ type Query {
   getEvents: [Event!]!
   getRealm(realmId: Float!): Realm!
   getRealmTraits: [RealmTrait!]!
-  getRealms(filter: RealmFilterInput, orderBy: RealmOrderByInput): [Realm!]!
-  getRealmsByAddress(address: String!): [Realm!]!
+  getRealms(filter: RealmFilterInput, orderBy: RealmOrderByInput, skip: Float = 0, take: Float = 100): [Realm!]!
   getResource(id: Float!): Resource!
   getResources: [Resource!]!
   getResourcesByAddress(address: String!): [Resource!]!
@@ -164,6 +163,7 @@ type Query {
 
 """The Realm Model"""
 type Realm {
+  bridgedOwner: String
   buildings: [Building!]
   imageUrl: String
   name: String
@@ -176,9 +176,14 @@ type Realm {
   squads: [Squad!]
   traits: [RealmTrait!]
   wallet: Wallet
+  wonder: String
 }
 
 input RealmFilterInput {
+  AND: [RealmFilterInput!]
+  NOT: [RealmFilterInput!]
+  OR: [RealmFilterInput!]
+  bridgedOwner: StringFilterInput
   buildingType: BuildingTypeInput
   name: StringFilterInput
   orderType: OrderTypeInput
@@ -189,10 +194,12 @@ input RealmFilterInput {
   resourceType: ResourceTypeInput
   squadAction: SquadActionInput
   squadType: SquadTypeInput
-  traitType: RealmTraitTypeInput
+  trait: RealmTraitFilterInput
+  wonder: StringFilterInput
 }
 
 input RealmInput {
+  bridgedOwner: String
   imageUrl: String
   name: String!
   orderType: String
@@ -200,6 +207,7 @@ input RealmInput {
   rarityRank: Int
   rarityScore: Float
   realmId: Int!
+  wonder: String
 }
 
 input RealmOrderByInput {
@@ -217,6 +225,11 @@ type RealmTrait {
   type: String!
 }
 
+input RealmTraitFilterInput {
+  qty: IntFilterInput
+  type: RealmTraitType!
+}
+
 input RealmTraitInput {
   qty: Float!
   realmId: Float!
@@ -228,13 +241,6 @@ enum RealmTraitType {
   Harbor
   Region
   River
-}
-
-input RealmTraitTypeInput {
-  equals: RealmTraitType
-  in: [RealmTraitType!]
-  not: [RealmTraitType!]
-  notIn: [RealmTraitType!]
 }
 
 """The Resource Model"""

@@ -15,8 +15,8 @@ import {
 const JOURNEY_1_ADDRESS = "0x17963290db8c30552d0cfa2a6453ff20a28c31a2";
 const JOURNEY_2_ADDRESS = "0xcdfe3d7ebfa793675426f150e928cd395469ca53";
 const SUBGRAPH_URL =
-  "https://api.thegraph.com/subgraphs/name/bibliothecaforadventurers/realms-goerli";
-const CONTRACT_ADDRESS = "0xd70cAc82981Dd2fb44fC8b283522Cf5090B313F1";
+  "https://api.thegraph.com/subgraphs/name/bibliothecaforadventurers/realms";
+const CONTRACT_ADDRESS = "0x7afe30cb3e53dba6801aa0ea647a0ecea7cbe18d";
 
 export class RealmsL1Indexer {
   context: Context;

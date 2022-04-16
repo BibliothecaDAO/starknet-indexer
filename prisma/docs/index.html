@@ -68,7 +68,7 @@
                   <div class="mt-1 ml-2">
                     <div class="mb-1 font-medium text-gray-600"><a href="#model-Realm-fields">Fields</a></div>
                       <ul class="pl-3 ml-1 border-l-2 border-gray-400">
-                      <li><a href="#model-Realm-id">id</a></li><li><a href="#model-Realm-realmId">realmId</a></li><li><a href="#model-Realm-name">name</a></li><li><a href="#model-Realm-wallet">wallet</a></li><li><a href="#model-Realm-owner">owner</a></li><li><a href="#model-Realm-rarityRank">rarityRank</a></li><li><a href="#model-Realm-rarityScore">rarityScore</a></li><li><a href="#model-Realm-imageUrl">imageUrl</a></li><li><a href="#model-Realm-orderType">orderType</a></li><li><a href="#model-Realm-buildings">buildings</a></li><li><a href="#model-Realm-resources">resources</a></li><li><a href="#model-Realm-traits">traits</a></li><li><a href="#model-Realm-squads">squads</a></li>
+                      <li><a href="#model-Realm-id">id</a></li><li><a href="#model-Realm-realmId">realmId</a></li><li><a href="#model-Realm-name">name</a></li><li><a href="#model-Realm-wallet">wallet</a></li><li><a href="#model-Realm-owner">owner</a></li><li><a href="#model-Realm-bridgedOwner">bridgedOwner</a></li><li><a href="#model-Realm-wonder">wonder</a></li><li><a href="#model-Realm-stakedOwner">stakedOwner</a></li><li><a href="#model-Realm-rarityRank">rarityRank</a></li><li><a href="#model-Realm-rarityScore">rarityScore</a></li><li><a href="#model-Realm-imageUrl">imageUrl</a></li><li><a href="#model-Realm-orderType">orderType</a></li><li><a href="#model-Realm-buildings">buildings</a></li><li><a href="#model-Realm-resources">resources</a></li><li><a href="#model-Realm-traits">traits</a></li><li><a href="#model-Realm-squads">squads</a></li>
                       </ul>
                   </div>
                   <div class="mt-2 ml-2">
@@ -1158,6 +1158,66 @@
     <tr id="model-Realm-owner">
       <td class="px-4 py-2 border">
        owner 
+      </td>
+      <td class="px-4 py-2 border">
+       String?
+      </td>
+      <td class="px-4 py-2 border">
+        <ul>
+          <li> - </li>
+        </ul>
+      </td>
+      <td class="px-4 py-2 border">
+        No
+      </td>
+      <td class="px-4 py-2 border">
+        -
+      </td>
+    </tr>
+    
+    <tr id="model-Realm-bridgedOwner">
+      <td class="px-4 py-2 border">
+       bridgedOwner 
+      </td>
+      <td class="px-4 py-2 border">
+       String?
+      </td>
+      <td class="px-4 py-2 border">
+        <ul>
+          <li> - </li>
+        </ul>
+      </td>
+      <td class="px-4 py-2 border">
+        No
+      </td>
+      <td class="px-4 py-2 border">
+        -
+      </td>
+    </tr>
+    
+    <tr id="model-Realm-wonder">
+      <td class="px-4 py-2 border">
+       wonder 
+      </td>
+      <td class="px-4 py-2 border">
+       String?
+      </td>
+      <td class="px-4 py-2 border">
+        <ul>
+          <li> - </li>
+        </ul>
+      </td>
+      <td class="px-4 py-2 border">
+        No
+      </td>
+      <td class="px-4 py-2 border">
+        -
+      </td>
+    </tr>
+    
+    <tr id="model-Realm-stakedOwner">
+      <td class="px-4 py-2 border">
+       stakedOwner 
       </td>
       <td class="px-4 py-2 border">
        String?
@@ -10631,6 +10691,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-IntFilter">IntFilter</a> | Int
@@ -10792,6 +10888,42 @@
     <tr>
       <td class="px-4 py-2 border">
         owner </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -11003,6 +11135,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
@@ -11200,6 +11368,42 @@
     <tr>
       <td class="px-4 py-2 border">
         owner </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-StringNullableWithAggregatesFilter">StringNullableWithAggregatesFilter</a> | String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-StringNullableWithAggregatesFilter">StringNullableWithAggregatesFilter</a> | String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-StringNullableWithAggregatesFilter">StringNullableWithAggregatesFilter</a> | String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-StringNullableWithAggregatesFilter">StringNullableWithAggregatesFilter</a> | String | Null
       </td>
@@ -16611,6 +16815,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int
@@ -16771,6 +17011,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int
@@ -16914,6 +17190,42 @@
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -17068,6 +17380,42 @@
     <tr>
       <td class="px-4 py-2 border">
         owner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
       </td>
@@ -17239,6 +17587,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int
@@ -17316,6 +17700,42 @@
     <tr>
       <td class="px-4 py-2 border">
         name </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
       </td>
@@ -17428,6 +17848,42 @@
     <tr>
       <td class="px-4 py-2 border">
         owner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
       </td>
@@ -24075,6 +24531,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
@@ -24251,6 +24743,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
@@ -24352,6 +24880,42 @@
     <tr>
       <td class="px-4 py-2 border">
         owner </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -37751,6 +38315,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int
@@ -37888,6 +38488,42 @@
     <tr>
       <td class="px-4 py-2 border">
         name </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         String | Null
       </td>
@@ -38616,6 +39252,42 @@
     <tr>
       <td class="px-4 py-2 border">
         owner </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
       </td>
@@ -41011,6 +41683,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int
@@ -41148,6 +41856,42 @@
     <tr>
       <td class="px-4 py-2 border">
         owner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         String | Null
       </td>
@@ -41375,6 +42119,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-IntFieldUpdateOperationsInput">IntFieldUpdateOperationsInput</a>
@@ -41523,6 +42303,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-IntFieldUpdateOperationsInput">IntFieldUpdateOperationsInput</a>
@@ -41654,6 +42470,42 @@
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -41796,6 +42648,42 @@
     <tr>
       <td class="px-4 py-2 border">
         owner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         String | Null
       </td>
@@ -42023,6 +42911,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-IntFieldUpdateOperationsInput">IntFieldUpdateOperationsInput</a>
@@ -42160,6 +43084,42 @@
     <tr>
       <td class="px-4 py-2 border">
         owner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
       </td>
@@ -42619,6 +43579,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int
@@ -42756,6 +43752,42 @@
     <tr>
       <td class="px-4 py-2 border">
         owner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         String | Null
       </td>
@@ -42983,6 +44015,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-IntFieldUpdateOperationsInput">IntFieldUpdateOperationsInput</a>
@@ -43120,6 +44188,42 @@
     <tr>
       <td class="px-4 py-2 border">
         owner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
       </td>
@@ -43579,6 +44683,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int
@@ -43716,6 +44856,42 @@
     <tr>
       <td class="px-4 py-2 border">
         owner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         String | Null
       </td>
@@ -43943,6 +45119,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-IntFieldUpdateOperationsInput">IntFieldUpdateOperationsInput</a>
@@ -44091,6 +45303,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-IntFieldUpdateOperationsInput">IntFieldUpdateOperationsInput</a>
@@ -44216,6 +45464,42 @@
     <tr>
       <td class="px-4 py-2 border">
         name </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         String | Null
       </td>
@@ -44407,6 +45691,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-IntFieldUpdateOperationsInput">IntFieldUpdateOperationsInput</a>
@@ -44555,6 +45875,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-IntFieldUpdateOperationsInput">IntFieldUpdateOperationsInput</a>
@@ -44692,6 +46048,42 @@
     <tr>
       <td class="px-4 py-2 border">
         name </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
       </td>
@@ -45814,6 +47206,42 @@
     <tr>
       <td class="px-4 py-2 border">
         owner </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         String
       </td>
@@ -47038,6 +48466,42 @@
     <tr>
       <td class="px-4 py-2 border">
         owner </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         String
       </td>
@@ -49777,6 +51241,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        Int
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        Int
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        Int
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int
@@ -50029,6 +51529,42 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         rarityRank </td>
       <td class="px-4 py-2 border">
         Int
@@ -50130,6 +51666,42 @@
     <tr>
       <td class="px-4 py-2 border">
         owner </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        bridgedOwner </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        wonder </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        stakedOwner </td>
       <td class="px-4 py-2 border">
         String
       </td>

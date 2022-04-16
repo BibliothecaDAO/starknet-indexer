@@ -4,7 +4,7 @@ import { InputType, Field } from "type-graphql";
 import { IntFilterInput, StringFilterInput } from "../common";
 import { BuildingTypeInput } from "./BuildingInput";
 import { OrderTypeInput } from "./OrderInput";
-import { RealmTraitTypeInput } from "./RealmTraitInput";
+import { RealmTraitFilterInput } from "./RealmTraitInput";
 import { ResourceTypeInput } from "./ResourceInput";
 import { SquadActionInput, SquadTypeInput } from "./SquadInput";
 
@@ -16,6 +16,8 @@ export class RealmFilterInput implements Partial<Prisma.RealmWhereInput> {
   name?: object;
   @Field(() => StringFilterInput, { nullable: true })
   owner?: object;
+  @Field(() => StringFilterInput, { nullable: true })
+  bridgedOwner?: object;
   @Field(() => IntFilterInput, { nullable: true })
   rarityRank?: object;
   @Field(() => IntFilterInput, { nullable: true })
@@ -28,8 +30,16 @@ export class RealmFilterInput implements Partial<Prisma.RealmWhereInput> {
   squadType?: object;
   @Field(() => OrderTypeInput, { nullable: true })
   orderType?: object;
-  @Field(() => RealmTraitTypeInput, { nullable: true })
-  traitType?: object;
+  @Field(() => RealmTraitFilterInput, { nullable: true })
+  trait?: object;
+  @Field(() => StringFilterInput, { nullable: true })
+  wonder?: object;
   @Field(() => SquadActionInput, { nullable: true })
   squadAction?: object;
+  @Field(() => [RealmFilterInput], { nullable: true })
+  AND?: [RealmFilterInput];
+  @Field(() => [RealmFilterInput], { nullable: true })
+  OR?: [RealmFilterInput];
+  @Field(() => [RealmFilterInput], { nullable: true })
+  NOT?: [RealmFilterInput];
 }

@@ -14,6 +14,7 @@
     "declaration": false,
     "noFallthroughCasesInSwitch": true,
     "composite": false,
+    "resolveJsonModule": true,
     "noImplicitAny": true,
     "moduleResolution": "node",
     "lib": ["dom", "es2016", "esnext.asynciterable"],
@@ -28,5 +29,5 @@
       "*": ["node_modules/*", "app/types/*"]
     }
   },
-  "include": ["app/**/*", "./app/**/*.ts", "./app/**/*.tsx", "app/../*.json"]
+  "include": ["app/**/*", "./app/**/*.ts", "./app/**/*.tsx", "./app/**/*.json"]
 }

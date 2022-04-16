@@ -1,6 +1,7 @@
 import { Field, InputType, registerEnumType } from "type-graphql";
 import { __Type } from "graphql";
 import { RealmTraitType } from "@prisma/client";
+import { IntFilterInput } from "../common";
 
 registerEnumType(RealmTraitType, {
   name: "RealmTraitType"
@@ -16,6 +17,14 @@ export class RealmTraitTypeInput {
   notIn?: [RealmTraitType];
   @Field(() => [RealmTraitType], { nullable: true })
   not?: RealmTraitType;
+}
+
+@InputType()
+export class RealmTraitFilterInput {
+  @Field(() => RealmTraitType, { nullable: false })
+  type: RealmTraitType;
+  @Field(() => IntFilterInput, { nullable: true })
+  qty?: object;
 }
 
 @InputType()
