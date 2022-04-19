@@ -79,13 +79,15 @@ type Desiege {
 
 """StarkNet Event Model"""
 type Event {
+  blockNumber: Int!
   chainId: String!
   contract: String!
-  eventId: Float!
+  eventId: String!
   id: ID!
   name: String!
   parameters: [Float!]!
   timestamp: DateTime!
+  transactionNumber: Int!
   txHash: String!
 }
 

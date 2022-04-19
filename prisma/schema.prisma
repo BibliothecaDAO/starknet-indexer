@@ -256,21 +256,23 @@ model Desiege {
   winner         Int?
   attackedTokens Int?
   defendedTokens Int?
-  eventIndexed   Int?
+  eventIndexed   String?
   initialHealth  Int?      @default(0)
   startedOn      DateTime?
 }
 
 model Event {
-  id         Int      @id @default(autoincrement())
-  eventId    Int      @unique
-  chainId    String
-  contract   String
-  name       String
-  parameters Int[]
-  timestamp  DateTime
-  txHash     String
-  status     Int      @default(0)
+  id                Int      @id @default(autoincrement())
+  eventId           String   @unique
+  blockNumber       Int      @default(0)
+  transactionNumber Int      @default(0)
+  chainId           String
+  contract          String
+  name              String
+  parameters        Int[]
+  timestamp         DateTime
+  txHash            String
+  status            Int      @default(0)
 }
 
 // LORE

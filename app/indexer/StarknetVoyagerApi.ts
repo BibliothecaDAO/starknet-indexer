@@ -9,11 +9,13 @@ interface StarknetVoyagerApiResponse {
 }
 
 interface StarknetVoyagerEvent {
-  id: number;
+  id: string;
+  block_number?: number;
+  transaction_number?: number;
   transactionHash: string;
   contract: string;
   blockHash?: string;
-  from_address?: string;
+  fromAddress?: string;
   status?: string;
 }
 
@@ -32,7 +34,7 @@ export default class StarknetVoyagerApi {
 
   async fetch(
     opts: FetchOptions,
-    lastEventId?: number
+    lastEventId?: string
   ): Promise<StarknetVoyagerApiResponse> {
     const response = {
       items: [] as StarknetVoyagerEvent[],
@@ -67,10 +69,12 @@ export default class StarknetVoyagerApi {
     });
     return {
       name: "",
-      chain_id: this.chainId,
-      event_id: voyagerEvent.id,
+      chainId: this.chainId,
+      eventId: voyagerEvent.id,
+      blockNumber: voyagerEvent.block_number,
+      transactionNumber: voyagerEvent.transaction_number,
       contract: voyagerEvent.contract,
-      tx_hash: voyagerEvent.transactionHash,
+      transactionHash: voyagerEvent.transactionHash,
       timestamp: new Date(details.header.timestamp * 1000),
       parameters
     };
