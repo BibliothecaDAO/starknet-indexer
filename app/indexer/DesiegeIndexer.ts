@@ -5,7 +5,7 @@ import { Indexer } from "./../types";
 
 export default class DesiegeIndexer implements Indexer<Event> {
   private CONTRACTS = [
-    "0x40098a0012c879cf85e0909ca10108197d9bf3970e6c2188641697f49aca134",
+    // "0x40098a0012c879cf85e0909ca10108197d9bf3970e6c2188641697f49aca134",
     "0x1fbec91116c1ced6bb392502adc191dd7978f2b066c674bf28f8710a9a52afd"
   ];
   private context: Context;
@@ -62,12 +62,12 @@ export default class DesiegeIndexer implements Indexer<Event> {
     return;
   }
 
-  async lastIndexId(): Promise<number> {
+  async lastIndexId(): Promise<string> {
     const desiege = await this.context.prisma.desiege.findFirst({
       orderBy: {
         eventIndexed: "desc"
       }
     });
-    return desiege?.eventIndexed ?? 0;
+    return desiege?.eventIndexed ?? "";
   }
 }

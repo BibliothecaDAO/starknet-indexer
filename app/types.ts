@@ -6,15 +6,16 @@ export interface StarkNetResponse {
 }
 
 export interface StarkNetEvent {
-  event_id: number;
-  block_number?: number;
-  chain_id?: string;
+  eventId: string;
+  blockNumber?: number;
+  transactionNumber?: number;
+  chainId?: string;
   contract?: string;
   keys?: Array<string>;
   name?: string;
   parameters?: Array<number>;
   timestamp?: Date;
-  tx_hash?: string;
+  transactionHash?: string;
   status?: number;
 }
 
@@ -26,5 +27,5 @@ export interface StarkNetEventParameter {
 export interface Indexer<T> {
   contracts(): string[];
   index(items: T[]): Promise<void>;
-  lastIndexId(): Promise<number>;
+  lastIndexId(): Promise<string>;
 }

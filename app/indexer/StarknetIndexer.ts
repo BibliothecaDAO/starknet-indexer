@@ -24,10 +24,12 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
   async index(events: StarkNetEvent[]): Promise<void> {
     for (let event of events) {
       const updates: any = {
-        chainId: event.chain_id ?? "testnet",
+        chainId: event.chainId ?? "testnet",
         contract: event.contract,
         name: event.name,
-        parameters: event.parameters
+        parameters: event.parameters,
+        blockNumber: event.blockNumber,
+        transactionNumber: event.transactionNumber
       };
 
       if (event.timestamp) {
@@ -35,21 +37,21 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
       }
 
       await this.context.prisma.event.upsert({
-        where: { eventId: event.event_id },
+        where: { eventId: event.eventId },
         update: { ...updates, status: event.status },
         create: {
           ...updates,
-          eventId: event.event_id as number,
+          eventId: event.eventId,
           name: event.name ?? "",
           timestamp: event.timestamp ?? new Date(0),
-          txHash: event.tx_hash ?? ""
+          txHash: event.transactionHash ?? ""
         }
       });
     }
     return;
   }
 
-  async indexContract(contract: string, lastEventIndexed: number) {
+  async indexContract(contract: string, lastEventIndexed: string) {
     let fetchMore = true;
     let page = 1;
 
@@ -62,15 +64,15 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
           .filter((item) => item.id > lastEventIndexed)
           .map((item) => {
             return {
-              event_id: item.id,
-              block_number: 0,
+              eventId: item.id,
               contract,
-              tx_hash: item.transactionHash,
+              blockNumber: item.block_number,
+              transactionNumber: item.transaction_number,
+              transactionHash: item.transactionHash,
               status: 0
             };
           });
       }
-
       fetchMore = data.hasMore && results.length === pageSize;
       await this.index(results);
       page++;
@@ -103,6 +105,8 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
             .fetchEventDetails({
               id: event.eventId,
               transactionHash: event.txHash,
+              block_number: event.blockNumber,
+              transaction_number: event.transactionNumber,
               contract: event.contract
             })
             .catch((e) => {
@@ -112,10 +116,10 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
               );
               return {
                 name: "",
-                event_id: event.eventId,
-                chain_id: "testnet",
+                eventId: event.eventId,
+                chainId: "testnet",
                 contract: event.contract,
-                tx_hash: event.txHash,
+                transactionHash: event.txHash,
                 timestamp: undefined,
                 parameters: []
               };
@@ -173,13 +177,13 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
     clearInterval(this.interval);
   }
 
-  async lastIndexId(): Promise<number> {
+  async lastIndexId(): Promise<string> {
     const event = await this.context.prisma.event.findFirst({
       orderBy: { eventId: "desc" }
     });
     if (event) {
       return event.eventId;
     }
-    return 0;
+    return "";
   }
 }
