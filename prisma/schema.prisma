@@ -274,58 +274,78 @@ model Event {
 }
 
 // LORE
-model LoreScroll {
-  id          Int        @id // from blockchain
-  owner       String?
+// model LastEvents {
+//   module 
+// }
 
-  revisions   LoreScrollRevision[]
+model LoreEntity {
+  id          Int     @id // from blockchain
+  owner       String?
+  kind        Int     @default(0) // Text entity is a default
+  
+  // lastRevision    LoreEntityRevision     @relation(fields: [lastRevisionId], references: [id])
+  // lastRevisionId  Int
+
+  revisions   LoreEntityRevision[]
 }
 
-model LoreScrollRevision {
-  id          Int        @id // from blockchain
+model LoreEntityRevision {
+  id          Int @id @default(autoincrement())
+
+  revisionNumber    Int // from blockchain
+
   title       String?
-  markdown    String?
+
+  // Arweave linking
+  arweaveId   String
+  
+  // Text kind fields
+  markdown    String? // markdown body text
+
+  // Media kind fields
+  media_url   String?
+
   createdAt   DateTime
 
-  scroll LoreScroll @relation(fields: [scrollId], references: [id])
-  scrollId   Int
+  entity LoreEntity @relation(fields: [entityId], references: [id])
+  entityId    Int
 
-  pois        LorePoisOnScrolls[]
-  props       LorePropsOnScrolls[]
+  pois        LorePoisOnEntityRevisions[]
+  props       LorePropsOnEntityRevisions[]
 }
 
 model LorePOI {
   id          Int        @id
   name        String
 
-  scrolls LorePoisOnScrolls[]
+  entities LorePoisOnEntityRevisions[]
 }
 
 model LoreProp {
   id          Int        @id
   name        String
 
-  scrolls LorePropsOnScrolls[]
+  entities LorePropsOnEntityRevisions[]
 }
 
-model LorePoisOnScrolls {
-  scrollRevision      LoreScrollRevision     @relation(fields: [scrollRevisionId], references: [id])
-  scrollRevisionId    Int 
-  poi                 LorePOI        @relation(fields: [poiId], references: [id])
-  poiId               Int 
+model LorePoisOnEntityRevisions {
+  entityRevision      LoreEntityRevision     @relation(fields: [entityRevisionId], references: [id])
+  entityRevisionId    Int 
+  poi         LorePOI        @relation(fields: [poiId], references: [id])
+  poiId       Int
 
-  assetId             String? // uint256
+  assetId     String? // uint256
 
-  @@id([scrollRevisionId, poiId])
+  @@id([entityRevisionId, poiId])
 }
 
-model LorePropsOnScrolls {
-  scrollRevision     LoreScrollRevision     @relation(fields: [scrollRevisionId], references: [id])
-  scrollRevisionId   Int // relation scalar field (used in the `@relation` attribute above)
+model LorePropsOnEntityRevisions {
+  entityRevision     LoreEntityRevision     @relation(fields: [entityRevisionId], references: [id])
+  entityRevisionId   Int // relation scalar field (used in the `@relation` attribute above)
   prop       LoreProp       @relation(fields: [propId], references: [id])
   propId     Int // relation scalar field (used in the `@relation` attribute above)
 
   value      String?
 
-  @@id([scrollRevisionId, propId])
+  @@id([entityRevisionId, propId])
 }
