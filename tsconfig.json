@@ -3,7 +3,7 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2016", // or newer if your node.js version supports this
+    "target": "es2018", // or newer if your node.js version supports this
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "noImplicitThis": true,
@@ -17,7 +17,7 @@
     "resolveJsonModule": true,
     "noImplicitAny": true,
     "moduleResolution": "node",
-    "lib": ["dom", "es2016", "esnext.asynciterable"],
+    "lib": ["dom", "es2018", "esnext.asynciterable"],
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "strict": false,

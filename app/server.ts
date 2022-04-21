@@ -5,29 +5,32 @@ import Express from "express";
 import { buildSchema } from "type-graphql";
 import { context } from "./context";
 import {
-  DesiegeResolver,
   WalletResolver,
   RealmResolver,
   BuildingResolver,
   ResourceResolver,
-  EventResolver,
   BuildingCostResolver,
   RealmTraitResolver
 } from "./resolvers";
 import { StarkNet } from "./indexer/Starknet";
 import { RealmsL1Indexer } from "./indexer/RealmsL1Indexer";
+import {
+  EventCrudResolver,
+  DesiegeCrudResolver
+} from "@generated/type-graphql";
 
 const main = async () => {
   const schema = await buildSchema({
     resolvers: [
       RealmResolver,
-      DesiegeResolver,
       WalletResolver,
       BuildingResolver,
       ResourceResolver,
-      EventResolver,
       BuildingCostResolver,
-      RealmTraitResolver
+      RealmTraitResolver,
+      // Generated
+      DesiegeCrudResolver,
+      EventCrudResolver
     ],
     emitSchemaFile: true,
     validate: false

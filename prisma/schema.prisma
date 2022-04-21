@@ -14,6 +14,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator typegraphql {
+  provider = "typegraphql-prisma"
+}
+
 enum ResourceType {
   Wood
   Stone
