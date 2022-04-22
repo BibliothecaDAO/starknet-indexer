@@ -279,6 +279,13 @@ model Event {
 // model LastEvents {
 //   module 
 // }
+model LastIndexedEvent {
+  id          Int @id @default(autoincrement())
+
+  moduleName  String
+
+  eventId     String
+}
 
 model LoreEntity {
   id          Int     @id // from blockchain
@@ -307,7 +314,7 @@ model LoreEntityRevision {
   // Media kind fields
   media_url   String?
 
-  createdAt   DateTime
+  createdAt   DateTime? @default(now())
 
   entity LoreEntity @relation(fields: [entityId], references: [id])
   entityId    Int
