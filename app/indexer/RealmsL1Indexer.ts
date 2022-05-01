@@ -11,12 +11,7 @@ import {
   RealmTraitResolver,
   ResourceResolver
 } from "../resolvers";
-
-const JOURNEY_1_ADDRESS = "0x17963290db8c30552d0cfa2a6453ff20a28c31a2";
-const JOURNEY_2_ADDRESS = "0xcdfe3d7ebfa793675426f150e928cd395469ca53";
-const SUBGRAPH_URL =
-  "https://api.thegraph.com/subgraphs/name/bibliothecaforadventurers/realms";
-const CONTRACT_ADDRESS = "0x7afe30cb3e53dba6801aa0ea647a0ecea7cbe18d";
+import { CONTRACTS, REALMS_L1_SUBGRAPH_URL } from "../utils/constants";
 
 export class RealmsL1Indexer {
   context: Context;
@@ -32,7 +27,7 @@ export class RealmsL1Indexer {
   constructor(context: Context) {
     this.context = context;
     this.contract = new ethers.Contract(
-      CONTRACT_ADDRESS,
+      CONTRACTS.REALMS_L1,
       LootRealm,
       this.provider
     );
@@ -192,7 +187,7 @@ export class RealmsL1Indexer {
       const from = args[0].toLowerCase();
       const to = args[1].toLowerCase();
       let bridgedOwner = null;
-      if (to === JOURNEY_1_ADDRESS || to === JOURNEY_2_ADDRESS) {
+      if (to === CONTRACTS.JOURNEY || to === CONTRACTS.CARRACK) {
         bridgedOwner = from;
       }
 
@@ -224,7 +219,7 @@ function getTraitsDb() {
 }
 
 async function getRealms(first: number, last: string) {
-  const response = await fetch(SUBGRAPH_URL, {
+  const response = await fetch(REALMS_L1_SUBGRAPH_URL, {
     method: "post",
     body: JSON.stringify({
       operationName: "getRealms",
