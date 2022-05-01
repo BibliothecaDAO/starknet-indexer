@@ -43,6 +43,7 @@
     "node-fetch": "2",
     "prisma-docs-generator": "^0.5.0",
     "reflect-metadata": "^0.1.13",
+    "starknet": "^3.9.0",
     "tslib": "^2.3.1",
     "type-graphql": "^1.1.1"
   },

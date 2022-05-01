@@ -1,4 +1,5 @@
 import { Desiege } from "./desiege/Desiege";
+import { LoreEntity } from "./lore/LoreEntitiy";
 import {
   Realm,
   Building,
@@ -19,5 +20,7 @@ export {
   BuildingCost,
   RealmTrait,
   Squad,
-  SquadCost
+  SquadCost,
+  LoreEntity,
+  // LorePOI,
 };

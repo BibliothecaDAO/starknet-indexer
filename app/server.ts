@@ -10,14 +10,21 @@ import {
   BuildingResolver,
   ResourceResolver,
   BuildingCostResolver,
-  RealmTraitResolver
+  RealmTraitResolver,
+  DesiegeResolver
 } from "./resolvers";
 import { StarkNet } from "./indexer/Starknet";
 import { RealmsL1Indexer } from "./indexer/RealmsL1Indexer";
 import {
   EventCrudResolver,
-  DesiegeCrudResolver
+  // DesiegeCrudResolver,
+  // LoreEntityCrudResolver,
+  // LoreEntityRelationsResolver,
+  // LoreEntityRevisionRelationsResolver
 } from "@generated/type-graphql";
+import { LoreResolver } from "./resolvers/lore/Lore";
+import { LorePOIResolver } from "./resolvers/lore/LorePOI";
+// import { LoreResolver } from "./resolvers/lore/Lore";
 
 const main = async () => {
   const schema = await buildSchema({
@@ -29,8 +36,14 @@ const main = async () => {
       BuildingCostResolver,
       RealmTraitResolver,
       // Generated
-      DesiegeCrudResolver,
-      EventCrudResolver
+      DesiegeResolver,
+      // DesiegeCrudResolver,
+      EventCrudResolver,
+      LoreResolver,
+      LorePOIResolver
+      // LoreEntityCrudResolver,
+      // LoreEntityRelationsResolver,
+      // LoreEntityRevisionRelationsResolver
     ],
     emitSchemaFile: true,
     validate: false
