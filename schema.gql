@@ -7,14 +7,6 @@ type AffectedRowsOutput {
   count: Int!
 }
 
-type AggregateDesiege {
-  _avg: DesiegeAvgAggregate
-  _count: DesiegeCountAggregate
-  _max: DesiegeMaxAggregate
-  _min: DesiegeMinAggregate
-  _sum: DesiegeSumAggregate
-}
-
 type AggregateEvent {
   _avg: EventAvgAggregate
   _count: EventCountAggregate
@@ -100,31 +92,6 @@ input DateTimeFilter {
   notIn: [DateTime!]
 }
 
-input DateTimeNullableFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  not: NestedDateTimeNullableFilter
-  notIn: [DateTime!]
-}
-
-input DateTimeNullableWithAggregatesFilter {
-  _count: NestedIntNullableFilter
-  _max: NestedDateTimeNullableFilter
-  _min: NestedDateTimeNullableFilter
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  not: NestedDateTimeNullableWithAggregatesFilter
-  notIn: [DateTime!]
-}
-
 input DateTimeWithAggregatesFilter {
   _count: NestedIntFilter
   _max: NestedDateTimeFilter
@@ -139,246 +106,16 @@ input DateTimeWithAggregatesFilter {
   notIn: [DateTime!]
 }
 
+"""The Desiege Model"""
 type Desiege {
-  attackedTokens: Int
-  defendedTokens: Int
-  eventIndexed: String
-  gameId: Int!
-  id: Int!
-  initialHealth: Int
-  startedOn: DateTime
-  winner: Int
-}
-
-type DesiegeAvgAggregate {
-  attackedTokens: Float
-  defendedTokens: Float
-  gameId: Float
-  id: Float
-  initialHealth: Float
-  winner: Float
-}
-
-input DesiegeAvgOrderByAggregateInput {
-  attackedTokens: SortOrder
-  defendedTokens: SortOrder
-  gameId: SortOrder
-  id: SortOrder
-  initialHealth: SortOrder
-  winner: SortOrder
-}
-
-type DesiegeCountAggregate {
-  _all: Int!
-  attackedTokens: Int!
-  defendedTokens: Int!
-  eventIndexed: Int!
-  gameId: Int!
-  id: Int!
-  initialHealth: Int!
-  startedOn: Int!
-  winner: Int!
-}
-
-input DesiegeCountOrderByAggregateInput {
-  attackedTokens: SortOrder
-  defendedTokens: SortOrder
-  eventIndexed: SortOrder
-  gameId: SortOrder
-  id: SortOrder
-  initialHealth: SortOrder
-  startedOn: SortOrder
-  winner: SortOrder
-}
-
-input DesiegeCreateInput {
-  attackedTokens: Int
-  defendedTokens: Int
-  eventIndexed: String
-  gameId: Int!
-  initialHealth: Int
-  startedOn: DateTime
-  winner: Int
-}
-
-input DesiegeCreateManyInput {
-  attackedTokens: Int
-  defendedTokens: Int
-  eventIndexed: String
-  gameId: Int!
-  id: Int
-  initialHealth: Int
-  startedOn: DateTime
-  winner: Int
-}
-
-type DesiegeGroupBy {
-  _avg: DesiegeAvgAggregate
-  _count: DesiegeCountAggregate
-  _max: DesiegeMaxAggregate
-  _min: DesiegeMinAggregate
-  _sum: DesiegeSumAggregate
-  attackedTokens: Int
-  defendedTokens: Int
-  eventIndexed: String
-  gameId: Int!
-  id: Int!
-  initialHealth: Int
-  startedOn: DateTime
-  winner: Int
-}
-
-type DesiegeMaxAggregate {
-  attackedTokens: Int
-  defendedTokens: Int
-  eventIndexed: String
-  gameId: Int
-  id: Int
-  initialHealth: Int
-  startedOn: DateTime
-  winner: Int
-}
-
-input DesiegeMaxOrderByAggregateInput {
-  attackedTokens: SortOrder
-  defendedTokens: SortOrder
-  eventIndexed: SortOrder
-  gameId: SortOrder
-  id: SortOrder
-  initialHealth: SortOrder
-  startedOn: SortOrder
-  winner: SortOrder
-}
-
-type DesiegeMinAggregate {
-  attackedTokens: Int
-  defendedTokens: Int
-  eventIndexed: String
-  gameId: Int
-  id: Int
-  initialHealth: Int
-  startedOn: DateTime
-  winner: Int
-}
-
-input DesiegeMinOrderByAggregateInput {
-  attackedTokens: SortOrder
-  defendedTokens: SortOrder
-  eventIndexed: SortOrder
-  gameId: SortOrder
-  id: SortOrder
-  initialHealth: SortOrder
-  startedOn: SortOrder
-  winner: SortOrder
-}
-
-input DesiegeOrderByWithAggregationInput {
-  _avg: DesiegeAvgOrderByAggregateInput
-  _count: DesiegeCountOrderByAggregateInput
-  _max: DesiegeMaxOrderByAggregateInput
-  _min: DesiegeMinOrderByAggregateInput
-  _sum: DesiegeSumOrderByAggregateInput
-  attackedTokens: SortOrder
-  defendedTokens: SortOrder
-  eventIndexed: SortOrder
-  gameId: SortOrder
-  id: SortOrder
-  initialHealth: SortOrder
-  startedOn: SortOrder
-  winner: SortOrder
-}
-
-input DesiegeOrderByWithRelationInput {
-  attackedTokens: SortOrder
-  defendedTokens: SortOrder
-  eventIndexed: SortOrder
-  gameId: SortOrder
-  id: SortOrder
-  initialHealth: SortOrder
-  startedOn: SortOrder
-  winner: SortOrder
-}
-
-enum DesiegeScalarFieldEnum {
-  attackedTokens
-  defendedTokens
-  eventIndexed
-  gameId
-  id
-  initialHealth
-  startedOn
-  winner
-}
-
-input DesiegeScalarWhereWithAggregatesInput {
-  AND: [DesiegeScalarWhereWithAggregatesInput!]
-  NOT: [DesiegeScalarWhereWithAggregatesInput!]
-  OR: [DesiegeScalarWhereWithAggregatesInput!]
-  attackedTokens: IntNullableWithAggregatesFilter
-  defendedTokens: IntNullableWithAggregatesFilter
-  eventIndexed: StringNullableWithAggregatesFilter
-  gameId: IntWithAggregatesFilter
-  id: IntWithAggregatesFilter
-  initialHealth: IntNullableWithAggregatesFilter
-  startedOn: DateTimeNullableWithAggregatesFilter
-  winner: IntNullableWithAggregatesFilter
-}
-
-type DesiegeSumAggregate {
-  attackedTokens: Int
-  defendedTokens: Int
-  gameId: Int
-  id: Int
-  initialHealth: Int
-  winner: Int
-}
-
-input DesiegeSumOrderByAggregateInput {
-  attackedTokens: SortOrder
-  defendedTokens: SortOrder
-  gameId: SortOrder
-  id: SortOrder
-  initialHealth: SortOrder
-  winner: SortOrder
-}
-
-input DesiegeUpdateInput {
-  attackedTokens: NullableIntFieldUpdateOperationsInput
-  defendedTokens: NullableIntFieldUpdateOperationsInput
-  eventIndexed: NullableStringFieldUpdateOperationsInput
-  gameId: IntFieldUpdateOperationsInput
-  initialHealth: NullableIntFieldUpdateOperationsInput
-  startedOn: NullableDateTimeFieldUpdateOperationsInput
-  winner: NullableIntFieldUpdateOperationsInput
-}
-
-input DesiegeUpdateManyMutationInput {
-  attackedTokens: NullableIntFieldUpdateOperationsInput
-  defendedTokens: NullableIntFieldUpdateOperationsInput
-  eventIndexed: NullableStringFieldUpdateOperationsInput
-  gameId: IntFieldUpdateOperationsInput
-  initialHealth: NullableIntFieldUpdateOperationsInput
-  startedOn: NullableDateTimeFieldUpdateOperationsInput
-  winner: NullableIntFieldUpdateOperationsInput
-}
-
-input DesiegeWhereInput {
-  AND: [DesiegeWhereInput!]
-  NOT: [DesiegeWhereInput!]
-  OR: [DesiegeWhereInput!]
-  attackedTokens: IntNullableFilter
-  defendedTokens: IntNullableFilter
-  eventIndexed: StringNullableFilter
-  gameId: IntFilter
-  id: IntFilter
-  initialHealth: IntNullableFilter
-  startedOn: DateTimeNullableFilter
-  winner: IntNullableFilter
-}
-
-input DesiegeWhereUniqueInput {
-  gameId: Int
-  id: Int
+  attackedTokens: Float!
+  defendedTokens: Float!
+  eventIndexed: Float!
+  gameId: Float!
+  id: ID!
+  initialHealth: Float!
+  startedOn: DateTime!
+  winner: Float!
 }
 
 type Event {
@@ -704,39 +441,12 @@ input IntFilterInput {
   notIn: [Int!]
 }
 
-input IntNullableFilter {
-  equals: Int
-  gt: Int
-  gte: Int
-  in: [Int!]
-  lt: Int
-  lte: Int
-  not: NestedIntNullableFilter
-  notIn: [Int!]
-}
-
 input IntNullableListFilter {
   equals: [Int!]
   has: Int
   hasEvery: [Int!]
   hasSome: [Int!]
   isEmpty: Boolean
-}
-
-input IntNullableWithAggregatesFilter {
-  _avg: NestedFloatNullableFilter
-  _count: NestedIntNullableFilter
-  _max: NestedIntNullableFilter
-  _min: NestedIntNullableFilter
-  _sum: NestedIntNullableFilter
-  equals: Int
-  gt: Int
-  gte: Int
-  in: [Int!]
-  lt: Int
-  lte: Int
-  not: NestedIntNullableWithAggregatesFilter
-  notIn: [Int!]
 }
 
 input IntWithAggregatesFilter {
@@ -755,10 +465,49 @@ input IntWithAggregatesFilter {
   notIn: [Int!]
 }
 
+"""Lore Entity"""
+type LoreEntity {
+  id: ID!
+  kind: Float!
+  owner: String!
+  revisions: [LoreEntityRevision!]!
+}
+
+"""Lore Entity Revision"""
+type LoreEntityRevision {
+  createdAt: DateTime!
+  excerpt: String
+  id: ID!
+  markdown: String
+  pois: [LorePoisOnEntityRevisions!]!
+  props: [LorePropsOnEntityRevisions!]!
+  revisionNumber: Float!
+  title: String
+}
+
+"""Lore POI"""
+type LorePoi {
+  assetType: String
+  id: ID!
+  name: String!
+}
+
+"""Lore Entity Revision"""
+type LorePoisOnEntityRevisions {
+  assetId: String
+  entityRevisionId: ID!
+  poiId: ID!
+}
+
+"""Lore Entity Revision"""
+type LorePropsOnEntityRevisions {
+  entityRevisionId: ID!
+  propId: ID!
+  value: String
+}
+
 type Mutation {
-  createDesiege(data: DesiegeCreateInput!): Desiege!
   createEvent(data: EventCreateInput!): Event!
-  createManyDesiege(data: [DesiegeCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createManyEvent(data: [EventCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createOrUpdateBuildingCost(data: BuildingCostInput!): BuildingCost!
   createOrUpdateBuildings(data: BuildingInput!): Building!
@@ -766,15 +515,11 @@ type Mutation {
   createOrUpdateRealmTrait(data: RealmTraitInput!): RealmTrait!
   createOrUpdateResources(data: ResourceInput!): Resource!
   createOrUpdateWallet(data: WalletInput!): Wallet!
-  deleteDesiege(where: DesiegeWhereUniqueInput!): Desiege
   deleteEvent(where: EventWhereUniqueInput!): Event
-  deleteManyDesiege(where: DesiegeWhereInput): AffectedRowsOutput!
   deleteManyEvent(where: EventWhereInput): AffectedRowsOutput!
-  updateDesiege(data: DesiegeUpdateInput!, where: DesiegeWhereUniqueInput!): Desiege
+  reindexDesiege: Boolean!
   updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
-  updateManyDesiege(data: DesiegeUpdateManyMutationInput!, where: DesiegeWhereInput): AffectedRowsOutput!
   updateManyEvent(data: EventUpdateManyMutationInput!, where: EventWhereInput): AffectedRowsOutput!
-  upsertDesiege(create: DesiegeCreateInput!, update: DesiegeUpdateInput!, where: DesiegeWhereUniqueInput!): Desiege!
   upsertEvent(create: EventCreateInput!, update: EventUpdateInput!, where: EventWhereUniqueInput!): Event!
 }
 
@@ -786,31 +531,6 @@ input NestedDateTimeFilter {
   lt: DateTime
   lte: DateTime
   not: NestedDateTimeFilter
-  notIn: [DateTime!]
-}
-
-input NestedDateTimeNullableFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  not: NestedDateTimeNullableFilter
-  notIn: [DateTime!]
-}
-
-input NestedDateTimeNullableWithAggregatesFilter {
-  _count: NestedIntNullableFilter
-  _max: NestedDateTimeNullableFilter
-  _min: NestedDateTimeNullableFilter
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  not: NestedDateTimeNullableWithAggregatesFilter
   notIn: [DateTime!]
 }
 
@@ -839,17 +559,6 @@ input NestedFloatFilter {
   notIn: [Float!]
 }
 
-input NestedFloatNullableFilter {
-  equals: Float
-  gt: Float
-  gte: Float
-  in: [Float!]
-  lt: Float
-  lte: Float
-  not: NestedFloatNullableFilter
-  notIn: [Float!]
-}
-
 input NestedIntFilter {
   equals: Int
   gt: Int
@@ -858,33 +567,6 @@ input NestedIntFilter {
   lt: Int
   lte: Int
   not: NestedIntFilter
-  notIn: [Int!]
-}
-
-input NestedIntNullableFilter {
-  equals: Int
-  gt: Int
-  gte: Int
-  in: [Int!]
-  lt: Int
-  lte: Int
-  not: NestedIntNullableFilter
-  notIn: [Int!]
-}
-
-input NestedIntNullableWithAggregatesFilter {
-  _avg: NestedFloatNullableFilter
-  _count: NestedIntNullableFilter
-  _max: NestedIntNullableFilter
-  _min: NestedIntNullableFilter
-  _sum: NestedIntNullableFilter
-  equals: Int
-  gt: Int
-  gte: Int
-  in: [Int!]
-  lt: Int
-  lte: Int
-  not: NestedIntNullableWithAggregatesFilter
   notIn: [Int!]
 }
 
@@ -918,37 +600,6 @@ input NestedStringFilter {
   startsWith: String
 }
 
-input NestedStringNullableFilter {
-  contains: String
-  endsWith: String
-  equals: String
-  gt: String
-  gte: String
-  in: [String!]
-  lt: String
-  lte: String
-  not: NestedStringNullableFilter
-  notIn: [String!]
-  startsWith: String
-}
-
-input NestedStringNullableWithAggregatesFilter {
-  _count: NestedIntNullableFilter
-  _max: NestedStringNullableFilter
-  _min: NestedStringNullableFilter
-  contains: String
-  endsWith: String
-  equals: String
-  gt: String
-  gte: String
-  in: [String!]
-  lt: String
-  lte: String
-  not: NestedStringNullableWithAggregatesFilter
-  notIn: [String!]
-  startsWith: String
-}
-
 input NestedStringWithAggregatesFilter {
   _count: NestedIntFilter
   _max: NestedStringFilter
@@ -964,22 +615,6 @@ input NestedStringWithAggregatesFilter {
   not: NestedStringWithAggregatesFilter
   notIn: [String!]
   startsWith: String
-}
-
-input NullableDateTimeFieldUpdateOperationsInput {
-  set: DateTime
-}
-
-input NullableIntFieldUpdateOperationsInput {
-  decrement: Int
-  divide: Int
-  increment: Int
-  multiply: Int
-  set: Int
-}
-
-input NullableStringFieldUpdateOperationsInput {
-  set: String
 }
 
 """Order By Direction"""
@@ -1015,19 +650,20 @@ input OrderTypeInput {
 }
 
 type Query {
-  aggregateDesiege(cursor: DesiegeWhereUniqueInput, orderBy: [DesiegeOrderByWithRelationInput!], skip: Int, take: Int, where: DesiegeWhereInput): AggregateDesiege!
   aggregateEvent(cursor: EventWhereUniqueInput, orderBy: [EventOrderByWithRelationInput!], skip: Int, take: Int, where: EventWhereInput): AggregateEvent!
-  desiege(where: DesiegeWhereUniqueInput!): Desiege
-  desieges(cursor: DesiegeWhereUniqueInput, distinct: [DesiegeScalarFieldEnum!], orderBy: [DesiegeOrderByWithRelationInput!], skip: Int, take: Int, where: DesiegeWhereInput): [Desiege!]!
   event(where: EventWhereUniqueInput!): Event
   events(cursor: EventWhereUniqueInput, distinct: [EventScalarFieldEnum!], orderBy: [EventOrderByWithRelationInput!], skip: Int, take: Int, where: EventWhereInput): [Event!]!
-  findFirstDesiege(cursor: DesiegeWhereUniqueInput, distinct: [DesiegeScalarFieldEnum!], orderBy: [DesiegeOrderByWithRelationInput!], skip: Int, take: Int, where: DesiegeWhereInput): Desiege
   findFirstEvent(cursor: EventWhereUniqueInput, distinct: [EventScalarFieldEnum!], orderBy: [EventOrderByWithRelationInput!], skip: Int, take: Int, where: EventWhereInput): Event
   getBuilding(id: Float!): Building!
   getBuildingCosts: [BuildingCost!]!
   getBuildings: [Building!]!
   getBuildingsByAddress(address: String!): [Building!]!
   getBuildingsByRealm(realmId: Float!): [Building!]!
+  getDesiege(id: Float!): Desiege!
+  getDesiegeGames: [Desiege!]!
+  getLoreEntities(skip: Float = 0, take: Float = 100): [LoreEntity!]!
+  getLoreEntity(entityId: Float!): LoreEntity!
+  getLorePois(skip: Float = 0, take: Float = 100): [LorePoi!]!
   getRealm(realmId: Float!): Realm!
   getRealmTraits: [RealmTrait!]!
   getRealms(filter: RealmFilterInput, orderBy: RealmOrderByInput, skip: Float = 0, take: Float = 100): [Realm!]!
@@ -1036,7 +672,6 @@ type Query {
   getResourcesByAddress(address: String!): [Resource!]!
   getWallet(address: String!): Wallet!
   getWallets: [Wallet!]!
-  groupByDesiege(by: [DesiegeScalarFieldEnum!]!, having: DesiegeScalarWhereWithAggregatesInput, orderBy: [DesiegeOrderByWithAggregationInput!], skip: Int, take: Int, where: DesiegeWhereInput): [DesiegeGroupBy!]!
   groupByEvent(by: [EventScalarFieldEnum!]!, having: EventScalarWhereWithAggregatesInput, orderBy: [EventOrderByWithAggregationInput!], skip: Int, take: Int, where: EventWhereInput): [EventGroupBy!]!
 }
 
@@ -1259,39 +894,6 @@ input StringFilterInput {
   not: [String!]
   notIn: [String!]
   startsWith: [String!]
-}
-
-input StringNullableFilter {
-  contains: String
-  endsWith: String
-  equals: String
-  gt: String
-  gte: String
-  in: [String!]
-  lt: String
-  lte: String
-  mode: QueryMode
-  not: NestedStringNullableFilter
-  notIn: [String!]
-  startsWith: String
-}
-
-input StringNullableWithAggregatesFilter {
-  _count: NestedIntNullableFilter
-  _max: NestedStringNullableFilter
-  _min: NestedStringNullableFilter
-  contains: String
-  endsWith: String
-  equals: String
-  gt: String
-  gte: String
-  in: [String!]
-  lt: String
-  lte: String
-  mode: QueryMode
-  not: NestedStringNullableWithAggregatesFilter
-  notIn: [String!]
-  startsWith: String
 }
 
 input StringWithAggregatesFilter {

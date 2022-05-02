@@ -278,3 +278,88 @@ model Event {
   txHash            String
   status            Int      @default(0)
 }
+
+// LORE
+// model LastEvents {
+//   module 
+// }
+model LastIndexedEvent {
+  moduleName  String @id
+
+  eventId     String
+}
+
+model LoreEntity {
+  id          Int     @id // from blockchain
+  owner       String?
+  kind        Int     @default(0) // Text entity is a default
+
+  // TODO: wanted to add it but Prisma doesn't allow it... its brain explodes  
+  // lastRevision    LoreEntityRevision @relation(fields: [lastRevisionId], references: [id])
+  // lastRevisionId  Int
+
+  revisions       LoreEntityRevision[]
+}
+
+model LoreEntityRevision {
+  id                Int @id @default(autoincrement())
+
+  revisionNumber    Int // from blockchain
+
+  // Arweave linking
+  arweaveId         String
+
+  title             String?
+  
+  // Text kind fields
+  markdown          String? // markdown body text
+  excerpt           String? // small description
+
+  // Media kind fields
+  media_url         String?
+
+  createdAt         DateTime? @default(now())
+
+  entity            LoreEntity @relation(fields: [entityId], references: [id])
+  entityId          Int
+
+  pois              LorePoisOnEntityRevisions[]
+  props             LorePropsOnEntityRevisions[]
+}
+
+model LorePOI {
+  id          Int        @id // the same as in blockchain 1, 1000, 1001, 2000, 2001, etc.
+  name        String
+  assetType   String?
+
+  entities LorePoisOnEntityRevisions[]
+}
+
+model LoreProp {
+  id          Int        @id
+  name        String
+
+  entities    LorePropsOnEntityRevisions[]
+}
+
+model LorePoisOnEntityRevisions {
+  entityRevision      LoreEntityRevision     @relation(fields: [entityRevisionId], references: [id])
+  entityRevisionId    Int 
+  poi                 LorePOI                @relation(fields: [poiId], references: [id])
+  poiId               Int
+
+  assetId             String? // uint256
+
+  @@id([entityRevisionId, poiId])
+}
+
+model LorePropsOnEntityRevisions {
+  entityRevision      LoreEntityRevision     @relation(fields: [entityRevisionId], references: [id])
+  entityRevisionId    Int // relation scalar field (used in the `@relation` attribute above)
+  prop                LoreProp       @relation(fields: [propId], references: [id])
+  propId              Int // relation scalar field (used in the `@relation` attribute above)
+
+  value               String?
+
+  @@id([entityRevisionId, propId])
+}
