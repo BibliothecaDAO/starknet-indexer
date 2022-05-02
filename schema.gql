@@ -662,6 +662,7 @@ type Query {
   getDesiege(id: Float!): Desiege!
   getDesiegeGames: [Desiege!]!
   getLoreEntities(skip: Float = 0, take: Float = 100): [LoreEntity!]!
+  getLoreEntity(entityId: Float!): LoreEntity!
   getLorePois(skip: Float = 0, take: Float = 100): [LorePoi!]!
   getRealm(realmId: Float!): Realm!
   getRealmTraits: [RealmTrait!]!
