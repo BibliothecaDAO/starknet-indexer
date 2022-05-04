@@ -16,7 +16,7 @@ import {
 import { StarkNet } from "./indexer/Starknet";
 import { RealmsL1Indexer } from "./indexer/RealmsL1Indexer";
 import {
-  EventCrudResolver,
+  EventCrudResolver
   // DesiegeCrudResolver,
   // LoreEntityCrudResolver,
   // LoreEntityRelationsResolver,
@@ -61,16 +61,14 @@ const main = async () => {
 
   server.applyMiddleware({ app });
 
-  await StarkNet().serverWillStart();
-
-  const realmsL1Indexer = new RealmsL1Indexer(context);
-  realmsL1Indexer.start();
-
   app.listen({ port: 3333 }, () =>
     console.log(
       `🚀 Server ready and listening at ==> http://localhost:3333${server.graphqlPath}`
     )
   );
+  const realmsL1Indexer = new RealmsL1Indexer(context);
+  await realmsL1Indexer.start();
+  await StarkNet().serverWillStart();
 };
 
 main().catch((error) => {
