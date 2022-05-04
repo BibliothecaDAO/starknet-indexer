@@ -18,6 +18,10 @@ export class RealmFilterInput implements Partial<Prisma.RealmWhereInput> {
   owner?: object;
   @Field(() => StringFilterInput, { nullable: true })
   bridgedOwner?: object;
+  @Field(() => StringFilterInput, { nullable: true })
+  ownerL2?: object;
+  @Field(() => StringFilterInput, { nullable: true })
+  settledOwner?: object;
   @Field(() => IntFilterInput, { nullable: true })
   rarityRank?: object;
   @Field(() => IntFilterInput, { nullable: true })

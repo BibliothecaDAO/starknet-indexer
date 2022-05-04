@@ -719,10 +719,12 @@ input RealmFilterInput {
   name: StringFilterInput
   orderType: OrderTypeInput
   owner: StringFilterInput
+  ownerL2: StringFilterInput
   rarityRank: IntFilterInput
   rarityScore: IntFilterInput
   realmId: IntFilterInput
   resourceType: ResourceTypeInput
+  settledOwner: StringFilterInput
   squadAction: SquadActionInput
   squadType: SquadTypeInput
   trait: RealmTraitFilterInput
@@ -735,9 +737,11 @@ input RealmInput {
   name: String!
   orderType: String
   owner: String
+  ownerL2: String
   rarityRank: Int
   rarityScore: Float
   realmId: Int!
+  settledOwner: String
   wonder: String
 }
 
