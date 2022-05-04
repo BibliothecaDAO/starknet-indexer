@@ -38,22 +38,7 @@ export default class LoreIndexer implements Indexer<Event> {
 
       const params: string[] = event.parameters ?? [];
 
-      const isOk = await this.createEntity(params[0]);
-
-      if (isOk) {
-        await this.context.prisma.lastIndexedEvent.upsert({
-          where: {
-            moduleName: "lore"
-          },
-          update: {
-            eventId
-          },
-          create: {
-            moduleName: "lore",
-            eventId
-          }
-        });
-      }
+      await this.createEntity(params[0]);
     }
     return;
   }
@@ -66,21 +51,15 @@ export default class LoreIndexer implements Indexer<Event> {
 
   async createEntity(entityId: string) {
     const entity = await this.contract.get_entity(
-      entityId, // entity_id
-      "0" // revision_id
-    );
+      entityId.toString(), // entity_id
+      "0", // revision_id
+    )
 
-    console.log(entityId);
-    console.log(entity);
-
-    const part1 = Buffer.from(
-      entity.content.Part1.toString(16),
-      "hex"
-    ).toString();
-    const part2 = Buffer.from(
-      entity.content.Part2.toString(16),
-      "hex"
-    ).toString();
+    // console.log(entityId)
+    // console.log(entity)
+    
+    const part1 = Buffer.from(entity.content.Part1.toString(16), "hex").toString();
+    const part2 = Buffer.from(entity.content.Part2.toString(16), "hex").toString();
 
     const arweaveId = `${part1}${part2}`;
 
@@ -95,22 +74,29 @@ export default class LoreIndexer implements Indexer<Event> {
       console.log(error);
       // await this.wait(6000);
       // await this.createEntity(entityId);
-      return false;
+      return;
     }
 
-    console.log(arweaveJSON);
+    // console.log(arweaveJSON)
 
     try {
-      const dbEntity = await this.context.prisma.loreEntity.create({
-        data: {
-          id: parseInt(entityId),
+      await this.context.prisma.loreEntity.upsert({
+        where: {
+          id: entityId,
+        },
+        create: {
+          id: entityId,
           owner: entity.owner.toString(),
           kind: entity.kind.toNumber()
-        }
+        },
+        update: {
+          owner: entity.owner.toString(),
+          kind: entity.kind.toNumber()
+        },
       });
 
       const data: any = {
-        entityId: dbEntity.id,
+        entityId,
         revisionNumber: 0,
         arweaveId,
         title: arweaveJSON.title,
@@ -141,25 +127,39 @@ export default class LoreIndexer implements Indexer<Event> {
         }
       }
 
-      await this.context.prisma.loreEntityRevision.create({
-        data
+      // Temporary while testing only 1 revision
+      const firstRevision = await this.context.prisma.loreEntityRevision.findFirst({
+        where: {
+          entityId,
+          revisionNumber: 0
+        }
+      })
+
+      // Omit pois and props
+      const { pois, props, ...updateData } = data; 
+
+      await this.context.prisma.loreEntityRevision.upsert({
+        where: {
+          id: firstRevision ? firstRevision.id : -1
+        },
+        create: data,
+        update: updateData
       });
     } catch (error) {
       console.log(error);
       return false;
     }
 
-    return true;
+    return;
   }
 
   async lastIndexId(): Promise<string> {
-    const lastIndexedEvent =
-      await this.context.prisma.lastIndexedEvent.findFirst({
-        where: {
-          moduleName: "lore"
-        }
-      });
+    const lastRevision = await this.context.prisma.loreEntity.findFirst({
+      orderBy: {
+        eventIndexed: "desc"
+      }
+    });
 
-    return lastIndexedEvent?.eventId ?? "0";
+    return lastRevision?.eventIndexed ?? "0";
   }
 }

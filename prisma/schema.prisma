@@ -230,7 +230,10 @@ model LoreEntity {
   // lastRevision    LoreEntityRevision @relation(fields: [lastRevisionId], references: [id])
   // lastRevisionId  Int
 
-  revisions LoreEntityRevision[]
+  // For Starknet indexing
+  eventIndexed      String?
+
+  revisions       LoreEntityRevision[]
 }
 
 model LoreEntityRevision {
@@ -255,8 +258,11 @@ model LoreEntityRevision {
   entity   LoreEntity @relation(fields: [entityId], references: [id])
   entityId Int
 
-  pois  LorePoisOnEntityRevisions[]
-  props LorePropsOnEntityRevisions[]
+  // For Starknet indexing
+  eventIndexed      String?
+
+  pois              LorePoisOnEntityRevisions[]
+  props             LorePropsOnEntityRevisions[]
 }
 
 model LorePOI {
