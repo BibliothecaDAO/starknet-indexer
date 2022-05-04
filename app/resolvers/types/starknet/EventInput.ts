@@ -15,8 +15,10 @@ export class EventInput implements Partial<Event> {
   contract: string;
   @Field()
   name: string;
-  @Field(() => [Number])
-  parameters: number[];
+  @Field(() => [String])
+  parameters: string[];
+  @Field(() => [String])
+  keys: string[];
   @Field()
   timestamp: Date;
   @Field()

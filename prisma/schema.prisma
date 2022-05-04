@@ -130,23 +130,23 @@ model Wallet {
 
 // MILSTONE 1
 model Realm {
-  id           Int        @id @default(autoincrement())
-  realmId      Int        @unique
+  id           Int          @id @default(autoincrement())
+  realmId      Int          @unique
   name         String?
-  wallet       Wallet?    @relation(fields: [owner], references: [address])
+  wallet       Wallet?      @relation(fields: [owner], references: [address])
   owner        String?
   bridgedOwner String?
+  ownerL2      String?
+  settledOwner String?
   wonder       String?
-  stakedOwner  String?
-  rarityRank   Int        @default(0)
-  rarityScore  Float      @default(0)
-  imageUrl     String     @default("")
+  rarityRank   Int          @default(0)
+  rarityScore  Float        @default(0)
+  imageUrl     String       @default("")
   orderType    OrderType?
-
-  buildings Building[]
-  resources Resource[]
-  traits    RealmTrait[]
-  squads    Squad[]
+  buildings    Building[]
+  resources    Resource[]
+  traits       RealmTrait[]
+  squads       Squad[]
 }
 
 // MILSTONE 1
@@ -273,93 +273,94 @@ model Event {
   chainId           String
   contract          String
   name              String
-  parameters        Int[]
+  parameters        String[]
+  keys              String[]
   timestamp         DateTime
   txHash            String
-  status            Int      @default(0)
+  status            Int      @default(0) // 0 event logged, 1 details fetched, 2 synced, -1 error
 }
 
 // LORE
 // model LastEvents {
-//   module 
+//   module
 // }
 model LastIndexedEvent {
-  moduleName  String @id
+  moduleName String @id
 
-  eventId     String
+  eventId String
 }
 
 model LoreEntity {
-  id          Int     @id // from blockchain
-  owner       String?
-  kind        Int     @default(0) // Text entity is a default
+  id    Int     @id // from blockchain
+  owner String?
+  kind  Int     @default(0) // Text entity is a default
 
-  // TODO: wanted to add it but Prisma doesn't allow it... its brain explodes  
+  // TODO: wanted to add it but Prisma doesn't allow it... its brain explodes
   // lastRevision    LoreEntityRevision @relation(fields: [lastRevisionId], references: [id])
   // lastRevisionId  Int
 
-  revisions       LoreEntityRevision[]
+  revisions LoreEntityRevision[]
 }
 
 model LoreEntityRevision {
-  id                Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  revisionNumber    Int // from blockchain
+  revisionNumber Int // from blockchain
 
   // Arweave linking
-  arweaveId         String
+  arweaveId String
 
-  title             String?
-  
+  title String?
+
   // Text kind fields
-  markdown          String? // markdown body text
-  excerpt           String? // small description
+  markdown String? // markdown body text
+  excerpt  String? // small description
 
   // Media kind fields
-  media_url         String?
+  media_url String?
 
-  createdAt         DateTime? @default(now())
+  createdAt DateTime? @default(now())
 
-  entity            LoreEntity @relation(fields: [entityId], references: [id])
-  entityId          Int
+  entity   LoreEntity @relation(fields: [entityId], references: [id])
+  entityId Int
 
-  pois              LorePoisOnEntityRevisions[]
-  props             LorePropsOnEntityRevisions[]
+  pois  LorePoisOnEntityRevisions[]
+  props LorePropsOnEntityRevisions[]
 }
 
 model LorePOI {
-  id          Int        @id // the same as in blockchain 1, 1000, 1001, 2000, 2001, etc.
-  name        String
-  assetType   String?
+  id        Int     @id // the same as in blockchain 1, 1000, 1001, 2000, 2001, etc.
+  name      String
+  assetType String?
 
   entities LorePoisOnEntityRevisions[]
 }
 
 model LoreProp {
-  id          Int        @id
-  name        String
+  id   Int    @id
+  name String
 
-  entities    LorePropsOnEntityRevisions[]
+  entities LorePropsOnEntityRevisions[]
 }
 
 model LorePoisOnEntityRevisions {
-  entityRevision      LoreEntityRevision     @relation(fields: [entityRevisionId], references: [id])
-  entityRevisionId    Int 
-  poi                 LorePOI                @relation(fields: [poiId], references: [id])
-  poiId               Int
+  entityRevision   LoreEntityRevision @relation(fields: [entityRevisionId], references: [id])
+  entityRevisionId Int
+  poi              LorePOI            @relation(fields: [poiId], references: [id])
+  poiId            Int
 
-  assetId             String? // uint256
+  assetId String? // uint256
 
   @@id([entityRevisionId, poiId])
 }
 
 model LorePropsOnEntityRevisions {
-  entityRevision      LoreEntityRevision     @relation(fields: [entityRevisionId], references: [id])
-  entityRevisionId    Int // relation scalar field (used in the `@relation` attribute above)
-  prop                LoreProp       @relation(fields: [propId], references: [id])
-  propId              Int // relation scalar field (used in the `@relation` attribute above)
+  entityRevision   LoreEntityRevision @relation(fields: [entityRevisionId], references: [id])
+  entityRevisionId Int // relation scalar field (used in the `@relation` attribute above)
+  prop             LoreProp           @relation(fields: [propId], references: [id])
+  propId           Int // relation scalar field (used in the `@relation` attribute above)
 
-  value               String?
+  value String?
 
   @@id([entityRevisionId, propId])
 }

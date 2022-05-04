@@ -2,6 +2,7 @@ import { Event } from "../entities/starknet/Event";
 import { Context } from "../context";
 import { Indexer, StarkNetEvent } from "./../types";
 import StarknetVoyagerApi from "./StarknetVoyagerApi";
+import { NETWORK } from "../utils/constants";
 
 export default class StarknetIndexer implements Indexer<StarkNetEvent> {
   indexers: Indexer<Event>[];
@@ -24,10 +25,11 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
   async index(events: StarkNetEvent[]): Promise<void> {
     for (let event of events) {
       const updates: any = {
-        chainId: event.chainId ?? "testnet",
+        chainId: event.chainId ?? NETWORK,
         contract: event.contract,
         name: event.name,
         parameters: event.parameters,
+        keys: event.keys,
         blockNumber: event.blockNumber,
         transactionNumber: event.transactionNumber
       };
@@ -117,11 +119,12 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
               return {
                 name: "",
                 eventId: event.eventId,
-                chainId: "testnet",
+                chainId: NETWORK,
                 contract: event.contract,
                 transactionHash: event.txHash,
                 timestamp: undefined,
-                parameters: []
+                parameters: [],
+                keys: []
               };
             })
         );
@@ -155,6 +158,20 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
         }
       });
       await indexer.index(events);
+      await this.context.prisma.event.updateMany({
+        data: {
+          status: 2
+        },
+        where: {
+          eventId: {
+            gt: lastId
+          },
+          contract: {
+            in: contracts
+          },
+          status: 1
+        }
+      });
     }
   }
 

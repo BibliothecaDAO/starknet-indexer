@@ -1,7 +1,9 @@
+export const NETWORK = process.env.NETWORK === "goerli" ? "goerli" : "mainnet";
+
 export const REALMS_L1_SUBGRAPH_URL =
-  process.env.NETWORK === "goerli"
+  NETWORK === "goerli"
     ? "https://api.thegraph.com/subgraphs/name/bibliothecaforadventurers/realms-goerli"
-    : '"https://api.thegraph.com/subgraphs/name/bibliothecaforadventurers/realms';
+    : "https://api.thegraph.com/subgraphs/name/bibliothecaforadventurers/realms";
 
 const NETWORKS = {
   mainnet: {
@@ -16,5 +18,4 @@ const NETWORKS = {
   }
 };
 
-export const CONTRACTS =
-  NETWORKS[process.env.NETWORK === "goerli" ? "goerli" : "mainnet"];
+export const CONTRACTS = NETWORKS[NETWORK];

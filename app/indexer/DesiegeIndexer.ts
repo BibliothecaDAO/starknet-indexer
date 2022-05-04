@@ -25,18 +25,18 @@ export default class DesiegeIndexer implements Indexer<Event> {
       if (eventId <= lastIndexedEventId) {
         continue;
       }
-      const params = (event.parameters as any) ?? [];
+      const params = event.parameters ?? [];
       const isGameAction = params.length === 5;
 
-      const tokenOffset = isGameAction ? params[2] : 0;
-      const tokenAmount = isGameAction ? params[3] : 0;
+      const tokenOffset = isGameAction ? parseInt(params[2]) : 0;
+      const tokenAmount = isGameAction ? parseInt(params[3]) : 0;
       // const actionType = isGameAction ? params[4] : 0;
       const attackedTokens = tokenOffset === 1 ? tokenAmount : 0;
       const defendedTokens = tokenOffset === 2 ? tokenAmount : 0;
       const winner = 0;
       await this.context.prisma.desiege.upsert({
         where: {
-          gameId: params[0]
+          gameId: parseInt(params[0])
         },
         update: {
           attackedTokens: { increment: attackedTokens },
@@ -44,16 +44,16 @@ export default class DesiegeIndexer implements Indexer<Event> {
           eventIndexed: event.eventId,
           winner,
           startedOn: !isGameAction ? event.timestamp : undefined,
-          initialHealth: !isGameAction ? params[1] : undefined
+          initialHealth: !isGameAction ? parseInt(params[1]) : undefined
         },
         create: {
-          gameId: params[0],
+          gameId: parseInt(params[0]),
           attackedTokens,
           defendedTokens,
           eventIndexed: event.eventId,
           winner,
           startedOn: !isGameAction ? event.timestamp : new Date(0),
-          initialHealth: !isGameAction ? params[1] : undefined
+          initialHealth: !isGameAction ? parseInt(params[1]) : undefined
         }
       });
 

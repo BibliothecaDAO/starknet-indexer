@@ -13,7 +13,7 @@ export interface StarkNetEvent {
   contract?: string;
   keys?: Array<string>;
   name?: string;
-  parameters?: Array<number>;
+  parameters?: Array<string>;
   timestamp?: Date;
   transactionHash?: string;
   status?: number;

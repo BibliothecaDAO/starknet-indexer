@@ -124,8 +124,9 @@ type Event {
   contract: String!
   eventId: String!
   id: Int!
+  keys: [String!]!
   name: String!
-  parameters: [Int!]!
+  parameters: [String!]!
   status: Int!
   timestamp: DateTime!
   transactionNumber: Int!
@@ -135,7 +136,6 @@ type Event {
 type EventAvgAggregate {
   blockNumber: Float
   id: Float
-  parameters: Float
   status: Float
   transactionNumber: Float
 }
@@ -143,7 +143,6 @@ type EventAvgAggregate {
 input EventAvgOrderByAggregateInput {
   blockNumber: SortOrder
   id: SortOrder
-  parameters: SortOrder
   status: SortOrder
   transactionNumber: SortOrder
 }
@@ -155,6 +154,7 @@ type EventCountAggregate {
   contract: Int!
   eventId: Int!
   id: Int!
+  keys: Int!
   name: Int!
   parameters: Int!
   status: Int!
@@ -169,6 +169,7 @@ input EventCountOrderByAggregateInput {
   contract: SortOrder
   eventId: SortOrder
   id: SortOrder
+  keys: SortOrder
   name: SortOrder
   parameters: SortOrder
   status: SortOrder
@@ -182,6 +183,7 @@ input EventCreateInput {
   chainId: String!
   contract: String!
   eventId: String!
+  keys: EventCreatekeysInput
   name: String!
   parameters: EventCreateparametersInput
   status: Int
@@ -196,6 +198,7 @@ input EventCreateManyInput {
   contract: String!
   eventId: String!
   id: Int
+  keys: EventCreatekeysInput
   name: String!
   parameters: EventCreateparametersInput
   status: Int
@@ -204,8 +207,12 @@ input EventCreateManyInput {
   txHash: String!
 }
 
+input EventCreatekeysInput {
+  set: [String!]!
+}
+
 input EventCreateparametersInput {
-  set: [Int!]!
+  set: [String!]!
 }
 
 type EventGroupBy {
@@ -219,8 +226,9 @@ type EventGroupBy {
   contract: String!
   eventId: String!
   id: Int!
+  keys: [String!]
   name: String!
-  parameters: [Int!]
+  parameters: [String!]
   status: Int!
   timestamp: DateTime!
   transactionNumber: Int!
@@ -290,6 +298,7 @@ input EventOrderByWithAggregationInput {
   contract: SortOrder
   eventId: SortOrder
   id: SortOrder
+  keys: SortOrder
   name: SortOrder
   parameters: SortOrder
   status: SortOrder
@@ -304,6 +313,7 @@ input EventOrderByWithRelationInput {
   contract: SortOrder
   eventId: SortOrder
   id: SortOrder
+  keys: SortOrder
   name: SortOrder
   parameters: SortOrder
   status: SortOrder
@@ -318,6 +328,7 @@ enum EventScalarFieldEnum {
   contract
   eventId
   id
+  keys
   name
   parameters
   status
@@ -335,8 +346,9 @@ input EventScalarWhereWithAggregatesInput {
   contract: StringWithAggregatesFilter
   eventId: StringWithAggregatesFilter
   id: IntWithAggregatesFilter
+  keys: StringNullableListFilter
   name: StringWithAggregatesFilter
-  parameters: IntNullableListFilter
+  parameters: StringNullableListFilter
   status: IntWithAggregatesFilter
   timestamp: DateTimeWithAggregatesFilter
   transactionNumber: IntWithAggregatesFilter
@@ -346,7 +358,6 @@ input EventScalarWhereWithAggregatesInput {
 type EventSumAggregate {
   blockNumber: Int
   id: Int
-  parameters: [Int!]
   status: Int
   transactionNumber: Int
 }
@@ -354,7 +365,6 @@ type EventSumAggregate {
 input EventSumOrderByAggregateInput {
   blockNumber: SortOrder
   id: SortOrder
-  parameters: SortOrder
   status: SortOrder
   transactionNumber: SortOrder
 }
@@ -364,6 +374,7 @@ input EventUpdateInput {
   chainId: StringFieldUpdateOperationsInput
   contract: StringFieldUpdateOperationsInput
   eventId: StringFieldUpdateOperationsInput
+  keys: EventUpdatekeysInput
   name: StringFieldUpdateOperationsInput
   parameters: EventUpdateparametersInput
   status: IntFieldUpdateOperationsInput
@@ -377,6 +388,7 @@ input EventUpdateManyMutationInput {
   chainId: StringFieldUpdateOperationsInput
   contract: StringFieldUpdateOperationsInput
   eventId: StringFieldUpdateOperationsInput
+  keys: EventUpdatekeysInput
   name: StringFieldUpdateOperationsInput
   parameters: EventUpdateparametersInput
   status: IntFieldUpdateOperationsInput
@@ -385,9 +397,14 @@ input EventUpdateManyMutationInput {
   txHash: StringFieldUpdateOperationsInput
 }
 
+input EventUpdatekeysInput {
+  push: [String!]
+  set: [String!]
+}
+
 input EventUpdateparametersInput {
-  push: [Int!]
-  set: [Int!]
+  push: [String!]
+  set: [String!]
 }
 
 input EventWhereInput {
@@ -399,8 +416,9 @@ input EventWhereInput {
   contract: StringFilter
   eventId: StringFilter
   id: IntFilter
+  keys: StringNullableListFilter
   name: StringFilter
-  parameters: IntNullableListFilter
+  parameters: StringNullableListFilter
   status: IntFilter
   timestamp: DateTimeFilter
   transactionNumber: IntFilter
@@ -439,14 +457,6 @@ input IntFilterInput {
   lt: Int
   lte: Int
   notIn: [Int!]
-}
-
-input IntNullableListFilter {
-  equals: [Int!]
-  has: Int
-  hasEvery: [Int!]
-  hasSome: [Int!]
-  isEmpty: Boolean
 }
 
 input IntWithAggregatesFilter {
@@ -894,6 +904,14 @@ input StringFilterInput {
   not: [String!]
   notIn: [String!]
   startsWith: [String!]
+}
+
+input StringNullableListFilter {
+  equals: [String!]
+  has: String
+  hasEvery: [String!]
+  hasSome: [String!]
+  isEmpty: Boolean
 }
 
 input StringWithAggregatesFilter {

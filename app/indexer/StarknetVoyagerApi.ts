@@ -1,3 +1,4 @@
+import { NETWORK } from "../utils/constants";
 import fetch from "node-fetch";
 import { StarkNetEvent } from "../types";
 
@@ -29,7 +30,7 @@ const PAGE_SIZE = 50;
 export default class StarknetVoyagerApi {
   private chainId: string;
   constructor() {
-    this.chainId = "testnet";
+    this.chainId = NETWORK;
   }
 
   async fetch(
@@ -64,9 +65,13 @@ export default class StarknetVoyagerApi {
 
     const response = await fetch(url, { timeout: 20000 });
     const details = await response.json();
-    const parameters = details.receipt.events[0].data.map((value: any) => {
-      return value.indexOf("0x") === 0 ? parseInt(value, 16) : parseInt(value);
-    });
+    const eventDetails = details.receipt.events.find(
+      (ev: any) => ev.id === voyagerEvent.id
+    );
+
+    //   data.map((value: any) => {
+    //   return value.indexOf("0x") === 0 ? parseInt(value, 16) : parseInt(value);
+    // });
     return {
       name: "",
       chainId: this.chainId,
@@ -76,7 +81,8 @@ export default class StarknetVoyagerApi {
       contract: voyagerEvent.contract,
       transactionHash: voyagerEvent.transactionHash,
       timestamp: new Date(details.header.timestamp * 1000),
-      parameters
+      parameters: eventDetails ? eventDetails.data : [],
+      keys: eventDetails ? eventDetails.keys : []
     };
   }
 }

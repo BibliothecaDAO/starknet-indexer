@@ -13,10 +13,15 @@ import {
 } from "../resolvers";
 import { CONTRACTS, REALMS_L1_SUBGRAPH_URL } from "../utils/constants";
 
+const REALMS_L1_MAINNET_URL =
+  "https://api.thegraph.com/subgraphs/name/bibliothecaforadventurers/realms";
+
+const NETWORK = process.env.NETWORK ?? "mainnet";
+
 export class RealmsL1Indexer {
   context: Context;
   provider = new ethers.providers.JsonRpcProvider(
-    `https://eth-mainnet.alchemyapi.io/v2/${process.env.PUBLIC_ALCHEMY_API_KEY}`
+    `https://eth-${NETWORK}.alchemyapi.io/v2/${process.env.PUBLIC_ALCHEMY_API_KEY}`
   );
   wallet = new WalletResolver();
   realm = new RealmResolver();
@@ -35,33 +40,11 @@ export class RealmsL1Indexer {
 
   async createOrUpdateRealmsFromSubgraph(realms: any[]) {
     for (let realm of realms) {
-      const realmOwner = realm.currentOwner
-        ? realm.currentOwner.address
-        : undefined;
-
-      const bridgedOwner = realm.bridgedOwner || realm.bridgedV2Owner;
-
-      // Update Wallet
-      await this.wallet.createOrUpdateWallet(
-        { address: realmOwner },
-        this.context
-      );
-
-      // Update BridgedOwner Wallet
-      if (bridgedOwner && bridgedOwner.address) {
-        await this.wallet.createOrUpdateWallet(
-          { address: bridgedOwner.address },
-          this.context
-        );
-      }
-
       // Update Realm
       await this.realm.createOrUpdateRealm(
         {
           realmId: parseInt(realm.id),
           name: realm.name,
-          owner: realmOwner,
-          bridgedOwner: bridgedOwner ? bridgedOwner.address : undefined,
           imageUrl: realm.image,
           wonder: realm.wonder,
           rarityRank: parseInt(realm.rarityRank),
@@ -141,31 +124,48 @@ export class RealmsL1Indexer {
 
   async syncL1Subgraph() {
     const count = await this.context.prisma.realm.count();
-    const doFullSync = count === 0;
+    if (count > 0) {
+      return;
+    }
 
     const traitsDb = getTraitsDb();
     const first = 1000;
     let last = "";
     for (let skip = 0; skip < 8000; skip += first) {
       console.log(`Syncing realms ${skip} to ${skip + first}`);
-      const realms = (await getRealms(first, last)).map((realm: any) => {
-        return {
-          ...realm,
-          ...traitsDb[realm.id]
-        };
-      });
+      const realms = (await getRealms(first, last, REALMS_L1_MAINNET_URL)).map(
+        (realm: any) => ({ ...realm, ...traitsDb[realm.id] })
+      );
 
       if (realms.length === 0) {
         continue;
       }
       last = realms[realms.length - 1]?.id;
 
-      if (doFullSync) {
-        this.createOrUpdateRealmsFromSubgraph(realms);
-      } else {
-        this.updateRealmsOwnersFromSubgraph(realms);
-      }
+      await this.createOrUpdateRealmsFromSubgraph(realms);
 
+      if (realms.length < first) {
+        break;
+      }
+    }
+  }
+
+  async syncL1WalletsSubgraph() {
+    const traitsDb = getTraitsDb();
+    const first = 1000;
+    let last = "";
+    for (let skip = 0; skip < 8000; skip += first) {
+      console.log(`Syncing realms ${skip} to ${skip + first}`);
+      const realms = (await getRealms(first, last)).map((realm: any) => ({
+        ...realm,
+        ...traitsDb[realm.id]
+      }));
+
+      if (realms.length === 0) {
+        continue;
+      }
+      last = realms[realms.length - 1]?.id;
+      await this.updateRealmsOwnersFromSubgraph(realms);
       if (realms.length < first) {
         break;
       }
@@ -206,7 +206,10 @@ export class RealmsL1Indexer {
   }
 
   async start() {
+    // Create All Realms From Mainnet URL
     await this.syncL1Subgraph();
+    // Sync Wallets
+    await this.syncL1WalletsSubgraph();
     await this.subscribeEvents();
   }
 }
@@ -218,8 +221,8 @@ function getTraitsDb() {
   return JSON.parse(data);
 }
 
-async function getRealms(first: number, last: string) {
-  const response = await fetch(REALMS_L1_SUBGRAPH_URL, {
+async function getRealms(first: number, last: string, subgraphUrl?: string) {
+  const response = await fetch(subgraphUrl ?? REALMS_L1_SUBGRAPH_URL, {
     method: "post",
     body: JSON.stringify({
       operationName: "getRealms",
