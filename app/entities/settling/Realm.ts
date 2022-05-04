@@ -21,6 +21,12 @@ export class Realm {
   @Field(() => String, { nullable: true })
   bridgedOwner?: string;
 
+  @Field(() => String, { nullable: true })
+  ownerL2?: string;
+
+  @Field(() => String, { nullable: true })
+  settledOwner?: string;
+
   @Field(() => Wallet, { nullable: true })
   wallet: Wallet;
 

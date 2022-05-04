@@ -698,10 +698,12 @@ type Realm {
   name: String
   orderType: String!
   owner: String
+  ownerL2: String
   rarityRank: Int!
   rarityScore: Float!
   realmId: Int!
   resources: [Resource!]
+  settledOwner: String
   squads: [Squad!]
   traits: [RealmTrait!]
   wallet: Wallet
