@@ -47,12 +47,8 @@ export default class RealmsL2Indexer implements Indexer<Event> {
         const where = {
           realmId: parseInt(params[2])
         };
-        const fromAddress = BigNumber.from(params[0])
-          .toHexString()
-          .replace("0x0", "0x");
-        const toAddress = BigNumber.from(params[1])
-          .toHexString()
-          .replace("0x0", "0x");
+        const fromAddress = BigNumber.from(params[0]).toHexString();
+        const toAddress = BigNumber.from(params[1]).toHexString();
 
         //ensure wallet is created
         await this.context.prisma.wallet.upsert({
