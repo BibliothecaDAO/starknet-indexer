@@ -524,7 +524,6 @@ type Mutation {
   createOrUpdateRealm(data: RealmInput!): Realm!
   createOrUpdateRealmTrait(data: RealmTraitInput!): RealmTrait!
   createOrUpdateResources(data: ResourceInput!): Resource!
-  createOrUpdateWallet(data: WalletInput!): Wallet!
   deleteEvent(where: EventWhereUniqueInput!): Event
   deleteManyEvent(where: EventWhereInput): AffectedRowsOutput!
   reindexDesiege: Boolean!
@@ -681,7 +680,6 @@ type Query {
   getResources: [Resource!]!
   getResourcesByAddress(address: String!): [Resource!]!
   getWallet(address: String!): Wallet!
-  getWallets: [Wallet!]!
   groupByEvent(by: [EventScalarFieldEnum!]!, having: EventScalarWhereWithAggregatesInput, orderBy: [EventOrderByWithAggregationInput!], skip: Int, take: Int, where: EventWhereInput): [EventGroupBy!]!
 }
 
@@ -941,11 +939,8 @@ input StringWithAggregatesFilter {
 """The Wallet Model"""
 type Wallet {
   address: String!
-  id: ID!
-  realms: [Realm!]!
-}
-
-input WalletInput {
-  address: String!
-  realms: RealmInput
+  realmsBridgedHeld: Int!
+  realmsL1Held: Int!
+  realmsL2Held: Int!
+  realmsSettledHeld: Int!
 }

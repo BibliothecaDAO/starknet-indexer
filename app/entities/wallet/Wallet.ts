@@ -1,15 +1,16 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field, Int } from "type-graphql";
 import { __Type } from "graphql";
-import { Realm } from "..";
 
 @ObjectType({ description: "The Wallet Model" })
 export class Wallet {
-  @Field(() => ID)
-  id: number;
-
   @Field()
   address: string;
-
-  @Field(() => [Realm], { nullable: false })
-  realms: [Realm];
+  @Field(() => Int, { nullable: false })
+  realmsL1Held: number;
+  @Field(() => Int, { nullable: false })
+  realmsL2Held: number;
+  @Field(() => Int, { nullable: false })
+  realmsSettledHeld: number;
+  @Field(() => Int, { nullable: false })
+  realmsBridgedHeld: number;
 }
