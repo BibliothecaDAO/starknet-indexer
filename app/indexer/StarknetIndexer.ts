@@ -88,6 +88,15 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
     }
   }
 
+  findIndexer(contract: string) {
+    if (!contract) {
+      return null;
+    }
+    return this.indexers.find((indexer) => {
+      return indexer.contracts().indexOf(contract) > -1;
+    });
+  }
+
   async syncEventDetails() {
     const events = await this.context.prisma.event.findMany({
       take: 50,
@@ -130,10 +139,20 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
         );
         const results = await Promise.all(batch);
         await this.index(
-          results.map((result) => ({
-            ...result,
-            status: result.parameters && result.parameters.length > 0 ? 1 : -1
-          }))
+          results.map((result) => {
+            const indexer = this.findIndexer(result.contract!);
+            let eventName = "";
+            if (indexer && indexer.eventName && result.keys) {
+              eventName = result.keys[0]
+                ? indexer.eventName(result.keys[0])
+                : "";
+            }
+            return {
+              ...result,
+              name: eventName,
+              status: result.parameters && result.parameters.length > 0 ? 1 : -1
+            };
+          })
         );
       }
     } catch (e) {}

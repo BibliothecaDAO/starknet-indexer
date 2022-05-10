@@ -28,4 +28,5 @@ export interface Indexer<T> {
   contracts(): string[];
   index(items: T[]): Promise<void>;
   lastIndexId(): Promise<string>;
+  eventName?(selector: string): string;
 }

@@ -7,7 +7,12 @@ import { hash } from "starknet";
 const SETTLING_CONTRACT_ADDRESS =
   "0x07416e6b5d7470a75ffe1eb7a3b6aa6174a4bec2d8598cddfc3a9c7d2d9457bc";
 
-const TRANSFER_SELECTOR = hash.getSelectorFromName("Transfer");
+const TRANSFER_SELECTOR = BigNumber.from(
+  hash.getSelectorFromName("Transfer")
+).toHexString();
+const APPROVAL_SELECTOR = BigNumber.from(
+  hash.getSelectorFromName("Approval")
+).toHexString();
 
 export default class RealmsL2Indexer implements Indexer<Event> {
   private CONTRACTS = [
@@ -32,6 +37,18 @@ export default class RealmsL2Indexer implements Indexer<Event> {
 
   isSettlingContract(address: string) {
     return SETTLING_CONTRACT_ADDRESS === address;
+  }
+
+  eventName(selector: string): string {
+    const eventSelector = BigNumber.from(selector).toHexString();
+    switch (eventSelector) {
+      case TRANSFER_SELECTOR:
+        return "Transfer";
+      case APPROVAL_SELECTOR:
+        return "Approval";
+      default:
+        return "";
+    }
   }
 
   async index(events: Event[]): Promise<void> {

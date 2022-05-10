@@ -175,10 +175,12 @@ model BuildingCost {
 
 // MILSTONE 1
 model Resource {
-  id      Int          @id @default(autoincrement())
-  type    ResourceType
-  realmId Int?
-  realm   Realm?       @relation(fields: [realmId], references: [realmId])
+  id       Int          @id @default(autoincrement())
+  type     ResourceType
+  realmId  Int?
+  realm    Realm?       @relation(fields: [realmId], references: [realmId])
+  level    Int          @default(0)
+  upgrades String[]
 
   @@unique([type, realmId])
 }
