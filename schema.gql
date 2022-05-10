@@ -779,9 +779,11 @@ enum RealmTraitType {
 """The Resource Model"""
 type Resource {
   id: ID!
+  level: Int!
   realm: Realm!
   realmId: Float
   type: String!
+  upgrades: [String!]!
 }
 
 input ResourceInput {

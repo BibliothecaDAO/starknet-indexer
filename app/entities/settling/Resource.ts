@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field, ID, Int } from "type-graphql";
 import { __Type } from "graphql";
 import { ResourceType } from "@prisma/client";
 import { Realm } from "./Realm";
@@ -16,4 +16,10 @@ export class Resource {
 
   @Field(() => Realm, { nullable: false })
   realm: Realm;
+
+  @Field(() => Int)
+  level: number;
+
+  @Field(() => [String])
+  upgrades: string[];
 }
