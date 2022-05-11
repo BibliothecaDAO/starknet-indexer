@@ -5,7 +5,7 @@ import { BigNumber } from "ethers";
 import { hash } from "starknet";
 
 const SETTLING_CONTRACT_ADDRESS =
-  "0x07416e6b5d7470a75ffe1eb7a3b6aa6174a4bec2d8598cddfc3a9c7d2d9457bc";
+  "0x007235420ad11fa85b9e9837fb03a0b42a56cc930dd51a9aadbb5ad229eabe77";
 
 const TRANSFER_SELECTOR = BigNumber.from(
   hash.getSelectorFromName("Transfer")
@@ -16,7 +16,7 @@ const APPROVAL_SELECTOR = BigNumber.from(
 
 export default class RealmsL2Indexer implements Indexer<Event> {
   private CONTRACTS = [
-    "0x04bf47377bbab7b259161f59631bfb8942813740c892b5c3761fb3232cbb0c5c"
+    "0x0741568eef7e69072fac5ac490ef2dca278fe75898814326fc37b0c6b36e94e0"
   ];
   private context: Context;
 

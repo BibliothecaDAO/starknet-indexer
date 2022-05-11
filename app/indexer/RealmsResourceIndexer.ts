@@ -36,7 +36,7 @@ const RESOURCES = [
 
 export default class RealmsResourceIndexer implements Indexer<Event> {
   private CONTRACTS = [
-    "0x04603ff9190233c0b7b52844b31c5f3f028dd906f5be1bab164d8d7ca144aa9a"
+    "0x04a29535b95b85aca744a0b1bcc2faa1972f0769db1ec10780bb7c01ce3fe8fd"
   ];
   private context: Context;
 
