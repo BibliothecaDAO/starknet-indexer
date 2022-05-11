@@ -15,7 +15,7 @@ const GAME_ACTION_SELECTOR = BigNumber.from(
 
 export default class DesiegeIndexer implements Indexer<Event> {
   private CONTRACTS = [
-    "0x1fbec91116c1ced6bb392502adc191dd7978f2b066c674bf28f8710a9a52afd"
+    "0x61756c424c781388f8908e02c97e31574a0fed80a9561fa025fb74140f79470"
   ];
   private context: Context;
 
