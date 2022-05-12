@@ -11,7 +11,7 @@ const realmId = 1009;
 export const building: BuildingInput = {
   id: 1,
   realmId: realmId,
-  type: "Carpenter"
+  type: "Fairgrounds"
 };
 
 export const offenceSquad: SquadInput = {
@@ -38,14 +38,8 @@ export const buildingCosts: BuildingCostInput[] = [
   { buildingType: "Granary", resourceType: "Alchemical_Silver", qty: 100 },
   { buildingType: "Housing", resourceType: "Wood", qty: 100 },
   { buildingType: "Amphitheater", resourceType: "Wood", qty: 100 },
-  { buildingType: "Carpenter", resourceType: "Wood", qty: 100 },
-  { buildingType: "Carpenter", resourceType: "Coal", qty: 100 },
   { buildingType: "School", resourceType: "Wood", qty: 100 },
-  { buildingType: "Symposium", resourceType: "Wood", qty: 100 },
-  { buildingType: "Logistics_Office", resourceType: "Wood", qty: 100 },
-  { buildingType: "Explorers_Guild", resourceType: "Wood", qty: 100 },
   { buildingType: "Parade_Grounds", resourceType: "Wood", qty: 100 },
-  { buildingType: "Resource_Facility", resourceType: "Wood", qty: 100 },
   { buildingType: "Dock", resourceType: "Wood", qty: 100 },
   { buildingType: "Fishmonger", resourceType: "Wood", qty: 100 },
   { buildingType: "Farms", resourceType: "Wood", qty: 100 },

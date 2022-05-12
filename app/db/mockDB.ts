@@ -2,21 +2,21 @@ import "reflect-metadata";
 import { PrismaClient } from "@prisma/client";
 import { context } from "../context";
 import {
-  BuildingResolver,
-  BuildingCostResolver,
+  // BuildingResolver,
+  // BuildingCostResolver,
   SquadResolver,
   SquadCostResolver
 } from "../resolvers";
 import {
-  building,
-  buildingCosts,
+  // building,
+  // buildingCosts,
   squadCosts,
   offenceSquad,
   defenceSquad
 } from "../db/testDB";
 
-const Building = new BuildingResolver();
-const BuildingCost = new BuildingCostResolver();
+// const Building = new BuildingResolver();
+// const BuildingCost = new BuildingCostResolver();
 const Squad = new SquadResolver();
 const SquadCost = new SquadCostResolver();
 
@@ -24,11 +24,11 @@ const prisma = new PrismaClient();
 
 export async function main() {
   try {
-    await Building.createOrUpdateBuildings(building, context);
+    // await Building.createOrUpdateBuildings(building, context);
 
-    for (let cost of buildingCosts) {
-      await BuildingCost.createOrUpdateBuildingCost(cost, context);
-    }
+    // for (let cost of buildingCosts) {
+    //   await BuildingCost.createOrUpdateBuildingCost(cost, context);
+    // }
 
     for (let cost of squadCosts) {
       await SquadCost.createOrUpdateSquadCost(cost, context);

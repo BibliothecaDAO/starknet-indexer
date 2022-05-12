@@ -30,24 +30,13 @@ type BuildingCost {
   resourceType: String!
 }
 
-input BuildingCostInput {
-  buildingType: String!
-  qty: Float!
-  resourceType: String!
-}
-
-input BuildingInput {
-  id: ID
-  realmId: Float!
-  type: BuildingType!
-}
-
 enum BuildingType {
   Amphitheater
-  Carpenter
+  Archer_Tower
+  Architect
+  Barracks
   Castle
   Dock
-  Explorers_Guild
   Fairgrounds
   Farms
   Fishmonger
@@ -56,13 +45,12 @@ enum BuildingType {
   Guild
   Hamlet
   Housing
-  Logistics_Office
+  Mage_Tower
   Officer_Academy
   Parade_Grounds
-  Resource_Facility
   Royal_Reserve
   School
-  Symposium
+  Trade_Office
 }
 
 input BuildingTypeInput {
@@ -519,8 +507,6 @@ type LorePropsOnEntityRevisions {
 type Mutation {
   createEvent(data: EventCreateInput!): Event!
   createManyEvent(data: [EventCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
-  createOrUpdateBuildingCost(data: BuildingCostInput!): BuildingCost!
-  createOrUpdateBuildings(data: BuildingInput!): Building!
   createOrUpdateRealm(data: RealmInput!): Realm!
   createOrUpdateRealmTrait(data: RealmTraitInput!): RealmTrait!
   createOrUpdateResources(data: ResourceInput!): Resource!

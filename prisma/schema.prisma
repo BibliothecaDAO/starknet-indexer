@@ -60,13 +60,13 @@ enum BuildingType {
   Granary
   Housing
   Amphitheater
-  Carpenter
+  Archer_Tower
   School
-  Symposium
-  Logistics_Office
-  Explorers_Guild
+  Mage_Tower
+  Trade_Office
+  Architect
   Parade_Grounds
-  Resource_Facility
+  Barracks
   Dock
   Fishmonger
   Farms
@@ -153,8 +153,11 @@ model Realm {
 model Building {
   id      Int          @id @default(autoincrement())
   type    BuildingType
-  realmId Int?         @unique
+  realmId Int?
+  eventId String
   realm   Realm?       @relation(fields: [realmId], references: [realmId])
+
+  @@unique([realmId, eventId])
 }
 
 model BuildingRealmTraitConstraint {
