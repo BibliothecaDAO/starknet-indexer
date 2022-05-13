@@ -5,7 +5,7 @@ import { BigNumber } from "ethers";
 import { hash } from "starknet";
 
 const SETTLING_CONTRACT_ADDRESS =
-  "0x007235420ad11fa85b9e9837fb03a0b42a56cc930dd51a9aadbb5ad229eabe77";
+  "0x077b2a96db5fb49200f11155f6c2b1f5c0e697fb62d6b2c290592a1cb0ad0356";
 
 const TRANSFER_SELECTOR = BigNumber.from(
   hash.getSelectorFromName("Transfer")
