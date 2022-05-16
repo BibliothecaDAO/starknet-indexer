@@ -74,16 +74,28 @@ export default class RealmsResourceIndexer implements Indexer<Event> {
       }
       const params = event.parameters ?? [];
       const keys = event.keys ?? [];
+      let resourceId = 0;
+      let where = {};
       if (this.isResourceUpgradedEvent(keys)) {
-        const where = {
-          type_realmId: {
-            realmId: parseInt(params[0]),
-            type: RESOURCES[parseInt(params[2]) - 1]
-          }
-        };
-        const resource = await this.context.prisma.resource.findUnique({
-          where
-        });
+        let resource;
+        try {
+          resourceId = Math.max(parseInt(params[2]), parseInt(params[3])) - 1;
+          where = {
+            type_realmId: {
+              realmId: parseInt(params[0]),
+              type: RESOURCES[resourceId]
+            }
+          };
+          resource = await this.context.prisma.resource.findUnique({
+            where
+          });
+        } catch (e) {
+          console.error(
+            `Invalid resource upgrade: Event: ${event.eventId}, Params: `,
+            JSON.stringify(params)
+          );
+        }
+
         if (resource) {
           let upgrades = resource.upgrades ?? [];
           const timestamp = event.timestamp.toISOString();
