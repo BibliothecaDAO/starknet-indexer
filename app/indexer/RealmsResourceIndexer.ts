@@ -79,7 +79,7 @@ export default class RealmsResourceIndexer implements Indexer<Event> {
       if (this.isResourceUpgradedEvent(keys)) {
         let resource;
         try {
-          resourceId = Math.max(parseInt(params[2]), parseInt(params[3])) - 1;
+          resourceId = parseInt(params[2]) - 1;
           where = {
             type_realmId: {
               realmId: parseInt(params[0]),
