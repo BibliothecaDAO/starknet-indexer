@@ -181,6 +181,8 @@ model Desiege {
   defendedTokens Int?
   eventIndexed   String?
   initialHealth  Int?      @default(0)
+  startBlock     Int       @default(0)
+  endBlock       Int       @default(0)
   startedOn      DateTime?
 }
 

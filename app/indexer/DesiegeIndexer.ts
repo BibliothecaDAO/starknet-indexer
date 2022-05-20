@@ -3,6 +3,9 @@ import { Context } from "../context";
 import { Indexer } from "./../types";
 import { BigNumber } from "ethers";
 import { hash } from "starknet";
+import { Contract } from "starknet";
+import TowerDefenceABI from "../abis/01_TowerDefence.json";
+import { toBN } from "starknet/utils/number";
 
 // Events
 const GAME_STARTED_SELECTOR = BigNumber.from(
@@ -18,6 +21,10 @@ export default class DesiegeIndexer implements Indexer<Event> {
     "0x61756c424c781388f8908e02c97e31574a0fed80a9561fa025fb74140f79470"
   ];
   private context: Context;
+  private contract: Contract = new Contract(
+    TowerDefenceABI as any,
+    this.CONTRACTS[0]
+  );
 
   constructor(context: Context) {
     this.context = context;
@@ -48,34 +55,55 @@ export default class DesiegeIndexer implements Indexer<Event> {
           continue;
         }
         const params = event.parameters ?? [];
-        const isGameAction = params.length === 5;
+        const eventName = this.eventName(event.keys[0]);
+        const isGameAction = eventName === "game_action";
+        const isGameStart = eventName === "game_started";
 
         const tokenOffset = isGameAction ? parseInt(params[2]) : 0;
         const tokenAmount = isGameAction ? parseInt(params[3]) : 0;
-        // const actionType = isGameAction ? params[4] : 0;
         const attackedTokens = tokenOffset === 2 ? tokenAmount : 0;
         const defendedTokens = tokenOffset === 1 ? tokenAmount : 0;
         const winner = 0;
+        let startedOn;
+        let initialHealth;
+        let startBlock;
+        let endBlock;
+        if (isGameStart) {
+          startedOn = event.timestamp;
+          initialHealth = parseInt(params[1]);
+          startBlock = event.blockNumber;
+          try {
+            const gameCtx = await this.getGameVariables();
+            endBlock =
+              startBlock + 60 * gameCtx.hoursPerGame * gameCtx.blocksPerMinute;
+          } catch (e) {
+            console.error(e);
+          }
+        }
+        const updates = {
+          attackedTokens: isGameAction
+            ? { increment: attackedTokens }
+            : attackedTokens,
+          defendedTokens: isGameAction
+            ? { increment: defendedTokens }
+            : defendedTokens,
+          eventIndexed: event.eventId,
+          winner,
+          startedOn,
+          initialHealth,
+          startBlock,
+          endBlock
+        };
         await this.context.prisma.desiege.upsert({
           where: {
             gameId: parseInt(params[0])
           },
-          update: {
-            attackedTokens: isGameAction ? { increment: attackedTokens } : 0,
-            defendedTokens: isGameAction ? { increment: defendedTokens } : 0,
-            eventIndexed: event.eventId,
-            winner,
-            startedOn: !isGameAction ? event.timestamp : undefined,
-            initialHealth: !isGameAction ? parseInt(params[1]) : undefined
-          },
+          update: updates,
           create: {
             gameId: parseInt(params[0]),
-            attackedTokens,
+            ...updates,
             defendedTokens,
-            eventIndexed: event.eventId,
-            winner,
-            startedOn: !isGameAction ? event.timestamp : new Date(0),
-            initialHealth: !isGameAction ? parseInt(params[1]) : undefined
+            attackedTokens
           }
         });
 
@@ -85,6 +113,19 @@ export default class DesiegeIndexer implements Indexer<Event> {
       console.log(e);
     }
     return;
+  }
+
+  async getGameVariables() {
+    const varList = await this.contract.get_game_context_variables();
+    return {
+      gameIdx: toBN(varList[0]).toNumber(),
+      blocksPerMinute: toBN(varList[1]).toNumber(),
+      hoursPerGame: toBN(varList[2]).toNumber(),
+      currentBlock: toBN(varList[3]),
+      gameStartBlock: toBN(varList[4]),
+      mainHealth: toBN(varList[5]),
+      currentBoost: toBN(varList[6]).toNumber()
+    };
   }
 
   async lastIndexId(): Promise<string> {

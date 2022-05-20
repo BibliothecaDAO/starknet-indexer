@@ -13,11 +13,17 @@ export class DesiegeResolver {
     });
   }
 
+  @Query((_returns) => Desiege, { nullable: false })
+  async getDesiegeCurrent(@Ctx() ctx: Context) {
+    return await ctx.prisma.desiege.findFirst({
+      orderBy: {
+        gameId: "desc"
+      }
+    });
+  }
+
   @Query(() => [Desiege])
-  async getDesiegeGames(
-    @Ctx() ctx: Context
-    // @Arg("opts", { nullable: true }) opts: DesiegeQueryOpts
-  ) {
+  async getDesiegeGames(@Ctx() ctx: Context) {
     return await ctx.prisma.desiege.findMany({
       orderBy: {
         gameId: "desc"

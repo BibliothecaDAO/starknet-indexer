@@ -1,22 +1,26 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field, ID, Int } from "type-graphql";
 import { __Type } from "graphql";
 
 @ObjectType({ description: "The Desiege Model" })
 export class Desiege {
   @Field(() => ID)
   id: number;
-  @Field()
+  @Field(() => Int)
   gameId: Number;
-  @Field()
+  @Field(() => Int)
   winner: number;
-  @Field()
+  @Field(() => Int)
   attackedTokens: number;
-  @Field()
+  @Field(() => Int)
   defendedTokens: number;
   @Field()
   eventIndexed: number;
-  @Field()
-  initialHealth?: number;
+  @Field(() => Int)
+  initialHealth: number;
+  @Field(() => Int)
+  startBlock: number;
+  @Field(() => Int)
+  endBlock: number;
   @Field()
   startedOn?: Date;
 }

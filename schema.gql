@@ -83,14 +83,16 @@ input DateTimeWithAggregatesFilter {
 
 """The Desiege Model"""
 type Desiege {
-  attackedTokens: Float!
-  defendedTokens: Float!
+  attackedTokens: Int!
+  defendedTokens: Int!
+  endBlock: Int!
   eventIndexed: Float!
-  gameId: Float!
+  gameId: Int!
   id: ID!
-  initialHealth: Float!
+  initialHealth: Int!
+  startBlock: Int!
   startedOn: DateTime!
-  winner: Float!
+  winner: Int!
 }
 
 input EnumOrderTypeNullableFilter {
@@ -699,6 +701,7 @@ type Query {
   getBuildingsByAddress(address: String!): [Building!]!
   getBuildingsByRealm(realmId: Float!): [Building!]!
   getDesiege(id: Float!): Desiege!
+  getDesiegeCurrent: Desiege!
   getDesiegeGames: [Desiege!]!
   getLoreEntities(skip: Float = 0, take: Float = 100): [LoreEntity!]!
   getLoreEntity(entityId: Float!): LoreEntity!
