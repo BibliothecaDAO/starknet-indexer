@@ -1,7 +1,0 @@
--- AlterTable
-ALTER TABLE "Desiege" ALTER COLUMN "eventIndexed" SET DATA TYPE TEXT;
-
--- AlterTable
-ALTER TABLE "Event" ADD COLUMN     "blockNumber" INTEGER NOT NULL DEFAULT 0,
-ADD COLUMN     "transactionNumber" INTEGER NOT NULL DEFAULT 0,
-ALTER COLUMN "eventId" SET DATA TYPE TEXT;
