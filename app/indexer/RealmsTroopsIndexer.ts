@@ -1,6 +1,6 @@
 import { Event } from "../entities/starknet/Event";
 import { Context } from "../context";
-import { Indexer } from "./../types";
+import { Indexer } from "../types";
 import { BigNumber } from "ethers";
 import { hash } from "starknet";
 
@@ -8,7 +8,7 @@ const BUILD_TROOPS_SELECTOR = BigNumber.from(
   hash.getSelectorFromName("Build_toops")
 ).toHexString();
 
-export default class TroopsIndexer implements Indexer<Event> {
+export default class RealmsTroopsIndexer implements Indexer<Event> {
   private CONTRACTS = [
     "0x0143c2b110961626f46c4b35c55fa565227ffdb803155e917df790bad29240b9"
   ];

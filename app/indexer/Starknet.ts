@@ -5,7 +5,7 @@ import RealmsBuildingIndexer from "./RealmsBuildingIndexer";
 import RealmsL2Indexer from "./RealmsL2Indexer";
 import RealmsResourceIndexer from "./RealmsResourceIndexer";
 import StarknetIndexer from "./StarknetIndexer";
-import TroopsIndexer from "./TroopsIndexer";
+import RealmsTroopsIndexer from "./RealmsTroopsIndexer";
 
 export const StarkNet = () => {
   return {
@@ -17,7 +17,7 @@ export const StarkNet = () => {
           new RealmsL2Indexer(context),
           new RealmsResourceIndexer(context),
           new RealmsBuildingIndexer(context),
-          new TroopsIndexer(context)
+          new RealmsTroopsIndexer(context)
         ],
         context
       );
