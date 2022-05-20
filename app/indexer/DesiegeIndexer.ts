@@ -53,16 +53,16 @@ export default class DesiegeIndexer implements Indexer<Event> {
         const tokenOffset = isGameAction ? parseInt(params[2]) : 0;
         const tokenAmount = isGameAction ? parseInt(params[3]) : 0;
         // const actionType = isGameAction ? params[4] : 0;
-        const attackedTokens = tokenOffset === 1 ? tokenAmount : 0;
-        const defendedTokens = tokenOffset === 2 ? tokenAmount : 0;
+        const attackedTokens = tokenOffset === 2 ? tokenAmount : 0;
+        const defendedTokens = tokenOffset === 1 ? tokenAmount : 0;
         const winner = 0;
         await this.context.prisma.desiege.upsert({
           where: {
             gameId: parseInt(params[0])
           },
           update: {
-            attackedTokens: { increment: attackedTokens },
-            defendedTokens: { increment: defendedTokens },
+            attackedTokens: isGameAction ? { increment: attackedTokens } : 0,
+            defendedTokens: isGameAction ? { increment: defendedTokens } : 0,
             eventIndexed: event.eventId,
             winner,
             startedOn: !isGameAction ? event.timestamp : undefined,
