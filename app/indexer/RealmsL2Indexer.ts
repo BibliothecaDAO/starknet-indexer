@@ -60,33 +60,43 @@ export default class RealmsL2Indexer implements Indexer<Event> {
       }
       const params = event.parameters ?? [];
       const keys = event.keys ?? [];
-      if (this.isTransferEvent(keys)) {
-        const where = {
-          realmId: parseInt(params[2])
-        };
-        const fromAddress = BigNumber.from(params[0]).toHexString();
-        const toAddress = BigNumber.from(params[1]).toHexString();
 
-        //ensure wallet is created
-        await this.context.prisma.wallet.upsert({
-          where: { address: toAddress },
-          update: { address: toAddress },
-          create: { address: toAddress }
-        });
+      try {
+        if (this.isTransferEvent(keys)) {
+          const where = {
+            realmId: parseInt(params[2])
+          };
+          const fromAddress = BigNumber.from(params[0]).toHexString();
+          const toAddress = BigNumber.from(params[1]).toHexString();
 
-        if (this.isSettlingContract(toAddress)) {
-          await this.context.prisma.realm.update({
-            data: { ownerL2: toAddress, settledOwner: fromAddress },
-            where
+          //ensure wallet is created
+          await this.context.prisma.wallet.upsert({
+            where: { address: toAddress },
+            update: { address: toAddress },
+            create: { address: toAddress }
           });
-        } else {
-          await this.context.prisma.realm.update({
-            data: { ownerL2: toAddress, settledOwner: null },
-            where
-          });
+
+          if (this.isSettlingContract(toAddress)) {
+            await this.context.prisma.realm.update({
+              data: { ownerL2: toAddress, settledOwner: fromAddress },
+              where
+            });
+          } else {
+            await this.context.prisma.realm.update({
+              data: { ownerL2: toAddress, settledOwner: null },
+              where
+            });
+          }
         }
+      } catch (e) {
+        console.error(
+          `Invalid realms update: Event: ${event.eventId}, Params: `,
+          JSON.stringify(params)
+        );
+        console.log(e);
       }
     }
+
     return;
   }
 

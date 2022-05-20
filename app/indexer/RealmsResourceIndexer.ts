@@ -3,36 +3,10 @@ import { Context } from "../context";
 import { Indexer } from "./../types";
 import { BigNumber } from "ethers";
 import { hash } from "starknet";
-import { ResourceType } from "@prisma/client";
 
 const RESOURCE_UPGRADED_SELECTOR = BigNumber.from(
   hash.getSelectorFromName("ResourceUpgraded")
 ).toHexString();
-
-const RESOURCES = [
-  ResourceType.Wood,
-  ResourceType.Stone,
-  ResourceType.Coal,
-  ResourceType.Copper,
-  ResourceType.Obsidian,
-  ResourceType.Silver,
-  ResourceType.Ironwood,
-  ResourceType.Cold_Iron,
-  ResourceType.Gold,
-  ResourceType.Hartwood,
-  ResourceType.Diamonds,
-  ResourceType.Sapphire,
-  ResourceType.Ruby,
-  ResourceType.Deep_Crystal,
-  ResourceType.Ignium,
-  ResourceType.Ethereal_Silica,
-  ResourceType.True_Ice,
-  ResourceType.Twilight_Quartz,
-  ResourceType.Alchemical_Silver,
-  ResourceType.Adamantine,
-  ResourceType.Mithral,
-  ResourceType.Dragonhide
-];
 
 export default class RealmsResourceIndexer implements Indexer<Event> {
   private CONTRACTS = [
@@ -79,11 +53,11 @@ export default class RealmsResourceIndexer implements Indexer<Event> {
       if (this.isResourceUpgradedEvent(keys)) {
         let resource;
         try {
-          resourceId = parseInt(params[2]) - 1;
+          resourceId = parseInt(params[2]);
           where = {
-            type_realmId: {
+            resourceId_realmId: {
               realmId: parseInt(params[0]),
-              type: RESOURCES[resourceId]
+              resourceId
             }
           };
           resource = await this.context.prisma.resource.findUnique({

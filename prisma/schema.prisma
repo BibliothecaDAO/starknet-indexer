@@ -18,59 +18,11 @@ generator typegraphql {
   provider = "typegraphql-prisma"
 }
 
-enum ResourceType {
-  Wood
-  Stone
-  Coal
-  Copper
-  Obsidian
-  Silver
-  Ironwood
-  Cold_Iron
-  Gold
-  Hartwood
-  Diamonds
-  Sapphire
-  Deep_Crystal
-  Ruby
-  Ignium
-  Ethereal_Silica
-  True_Ice
-  Twilight_Quartz
-  Alchemical_Silver
-  Adamantine
-  Mithral
-  Dragonhide
-}
-
 enum RealmTraitType {
   Region
   City
   Harbor
   River
-}
-
-enum BuildingType {
-  Fairgrounds
-  Royal_Reserve
-  Grand_Market
-  Castle
-  Guild
-  Officer_Academy
-  Granary
-  Housing
-  Amphitheater
-  Archer_Tower
-  School
-  Mage_Tower
-  Trade_Office
-  Architect
-  Parade_Grounds
-  Barracks
-  Dock
-  Fishmonger
-  Farms
-  Hamlet
 }
 
 enum OrderType {
@@ -92,33 +44,6 @@ enum OrderType {
   the_Twins
 }
 
-enum SquadType {
-  Watchman
-  Guard
-  Guard_Captain
-  Squire
-  Knight
-  Knight_Commander
-  Scout
-  Archer
-  Sniper
-  Scorpio
-  Ballista
-  Catapult
-  Shaman
-  Healer
-  Life_Mage
-  Apprentice
-  Mage
-  Arcanist
-  Grand_Marshal
-}
-
-enum SquadAction {
-  Offence
-  Defence
-}
-
 // MILSTONE 1
 model Wallet {
   id      Int             @id @default(autoincrement())
@@ -130,70 +55,71 @@ model Wallet {
 
 // MILSTONE 1
 model Realm {
-  id           Int          @id @default(autoincrement())
-  realmId      Int          @unique
-  name         String?
-  wallet       Wallet?      @relation(fields: [owner], references: [address])
-  owner        String?
-  bridgedOwner String?
-  ownerL2      String?
-  settledOwner String?
-  wonder       String?
-  rarityRank   Int          @default(0)
-  rarityScore  Float        @default(0)
-  imageUrl     String       @default("")
-  orderType    OrderType?
-  buildings    Building[]
-  resources    Resource[]
-  traits       RealmTrait[]
-  squads       Squad[]
+  id             Int          @id @default(autoincrement())
+  realmId        Int          @unique
+  name           String?
+  wallet         Wallet?      @relation(fields: [owner], references: [address])
+  owner          String?
+  bridgedOwner   String?
+  ownerL2        String?
+  settledOwner   String?
+  wonder         String?
+  rarityRank     Int          @default(0)
+  rarityScore    Float        @default(0)
+  imageUrl       String       @default("")
+  orderType      OrderType?
+  buildings      Building[]
+  resources      Resource[]
+  traits         RealmTrait[]
+  attackTroopIds String[]
+  defendTroopIds String[]
 }
 
 // MILSTONE 1
 model Building {
-  id      Int          @id @default(autoincrement())
-  type    BuildingType
-  realmId Int?
-  eventId String
-  realm   Realm?       @relation(fields: [realmId], references: [realmId])
+  id         Int    @id @default(autoincrement())
+  buildingId Int
+  realmId    Int?
+  eventId    String
+  realm      Realm? @relation(fields: [realmId], references: [realmId])
 
   @@unique([realmId, eventId])
 }
 
 model BuildingRealmTraitConstraint {
-  type      BuildingType
-  traitType RealmTraitType
-  max       Int            @default(5)
+  buildingId Int
+  traitType  RealmTraitType
+  max        Int            @default(5)
 
-  @@unique([type])
+  @@unique([buildingId])
 }
 
 model BuildingCost {
-  buildingType BuildingType @id
-  resourceType ResourceType
-  qty          Int
+  buildingId Int @id
+  resourceId Int
+  qty        Int @default(0)
 
-  @@unique([buildingType, resourceType])
+  @@unique([buildingId, resourceId])
 }
 
 // MILSTONE 1
 model Resource {
-  id       Int          @id @default(autoincrement())
-  type     ResourceType
-  realmId  Int?
-  realm    Realm?       @relation(fields: [realmId], references: [realmId])
-  level    Int          @default(0)
-  upgrades String[]
+  id         Int      @id @default(autoincrement())
+  resourceId Int
+  realmId    Int?
+  realm      Realm?   @relation(fields: [realmId], references: [realmId])
+  level      Int      @default(0)
+  upgrades   String[]
 
-  @@unique([type, realmId])
+  @@unique([resourceId, realmId])
 }
 
 model ResourceToken {
-  id      Int          @id @default(autoincrement())
-  type    ResourceType
-  qty     Int
-  address String
-  wallet  Wallet       @relation(fields: [address], references: [address])
+  id         Int    @id @default(autoincrement())
+  resourceId Int
+  qty        Int
+  address    String
+  wallet     Wallet @relation(fields: [address], references: [address])
 }
 
 model RealmTrait {
@@ -213,24 +139,12 @@ model SRealm {
   owner   String?
 }
 
-// MILSTONE 1
+model TroopCost {
+  troopId    Int @id
+  resourceId Int
+  qty        Int
 
-model Squad {
-  id      Int         @id @default(autoincrement())
-  realmId Int
-  action  SquadAction
-  type    SquadType
-
-  realm Realm @relation(fields: [realmId], references: [realmId])
-  @@unique([realmId, action])
-}
-
-model SquadCost {
-  squadType    SquadType    @id
-  resourceType ResourceType
-  qty          Int
-
-  @@unique([squadType, resourceType])
+  @@unique([troopId, resourceId])
 }
 
 ///////////// MILSTONE 2 ///////////////

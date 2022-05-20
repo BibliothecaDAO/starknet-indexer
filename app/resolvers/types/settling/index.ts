@@ -3,8 +3,7 @@ import { BuildingInput } from "./BuildingInput";
 import { ResourceInput } from "./ResourceInput";
 import { BuildingCostInput } from ".//BuildingCostInput";
 import { RealmTraitInput } from ".//RealmTraitInput";
-import { SquadInput } from "./SquadInput";
-import { SquadCostInput } from "./SquadCostInput";
+import { TroopCostInput } from "./TroopCostInput";
 import { RealmFilterInput } from "./RealmFilterInput";
 import { RealmOrderByInput } from "./RealmOrderByInput";
 
@@ -14,8 +13,7 @@ export {
   ResourceInput,
   BuildingCostInput,
   RealmTraitInput,
-  SquadInput,
-  SquadCostInput,
+  TroopCostInput,
   RealmFilterInput,
   RealmOrderByInput
 };

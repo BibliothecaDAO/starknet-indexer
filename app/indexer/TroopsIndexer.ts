@@ -4,13 +4,13 @@ import { Indexer } from "./../types";
 import { BigNumber } from "ethers";
 import { hash } from "starknet";
 
-const BUILDINGS_BUILT_SELECTOR = BigNumber.from(
-  hash.getSelectorFromName("BuildingBuilt")
+const BUILD_TROOPS_SELECTOR = BigNumber.from(
+  hash.getSelectorFromName("Build_toops")
 ).toHexString();
 
-export default class RealmsBuildingIndexer implements Indexer<Event> {
+export default class TroopsIndexer implements Indexer<Event> {
   private CONTRACTS = [
-    "0x04d2078fade1855b48ad11d711d11afa107f050637572eecbab244a4cd7f35cc"
+    "0x0143c2b110961626f46c4b35c55fa565227ffdb803155e917df790bad29240b9"
   ];
   private context: Context;
 
@@ -22,18 +22,18 @@ export default class RealmsBuildingIndexer implements Indexer<Event> {
     return this.CONTRACTS;
   }
 
-  isBuildingBuiltEvent(keys: string[]) {
+  isBuildTroops(keys: string[]) {
     if (keys?.length !== 1) {
       return false;
     }
-    return BigNumber.from(keys[0]).toHexString() === BUILDINGS_BUILT_SELECTOR;
+    return BigNumber.from(keys[0]).toHexString() === BUILD_TROOPS_SELECTOR;
   }
 
   eventName(selector: string): string {
     const eventSelector = BigNumber.from(selector).toHexString();
     switch (eventSelector) {
-      case BUILDINGS_BUILT_SELECTOR:
-        return "BuildingBuilt";
+      case BUILD_TROOPS_SELECTOR:
+        return "Build_toops";
       default:
         return "";
     }
@@ -48,16 +48,30 @@ export default class RealmsBuildingIndexer implements Indexer<Event> {
       }
       const params = event.parameters ?? [];
       const keys = event.keys ?? [];
-      if (this.isBuildingBuiltEvent(keys)) {
-        const realmId = parseInt(params[0]);
-        const buildingId = parseInt(params[2]);
-        await this.context.prisma.building.upsert({
-          where: {
-            realmId_eventId: { realmId, eventId }
-          },
-          create: { realmId, eventId, buildingId },
-          update: { buildingId }
-        });
+      let realmId = 0;
+      if (this.isBuildTroops(keys)) {
+        try {
+          const troopsLen = parseInt(params[0]);
+          const troops = params.slice(1, troopsLen + 1);
+          realmId = parseInt(params[troopsLen + 1]);
+          const isAttack = params[params.length - 1] === "1";
+          const data = {} as any;
+          if (isAttack) {
+            data.attackTroopIds = [...troops];
+          } else {
+            data.defendTroopIds = [...troops];
+          }
+
+          await this.context.prisma.realm.update({
+            where: { realmId },
+            data
+          });
+        } catch (e) {
+          console.error(
+            `Invalid troops upgrade: realmId: ${realmId} Event: ${event.eventId}, Params: `,
+            JSON.stringify(params)
+          );
+        }
       }
     }
     return;

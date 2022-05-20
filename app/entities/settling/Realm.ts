@@ -5,7 +5,6 @@ import { Building } from "./Building";
 import { Resource } from "./Resource";
 import { RealmTrait } from "./RealmTrait";
 import { OrderType } from "@prisma/client";
-import { Squad } from "./Squad";
 
 @ObjectType({ description: "The Realm Model" })
 export class Realm {
@@ -54,6 +53,9 @@ export class Realm {
   @Field(() => [RealmTrait], { nullable: true })
   traits: [RealmTrait];
 
-  @Field(() => [Squad], { nullable: true })
-  squads: [Squad];
+  @Field(() => [String])
+  attackTroopIds: string[];
+
+  @Field(() => [String])
+  defendTroopIds: string[];
 }

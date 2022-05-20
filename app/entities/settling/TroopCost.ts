@@ -1,10 +1,10 @@
-import { Field, InputType, Int } from "type-graphql";
+import { ObjectType, Field, Int } from "type-graphql";
 import { __Type } from "graphql";
 
-@InputType()
-export class BuildingCostInput {
+@ObjectType({ description: "Troop Cost Model" })
+export class TroopCost {
   @Field(() => Int, { nullable: false })
-  buildingId: number;
+  troopId: number;
 
   @Field(() => Int, { nullable: false })
   resourceId: number;

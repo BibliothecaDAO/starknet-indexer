@@ -17,47 +17,34 @@ type AggregateEvent {
 
 """The Buildings Model"""
 type Building {
+  buildingId: Int
   id: ID!
   realm: Realm
   realmId: Float!
-  type: String
 }
 
 """Building Cost Model"""
 type BuildingCost {
-  buildingType: String!
+  buildingId: Int!
   qty: Float!
-  resourceType: String!
+  resourceId: Int!
 }
 
-enum BuildingType {
-  Amphitheater
-  Archer_Tower
-  Architect
-  Barracks
-  Castle
-  Dock
-  Fairgrounds
-  Farms
-  Fishmonger
-  Granary
-  Grand_Market
-  Guild
-  Hamlet
-  Housing
-  Mage_Tower
-  Officer_Academy
-  Parade_Grounds
-  Royal_Reserve
-  School
-  Trade_Office
+input BuildingListRelationFilter {
+  every: BuildingWhereInput
+  none: BuildingWhereInput
+  some: BuildingWhereInput
 }
 
-input BuildingTypeInput {
-  equals: BuildingType
-  in: [BuildingType!]
-  not: [BuildingType!]
-  notIn: [BuildingType!]
+input BuildingWhereInput {
+  AND: [BuildingWhereInput!]
+  NOT: [BuildingWhereInput!]
+  OR: [BuildingWhereInput!]
+  buildingId: IntFilter
+  eventId: StringFilter
+  id: IntFilter
+  realm: RealmRelationFilter
+  realmId: IntNullableFilter
 }
 
 """
@@ -104,6 +91,20 @@ type Desiege {
   initialHealth: Float!
   startedOn: DateTime!
   winner: Float!
+}
+
+input EnumOrderTypeNullableFilter {
+  equals: OrderType
+  in: [OrderType!]
+  not: NestedEnumOrderTypeNullableFilter
+  notIn: [OrderType!]
+}
+
+input EnumRealmTraitTypeFilter {
+  equals: RealmTraitType
+  in: [RealmTraitType!]
+  not: NestedEnumRealmTraitTypeFilter
+  notIn: [RealmTraitType!]
 }
 
 type Event {
@@ -418,6 +419,17 @@ input EventWhereUniqueInput {
   id: Int
 }
 
+input FloatFilter {
+  equals: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  lt: Float
+  lte: Float
+  not: NestedFloatFilter
+  notIn: [Float!]
+}
+
 input IntFieldUpdateOperationsInput {
   decrement: Int
   divide: Int
@@ -437,13 +449,14 @@ input IntFilter {
   notIn: [Int!]
 }
 
-input IntFilterInput {
+input IntNullableFilter {
   equals: Int
   gt: Int
   gte: Int
   in: [Int!]
   lt: Int
   lte: Int
+  not: NestedIntNullableFilter
   notIn: [Int!]
 }
 
@@ -508,7 +521,6 @@ type Mutation {
   createEvent(data: EventCreateInput!): Event!
   createManyEvent(data: [EventCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createOrUpdateRealm(data: RealmInput!): Realm!
-  createOrUpdateRealmTrait(data: RealmTraitInput!): RealmTrait!
   createOrUpdateResources(data: ResourceInput!): Resource!
   deleteEvent(where: EventWhereUniqueInput!): Event
   deleteManyEvent(where: EventWhereInput): AffectedRowsOutput!
@@ -543,6 +555,20 @@ input NestedDateTimeWithAggregatesFilter {
   notIn: [DateTime!]
 }
 
+input NestedEnumOrderTypeNullableFilter {
+  equals: OrderType
+  in: [OrderType!]
+  not: NestedEnumOrderTypeNullableFilter
+  notIn: [OrderType!]
+}
+
+input NestedEnumRealmTraitTypeFilter {
+  equals: RealmTraitType
+  in: [RealmTraitType!]
+  not: NestedEnumRealmTraitTypeFilter
+  notIn: [RealmTraitType!]
+}
+
 input NestedFloatFilter {
   equals: Float
   gt: Float
@@ -562,6 +588,17 @@ input NestedIntFilter {
   lt: Int
   lte: Int
   not: NestedIntFilter
+  notIn: [Int!]
+}
+
+input NestedIntNullableFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntNullableFilter
   notIn: [Int!]
 }
 
@@ -591,6 +628,20 @@ input NestedStringFilter {
   lt: String
   lte: String
   not: NestedStringFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+input NestedStringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringNullableFilter
   notIn: [String!]
   startsWith: String
 }
@@ -637,13 +688,6 @@ enum OrderType {
   the_Twins
 }
 
-input OrderTypeInput {
-  equals: OrderType
-  in: [OrderType!]
-  not: [OrderType!]
-  notIn: [OrderType!]
-}
-
 type Query {
   aggregateEvent(cursor: EventWhereUniqueInput, orderBy: [EventOrderByWithRelationInput!], skip: Int, take: Int, where: EventWhereInput): AggregateEvent!
   event(where: EventWhereUniqueInput!): Event
@@ -660,8 +704,7 @@ type Query {
   getLoreEntity(entityId: Float!): LoreEntity!
   getLorePois(skip: Float = 0, take: Float = 100): [LorePoi!]!
   getRealm(realmId: Float!): Realm!
-  getRealmTraits: [RealmTrait!]!
-  getRealms(filter: RealmFilterInput, orderBy: RealmOrderByInput, skip: Float = 0, take: Float = 100): [Realm!]!
+  getRealms(filter: RealmWhereInput, orderBy: RealmOrderByInput, skip: Float = 0, take: Float = 100): [Realm!]!
   getResource(id: Float!): Resource!
   getResources: [Resource!]!
   getResourcesByAddress(address: String!): [Resource!]!
@@ -676,8 +719,10 @@ enum QueryMode {
 
 """The Realm Model"""
 type Realm {
+  attackTroopIds: [String!]!
   bridgedOwner: String
   buildings: [Building!]
+  defendTroopIds: [String!]!
   imageUrl: String
   name: String
   orderType: String!
@@ -688,31 +733,9 @@ type Realm {
   realmId: Int!
   resources: [Resource!]
   settledOwner: String
-  squads: [Squad!]
   traits: [RealmTrait!]
   wallet: Wallet
   wonder: String
-}
-
-input RealmFilterInput {
-  AND: [RealmFilterInput!]
-  NOT: [RealmFilterInput!]
-  OR: [RealmFilterInput!]
-  bridgedOwner: StringFilterInput
-  buildingType: BuildingTypeInput
-  name: StringFilterInput
-  orderType: OrderTypeInput
-  owner: StringFilterInput
-  ownerL2: StringFilterInput
-  rarityRank: IntFilterInput
-  rarityScore: IntFilterInput
-  realmId: IntFilterInput
-  resourceType: ResourceTypeInput
-  settledOwner: StringFilterInput
-  squadAction: SquadActionInput
-  squadType: SquadTypeInput
-  trait: RealmTraitFilterInput
-  wonder: StringFilterInput
 }
 
 input RealmInput {
@@ -729,10 +752,21 @@ input RealmInput {
   wonder: String
 }
 
+input RealmListRelationFilter {
+  every: RealmWhereInput
+  none: RealmWhereInput
+  some: RealmWhereInput
+}
+
 input RealmOrderByInput {
   rarityRank: OrderByDirectionInput
   rarityScore: OrderByDirectionInput
   realmId: OrderByDirectionInput
+}
+
+input RealmRelationFilter {
+  is: RealmWhereInput
+  isNot: RealmWhereInput
 }
 
 """Realm Trait Model"""
@@ -744,15 +778,10 @@ type RealmTrait {
   type: String!
 }
 
-input RealmTraitFilterInput {
-  qty: IntFilterInput
-  type: RealmTraitType!
-}
-
-input RealmTraitInput {
-  qty: Float!
-  realmId: Float!
-  type: RealmTraitType!
+input RealmTraitListRelationFilter {
+  every: RealmTraitWhereInput
+  none: RealmTraitWhereInput
+  some: RealmTraitWhereInput
 }
 
 enum RealmTraitType {
@@ -762,107 +791,110 @@ enum RealmTraitType {
   River
 }
 
+input RealmTraitWhereInput {
+  AND: [RealmTraitWhereInput!]
+  NOT: [RealmTraitWhereInput!]
+  OR: [RealmTraitWhereInput!]
+  qty: IntFilter
+  realm: RealmRelationFilter
+  realmId: IntFilter
+  type: EnumRealmTraitTypeFilter
+}
+
+input RealmWhereInput {
+  AND: [RealmWhereInput!]
+  NOT: [RealmWhereInput!]
+  OR: [RealmWhereInput!]
+  attackTroopIds: StringNullableListFilter
+  bridgedOwner: StringNullableFilter
+  buildings: BuildingListRelationFilter
+  defendTroopIds: StringNullableListFilter
+  id: IntFilter
+  imageUrl: StringFilter
+  name: StringNullableFilter
+  orderType: EnumOrderTypeNullableFilter
+  owner: StringNullableFilter
+  ownerL2: StringNullableFilter
+  rarityRank: IntFilter
+  rarityScore: FloatFilter
+  realmId: IntFilter
+  resources: ResourceListRelationFilter
+  settledOwner: StringNullableFilter
+  traits: RealmTraitListRelationFilter
+  wallet: WalletRelationFilter
+  wonder: StringNullableFilter
+}
+
 """The Resource Model"""
 type Resource {
   id: ID!
   level: Int!
   realm: Realm!
   realmId: Float
-  type: String!
+  resourceId: Int!
   upgrades: [String!]!
 }
 
 input ResourceInput {
   id: ID
   realmId: Float!
-  type: ResourceType!
+  resourceId: Int!
 }
 
-"""ResourceType"""
-enum ResourceType {
-  Adamantine
-  Alchemical_Silver
-  Coal
-  Cold_Iron
-  Copper
-  Deep_Crystal
-  Diamonds
-  Dragonhide
-  Ethereal_Silica
-  Gold
-  Hartwood
-  Ignium
-  Ironwood
-  Mithral
-  Obsidian
-  Ruby
-  Sapphire
-  Silver
-  Stone
-  True_Ice
-  Twilight_Quartz
-  Wood
+input ResourceListRelationFilter {
+  every: ResourceWhereInput
+  none: ResourceWhereInput
+  some: ResourceWhereInput
 }
 
-input ResourceTypeInput {
-  equals: ResourceType
-  in: [ResourceType!]
-  not: [ResourceType!]
-  notIn: [ResourceType!]
+input ResourceTokenListRelationFilter {
+  every: ResourceTokenWhereInput
+  none: ResourceTokenWhereInput
+  some: ResourceTokenWhereInput
+}
+
+input ResourceTokenWhereInput {
+  AND: [ResourceTokenWhereInput!]
+  NOT: [ResourceTokenWhereInput!]
+  OR: [ResourceTokenWhereInput!]
+  address: StringFilter
+  id: IntFilter
+  qty: IntFilter
+  resourceId: IntFilter
+  wallet: WalletRelationFilter
+}
+
+input ResourceWhereInput {
+  AND: [ResourceWhereInput!]
+  NOT: [ResourceWhereInput!]
+  OR: [ResourceWhereInput!]
+  id: IntFilter
+  level: IntFilter
+  realm: RealmRelationFilter
+  realmId: IntNullableFilter
+  resourceId: IntFilter
+  upgrades: StringNullableListFilter
+}
+
+input SRealmListRelationFilter {
+  every: SRealmWhereInput
+  none: SRealmWhereInput
+  some: SRealmWhereInput
+}
+
+input SRealmWhereInput {
+  AND: [SRealmWhereInput!]
+  NOT: [SRealmWhereInput!]
+  OR: [SRealmWhereInput!]
+  id: IntFilter
+  owner: StringNullableFilter
+  realmId: IntFilter
+  wallet: WalletRelationFilter
 }
 
 enum SortOrder {
   asc
   desc
-}
-
-"""The Squad Model"""
-type Squad {
-  action: String!
-  realm: Realm
-  realmId: Int!
-  type: String!
-}
-
-enum SquadAction {
-  Defence
-  Offence
-}
-
-input SquadActionInput {
-  equals: SquadAction
-  in: [SquadAction!]
-  not: [SquadAction!]
-  notIn: [SquadAction!]
-}
-
-enum SquadType {
-  Apprentice
-  Arcanist
-  Archer
-  Ballista
-  Catapult
-  Grand_Marshal
-  Guard
-  Guard_Captain
-  Healer
-  Knight
-  Knight_Commander
-  Life_Mage
-  Mage
-  Scorpio
-  Scout
-  Shaman
-  Sniper
-  Squire
-  Watchman
-}
-
-input SquadTypeInput {
-  equals: SquadType
-  in: [SquadType!]
-  not: [SquadType!]
-  notIn: [SquadType!]
 }
 
 input StringFieldUpdateOperationsInput {
@@ -884,18 +916,19 @@ input StringFilter {
   startsWith: String
 }
 
-input StringFilterInput {
-  contains: [String!]
-  endsWith: [String!]
+input StringNullableFilter {
+  contains: String
+  endsWith: String
   equals: String
-  gt: [String!]
-  gte: [String!]
+  gt: String
+  gte: String
   in: [String!]
-  lt: [String!]
-  lte: [String!]
-  not: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringNullableFilter
   notIn: [String!]
-  startsWith: [String!]
+  startsWith: String
 }
 
 input StringNullableListFilter {
@@ -931,4 +964,20 @@ type Wallet {
   realmsL1Held: Int!
   realmsL2Held: Int!
   realmsSettledHeld: Int!
+}
+
+input WalletRelationFilter {
+  is: WalletWhereInput
+  isNot: WalletWhereInput
+}
+
+input WalletWhereInput {
+  AND: [WalletWhereInput!]
+  NOT: [WalletWhereInput!]
+  OR: [WalletWhereInput!]
+  address: StringFilter
+  id: IntFilter
+  realms: RealmListRelationFilter
+  sRealms: SRealmListRelationFilter
+  tokens: ResourceTokenListRelationFilter
 }

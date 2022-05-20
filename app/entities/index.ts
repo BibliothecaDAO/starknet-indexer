@@ -5,9 +5,7 @@ import {
   Building,
   Resource,
   BuildingCost,
-  RealmTrait,
-  Squad,
-  SquadCost
+  RealmTrait
 } from "./settling";
 import { Wallet } from "./wallet/Wallet";
 
@@ -19,8 +17,6 @@ export {
   Resource,
   BuildingCost,
   RealmTrait,
-  Squad,
-  SquadCost,
-  LoreEntity,
+  LoreEntity
   // LorePOI,
 };

@@ -24,9 +24,7 @@ export class ResourceResolver {
   ) {
     return await ctx.prisma.resource.findMany({
       where: {
-        realm: {
-          owner: address
-        }
+        realm: { owner: address }
       }
     });
   }
@@ -39,17 +37,17 @@ export class ResourceResolver {
   ) {
     return ctx.prisma.resource.upsert({
       where: {
-        type_realmId: {
+        resourceId_realmId: {
           realmId: data.realmId,
-          type: data.type
+          resourceId: data.resourceId
         }
       },
       update: {
-        type: data.type,
+        resourceId: data.resourceId,
         realmId: data.realmId
       },
       create: {
-        type: data.type,
+        resourceId: data.resourceId,
         realmId: data.realmId
       }
     });

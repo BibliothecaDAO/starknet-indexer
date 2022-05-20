@@ -4,7 +4,7 @@ import LootRealm from "../abis/LootRealm.json";
 import fetch from "node-fetch";
 import { readFileSync } from "fs";
 import { Context } from "../context";
-import { ResourceType } from "@prisma/client";
+
 import {
   WalletResolver,
   RealmResolver,
@@ -17,6 +17,31 @@ const REALMS_L1_MAINNET_URL =
   "https://api.thegraph.com/subgraphs/name/bibliothecaforadventurers/realms";
 
 const NETWORK = process.env.NETWORK ?? "mainnet";
+
+const RESOURCES = [
+  "Wood",
+  "Stone",
+  "Coal",
+  "Copper",
+  "Obsidian",
+  "Silver",
+  "Ironwood",
+  "Cold Iron",
+  "Gold",
+  "Hartwood",
+  "Diamonds",
+  "Sapphire",
+  "Ruby",
+  "Deep Crystal",
+  "Ignium",
+  "Ethereal Silica",
+  "True Ice",
+  "Twilight Quartz",
+  "Alchemical Silver",
+  "Adamantine",
+  "Mithral",
+  "Dragonhide"
+];
 
 export class RealmsL1Indexer {
   context: Context;
@@ -60,12 +85,11 @@ export class RealmsL1Indexer {
       // Add Resources and Traits
       for (let resource of realm.attributes) {
         if (resource.trait_type === "Resource") {
-          const resourceType = (resource.value as string).replace(
-            " ",
-            "_"
-          ) as ResourceType;
+          const resourceId =
+            RESOURCES.findIndex((val) => val === (resource.value as string)) +
+            1;
           await this.resource.createOrUpdateResources(
-            { type: resourceType, realmId: parseInt(realm.id) },
+            { resourceId, realmId: parseInt(realm.id) },
             this.context
           );
         } else if (

@@ -10,7 +10,7 @@ import {
   BuildingResolver,
   ResourceResolver,
   BuildingCostResolver,
-  RealmTraitResolver,
+  // RealmTraitResolver,
   DesiegeResolver
 } from "./resolvers";
 import { StarkNet } from "./indexer/Starknet";
@@ -34,7 +34,7 @@ const main = async () => {
       BuildingResolver,
       ResourceResolver,
       BuildingCostResolver,
-      RealmTraitResolver,
+      // RealmTraitResolver,
       // Generated
       DesiegeResolver,
       // DesiegeCrudResolver,

@@ -11,7 +11,7 @@ import { toBN } from "starknet/utils/number";
 
 export default class LoreIndexer implements Indexer<Event> {
   private CONTRACTS = [
-    "0x521151a3e28d2efff7d7d34c4f8bbe45c4c9f37424bae4dc63836fd659c51e6"
+    "0x06894a6766b4763d8bea8d43f433d25e577ed8bf057942c861df4e9951282c64"
   ];
   // @ts-ignore
   private context: Context;
