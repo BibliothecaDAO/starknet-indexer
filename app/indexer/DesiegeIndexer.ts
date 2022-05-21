@@ -16,9 +16,13 @@ const GAME_ACTION_SELECTOR = BigNumber.from(
   hash.getSelectorFromName("game_action")
 ).toHexString();
 
+const TOWER_DAMAGE_INFLICTED_SELECTOR = BigNumber.from(
+  hash.getSelectorFromName("tower_damage_inflicted")
+).toHexString();
+
 export default class DesiegeIndexer implements Indexer<Event> {
   private CONTRACTS = [
-    "0x61756c424c781388f8908e02c97e31574a0fed80a9561fa025fb74140f79470"
+    "0x61756c424c781388f8908e02c97e31574a0fed80a9561fa025fb74140f79470",
   ];
   private context: Context;
   private contract: Contract = new Contract(
@@ -41,6 +45,8 @@ export default class DesiegeIndexer implements Indexer<Event> {
         return "game_started";
       case GAME_ACTION_SELECTOR:
         return "game_action";
+      case TOWER_DAMAGE_INFLICTED_SELECTOR:
+        return "tower_damage_inflicted";
       default:
         return "";
     }
@@ -55,12 +61,19 @@ export default class DesiegeIndexer implements Indexer<Event> {
           continue;
         }
         const params = event.parameters ?? [];
+        const gameId = parseInt(params[0]);
         const eventName = this.eventName(event.keys[0]);
         const isGameAction = eventName === "game_action";
         const isGameStart = eventName === "game_started";
+        const isDamageAction = eventName === "tower_damage_inflicted";
 
         const tokenOffset = isGameAction ? parseInt(params[2]) : 0;
         const tokenAmount = isGameAction ? parseInt(params[3]) : 0;
+        const boostedAmount = isGameAction ? parseInt(params[4]) : 0;
+        const damageAmount = isDamageAction ? parseInt(params[2]) : 0;
+        const account = isGameAction
+          ? BigNumber.from(params[6]).toHexString()
+          : "";
         const attackedTokens = tokenOffset === 2 ? tokenAmount : 0;
         const defendedTokens = tokenOffset === 1 ? tokenAmount : 0;
         const winner = 0;
@@ -80,6 +93,19 @@ export default class DesiegeIndexer implements Indexer<Event> {
             console.error(e);
           }
         }
+
+        if (isGameAction) {
+          await this.context.prisma.desiegeAction.create({
+            data: {
+              gameId,
+              account,
+              amount: tokenAmount,
+              amountBoosted: boostedAmount,
+              tokenOffset: tokenOffset,
+            },
+          });
+        }
+
         const updates = {
           attackedTokens: isGameAction
             ? { increment: attackedTokens }
@@ -87,24 +113,28 @@ export default class DesiegeIndexer implements Indexer<Event> {
           defendedTokens: isGameAction
             ? { increment: defendedTokens }
             : defendedTokens,
+          damageInflicted: isDamageAction
+            ? { increment: damageAmount }
+            : damageAmount,
           eventIndexed: event.eventId,
           winner,
           startedOn,
           initialHealth,
           startBlock,
-          endBlock
+          endBlock,
         };
         await this.context.prisma.desiege.upsert({
           where: {
-            gameId: parseInt(params[0])
+            gameId,
           },
           update: updates,
           create: {
-            gameId: parseInt(params[0]),
+            gameId,
             ...updates,
+            damageInflicted: damageAmount,
             defendedTokens,
-            attackedTokens
-          }
+            attackedTokens,
+          },
         });
 
         lastIndexedEventId = event.eventId;
@@ -124,15 +154,15 @@ export default class DesiegeIndexer implements Indexer<Event> {
       currentBlock: toBN(varList[3]),
       gameStartBlock: toBN(varList[4]),
       mainHealth: toBN(varList[5]),
-      currentBoost: toBN(varList[6]).toNumber()
+      currentBoost: toBN(varList[6]).toNumber(),
     };
   }
 
   async lastIndexId(): Promise<string> {
     const desiege = await this.context.prisma.desiege.findFirst({
       orderBy: {
-        eventIndexed: "desc"
-      }
+        eventIndexed: "desc",
+      },
     });
     return desiege?.eventIndexed ?? "";
   }
