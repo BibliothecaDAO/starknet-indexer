@@ -7,7 +7,7 @@ import { toBN } from "starknet/utils/number";
 import BaseContractIndexer from "./BaseContractIndexer";
 
 const CONTRACT =
-  "0x61756c424c781388f8908e02c97e31574a0fed80a9561fa025fb74140f79470";
+  "0xcb953e715b337d58bc9d3fd3e67bfbf3ca0a1271e6e7dd36bb31140bfc3903";
 export default class DesiegeIndexer extends BaseContractIndexer {
   private contract: Contract = new Contract(TowerDefenceABI as any, CONTRACT);
 
