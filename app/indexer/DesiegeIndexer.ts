@@ -14,9 +14,9 @@ export default class DesiegeIndexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);
 
-    this.addHandler("game_started", this.startGame.bind(this));
-    this.addHandler("game_action", this.updateGame.bind(this));
-    this.addHandler("tower_damage_inflicted", this.inflictDamage.bind(this));
+    this.on("game_started", this.startGame.bind(this));
+    this.on("game_action", this.updateGame.bind(this));
+    this.on("tower_damage_inflicted", this.inflictDamage.bind(this));
   }
 
   async startGame(event: Event): Promise<void> {

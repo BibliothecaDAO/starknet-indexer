@@ -8,7 +8,7 @@ export default class RealmsResourceIndexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);
 
-    this.addHandler("ResourceUpgraded", this.upgradeResource.bind(this));
+    this.on("ResourceUpgraded", this.upgradeResource.bind(this));
   }
 
   async upgradeResource(event: Event): Promise<void> {

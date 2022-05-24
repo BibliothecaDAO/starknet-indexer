@@ -8,7 +8,7 @@ export default class RealmsTroopsIndexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);
 
-    this.addHandler("Build_toops", this.buildTroops.bind(this));
+    this.on("Build_toops", this.buildTroops.bind(this));
   }
 
   async buildTroops(event: Event) {

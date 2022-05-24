@@ -28,10 +28,10 @@ export default class BaseContractIndexer implements Indexer<Event> {
     return this.addresses;
   }
 
-  addHandler(name: string, handler: (event: Event) => Promise<void>) {
+  on(name: string, handle: (event: Event) => Promise<void>) {
     this.handlers[selectorHash(hash.getSelectorFromName(name))] = {
       name,
-      handle: handler
+      handle
     };
   }
 

@@ -12,7 +12,7 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);
 
-    this.addHandler("Transfer", this.transferRealm.bind(this));
+    this.on("Transfer", this.transferRealm.bind(this));
   }
 
   isSettlingContract(address: string) {

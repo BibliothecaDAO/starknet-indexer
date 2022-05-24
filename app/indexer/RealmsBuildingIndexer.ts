@@ -9,7 +9,7 @@ export default class RealmsBuildingIndexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);
 
-    this.addHandler("BuildingBuilt", this.buildBuilding.bind(this));
+    this.on("BuildingBuilt", this.buildBuilding.bind(this));
   }
 
   async buildBuilding(event: Event): Promise<void> {
