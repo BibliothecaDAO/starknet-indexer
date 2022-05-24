@@ -1,148 +1,129 @@
 import { Event } from "../entities/starknet/Event";
 import { Context } from "../context";
-import { Indexer } from "./../types";
 import { BigNumber } from "ethers";
-import { hash } from "starknet";
 import { Contract } from "starknet";
 import TowerDefenceABI from "../abis/01_TowerDefence.json";
 import { toBN } from "starknet/utils/number";
+import BaseContractIndexer from "./BaseContractIndexer";
 
-// Events
-const GAME_STARTED_SELECTOR = BigNumber.from(
-  hash.getSelectorFromName("game_started")
-).toHexString();
-
-const GAME_ACTION_SELECTOR = BigNumber.from(
-  hash.getSelectorFromName("game_action")
-).toHexString();
-
-const TOWER_DAMAGE_INFLICTED_SELECTOR = BigNumber.from(
-  hash.getSelectorFromName("tower_damage_inflicted")
-).toHexString();
-
-export default class DesiegeIndexer implements Indexer<Event> {
-  private CONTRACTS = [
-    "0x61756c424c781388f8908e02c97e31574a0fed80a9561fa025fb74140f79470",
-  ];
-  private context: Context;
-  private contract: Contract = new Contract(
-    TowerDefenceABI as any,
-    this.CONTRACTS[0]
-  );
+const CONTRACT =
+  "0x61756c424c781388f8908e02c97e31574a0fed80a9561fa025fb74140f79470";
+export default class DesiegeIndexer extends BaseContractIndexer {
+  private contract: Contract = new Contract(TowerDefenceABI as any, CONTRACT);
 
   constructor(context: Context) {
-    this.context = context;
+    super(context, CONTRACT);
+
+    this.addHandler("game_started", this.startGame.bind(this));
+    this.addHandler("game_action", this.updateGame.bind(this));
+    this.addHandler("tower_damage_inflicted", this.inflictDamage.bind(this));
   }
 
-  contracts(): string[] {
-    return this.CONTRACTS;
-  }
+  async startGame(event: Event): Promise<void> {
+    try {
+      const params = event.parameters ?? [];
+      const gameId = parseInt(params[0]);
 
-  eventName(selector: string): string {
-    const eventSelector = BigNumber.from(selector).toHexString();
-    switch (eventSelector) {
-      case GAME_STARTED_SELECTOR:
-        return "game_started";
-      case GAME_ACTION_SELECTOR:
-        return "game_action";
-      case TOWER_DAMAGE_INFLICTED_SELECTOR:
-        return "tower_damage_inflicted";
-      default:
-        return "";
+      const startedOn = event.timestamp;
+      const initialHealth = parseInt(params[1]);
+      const startBlock = event.blockNumber;
+      let endBlock = 0;
+      try {
+        const gameCtx = await this.getGameVariables();
+        endBlock =
+          startBlock + 60 * gameCtx.hoursPerGame * gameCtx.blocksPerMinute;
+      } catch (e) {
+        console.error(e);
+      }
+      const updates = {
+        startedOn,
+        startBlock,
+        initialHealth,
+        endBlock,
+        eventIndexed: event.eventId
+      };
+
+      await this.context.prisma.desiege.upsert({
+        where: { gameId },
+        update: updates,
+        create: {
+          gameId,
+          ...updates,
+          attackedTokens: 0,
+          defendedTokens: 0,
+          winner: 0
+        }
+      });
+    } catch (e) {
+      console.error(e);
     }
   }
 
-  async index(events: Event[]): Promise<void> {
+  async updateGame(event: Event): Promise<void> {
     try {
-      let lastIndexedEventId = await this.lastIndexId();
-      for (const event of events) {
-        const eventId = event.eventId;
-        if (eventId <= lastIndexedEventId) {
-          continue;
+      const params = event.parameters ?? [];
+      const isV2 = params.length === 7;
+      const gameId = parseInt(params[0]);
+      const tokenOffset = parseInt(params[2]);
+      const tokenAmount = parseInt(params[3]);
+      const boostedAmount = isV2 ? parseInt(params[4]) : 0;
+      const account = isV2 ? BigNumber.from(params[6]).toHexString() : "";
+      const attackedTokens = tokenOffset === 2 ? tokenAmount : 0;
+      const defendedTokens = tokenOffset === 1 ? tokenAmount : 0;
+
+      await this.context.prisma.desiegeAction.create({
+        data: {
+          gameId,
+          account,
+          amount: tokenAmount,
+          amountBoosted: boostedAmount,
+          tokenOffset: tokenOffset
         }
-        const params = event.parameters ?? [];
-        const gameId = parseInt(params[0]);
-        const eventName = this.eventName(event.keys[0]);
-        const isGameAction = eventName === "game_action";
-        const isGameStart = eventName === "game_started";
-        const isDamageAction = eventName === "tower_damage_inflicted";
+      });
 
-        const tokenOffset = isGameAction ? parseInt(params[2]) : 0;
-        const tokenAmount = isGameAction ? parseInt(params[3]) : 0;
-        const boostedAmount = isGameAction ? parseInt(params[4]) : 0;
-        const damageAmount = isDamageAction ? parseInt(params[2]) : 0;
-        const account = isGameAction
-          ? BigNumber.from(params[6]).toHexString()
-          : "";
-        const attackedTokens = tokenOffset === 2 ? tokenAmount : 0;
-        const defendedTokens = tokenOffset === 1 ? tokenAmount : 0;
-        const winner = 0;
-        let startedOn;
-        let initialHealth;
-        let startBlock;
-        let endBlock;
-        if (isGameStart) {
-          startedOn = event.timestamp;
-          initialHealth = parseInt(params[1]);
-          startBlock = event.blockNumber;
-          try {
-            const gameCtx = await this.getGameVariables();
-            endBlock =
-              startBlock + 60 * gameCtx.hoursPerGame * gameCtx.blocksPerMinute;
-          } catch (e) {
-            console.error(e);
-          }
+      const updates = {
+        attackedTokens: { increment: attackedTokens },
+        defendedTokens: { increment: defendedTokens },
+        eventIndexed: event.eventId
+      };
+
+      await this.context.prisma.desiege.upsert({
+        where: { gameId },
+        update: updates,
+        create: {
+          gameId,
+          ...updates,
+          defendedTokens,
+          attackedTokens
         }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
-        if (isGameAction) {
-          await this.context.prisma.desiegeAction.create({
-            data: {
-              gameId,
-              account,
-              amount: tokenAmount,
-              amountBoosted: boostedAmount,
-              tokenOffset: tokenOffset,
-            },
-          });
+  async inflictDamage(event: Event): Promise<void> {
+    try {
+      const params = event.parameters ?? [];
+      const gameId = parseInt(params[0]);
+      const damageAmount = parseInt(params[2]);
+
+      const updates = {
+        damageInflicted: { increment: damageAmount },
+        eventIndexed: event.eventId
+      };
+      await this.context.prisma.desiege.upsert({
+        where: { gameId },
+        update: updates,
+        create: {
+          gameId,
+          ...updates,
+          damageInflicted: damageAmount
         }
-
-        const updates = {
-          attackedTokens: isGameAction
-            ? { increment: attackedTokens }
-            : attackedTokens,
-          defendedTokens: isGameAction
-            ? { increment: defendedTokens }
-            : defendedTokens,
-          damageInflicted: isDamageAction
-            ? { increment: damageAmount }
-            : damageAmount,
-          eventIndexed: event.eventId,
-          winner,
-          startedOn,
-          initialHealth,
-          startBlock,
-          endBlock,
-        };
-        await this.context.prisma.desiege.upsert({
-          where: {
-            gameId,
-          },
-          update: updates,
-          create: {
-            gameId,
-            ...updates,
-            damageInflicted: damageAmount,
-            defendedTokens,
-            attackedTokens,
-          },
-        });
-
-        lastIndexedEventId = event.eventId;
-      }
+      });
     } catch (e) {
       console.log(e);
     }
-    return;
   }
 
   async getGameVariables() {
@@ -154,16 +135,7 @@ export default class DesiegeIndexer implements Indexer<Event> {
       currentBlock: toBN(varList[3]),
       gameStartBlock: toBN(varList[4]),
       mainHealth: toBN(varList[5]),
-      currentBoost: toBN(varList[6]).toNumber(),
+      currentBoost: toBN(varList[6]).toNumber()
     };
-  }
-
-  async lastIndexId(): Promise<string> {
-    const desiege = await this.context.prisma.desiege.findFirst({
-      orderBy: {
-        eventIndexed: "desc",
-      },
-    });
-    return desiege?.eventIndexed ?? "";
   }
 }
