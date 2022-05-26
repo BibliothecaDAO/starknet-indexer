@@ -231,9 +231,9 @@ model LoreEntity {
   // lastRevisionId  Int
 
   // For Starknet indexing
-  eventIndexed      String?
+  eventIndexed String?
 
-  revisions       LoreEntityRevision[]
+  revisions LoreEntityRevision[]
 }
 
 model LoreEntityRevision {
@@ -259,10 +259,10 @@ model LoreEntityRevision {
   entityId Int
 
   // For Starknet indexing
-  eventIndexed      String?
+  eventIndexed String?
 
-  pois              LorePoisOnEntityRevisions[]
-  props             LorePropsOnEntityRevisions[]
+  pois  LorePoisOnEntityRevisions[]
+  props LorePropsOnEntityRevisions[]
 }
 
 model LorePOI {
