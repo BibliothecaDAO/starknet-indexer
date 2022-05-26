@@ -421,6 +421,16 @@ input EventWhereUniqueInput {
   id: Int
 }
 
+"""Exchange Price"""
+type ExchangePrice {
+  buyAmount: String!
+  date: String!
+  hour: Int!
+  rateAmount: String!
+  sellAmount: String!
+  tokenId: Int!
+}
+
 input FloatFilter {
   equals: Float
   gt: Float
@@ -700,6 +710,7 @@ type Query {
   getBuildings: [Building!]!
   getBuildingsByAddress(address: String!): [Building!]!
   getBuildingsByRealm(realmId: Float!): [Building!]!
+  getCurrentExchangePrices: [ExchangePrice!]!
   getDesiege(id: Float!): Desiege!
   getDesiegeCurrent: Desiege!
   getDesiegeGames: [Desiege!]!

@@ -11,7 +11,8 @@ import {
   ResourceResolver,
   BuildingCostResolver,
   // RealmTraitResolver,
-  DesiegeResolver
+  DesiegeResolver,
+  ExchangePriceResolver
 } from "./resolvers";
 import { StarkNet } from "./indexer/Starknet";
 import { RealmsL1Indexer } from "./indexer/RealmsL1Indexer";
@@ -34,7 +35,7 @@ const main = async () => {
       BuildingResolver,
       ResourceResolver,
       BuildingCostResolver,
-      // RealmTraitResolver,
+      ExchangePriceResolver,
       // Generated
       DesiegeResolver,
       // DesiegeCrudResolver,

@@ -174,24 +174,24 @@ model TroopCost {
 
 // MILSTONE 2
 model Desiege {
-  id             Int       @id @default(autoincrement())
-  gameId         Int       @unique
-  winner         Int?
-  attackedTokens Int?
-  defendedTokens Int?
-  damageInflicted Int?     @default(0)
-  eventIndexed   String?
-  initialHealth  Int?      @default(0)
-  startBlock     Int       @default(0)
-  endBlock       Int       @default(0)
-  startedOn      DateTime?
+  id              Int       @id @default(autoincrement())
+  gameId          Int       @unique
+  winner          Int?
+  attackedTokens  Int?
+  defendedTokens  Int?
+  damageInflicted Int?      @default(0)
+  eventIndexed    String?
+  initialHealth   Int?      @default(0)
+  startBlock      Int       @default(0)
+  endBlock        Int       @default(0)
+  startedOn       DateTime?
 }
 
 model DesiegeAction {
-  id        Int    @id @default(autoincrement())
-  gameId    Int
-  account   String
-  amount    Int
+  id            Int    @id @default(autoincrement())
+  gameId        Int
+  account       String
+  amount        Int
   amountBoosted Int
   tokenOffset   Int
 }
@@ -294,4 +294,15 @@ model LorePropsOnEntityRevisions {
   value String?
 
   @@id([entityRevisionId, propId])
+}
+
+model ExchangePrice {
+  date       String
+  hour       Int
+  tokenId    Int
+  rateAmount String @default("")
+  buyAmount  String @default("")
+  sellAmount String @default("")
+
+  @@id([date, hour, tokenId])
 }

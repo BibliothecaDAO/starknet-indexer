@@ -5,7 +5,8 @@ import {
   Building,
   Resource,
   BuildingCost,
-  RealmTrait
+  RealmTrait,
+  ExchangePrice
 } from "./settling";
 import { Wallet } from "./wallet/Wallet";
 
@@ -15,6 +16,7 @@ export {
   Wallet,
   Building,
   Resource,
+  ExchangePrice,
   BuildingCost,
   RealmTrait,
   LoreEntity
