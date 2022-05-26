@@ -33,7 +33,7 @@ export default class ExchangeIndexer extends BaseContractIndexer {
     this.contract = new Contract(ExchangeABI as any, CONTRACT, PROVIDER as any);
 
     this.on("LiquidityAdded", this.addLiquidity.bind(this));
-    this.on("LiquidityRemoved", this.addLiquidity.bind(this));
+    this.on("LiquidityRemoved", this.removeLiquidity.bind(this));
     this.on("TokensPurchased", this.purchaseTokens.bind(this));
     this.on("CurrencyPurchased", this.purchaseCurrency.bind(this));
 
