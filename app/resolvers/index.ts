@@ -5,7 +5,7 @@ import {
   ResourceResolver,
   BuildingCostResolver,
   RealmTraitResolver,
-  ExchangePriceResolver
+  ExchangeRateResolver
 } from "./settling";
 import { DesiegeResolver } from "./desiege/Desiege";
 import { EventResolver } from "./starknet/Event";
@@ -19,5 +19,5 @@ export {
   EventResolver,
   BuildingCostResolver,
   RealmTraitResolver,
-  ExchangePriceResolver
+  ExchangeRateResolver
 };

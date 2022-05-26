@@ -296,11 +296,11 @@ model LorePropsOnEntityRevisions {
   @@id([entityRevisionId, propId])
 }
 
-model ExchangePrice {
+model ExchangeRate {
   date       String
   hour       Int
   tokenId    Int
-  rateAmount String @default("")
+  amount     String @default("")
   buyAmount  String @default("")
   sellAmount String @default("")
 

@@ -421,12 +421,12 @@ input EventWhereUniqueInput {
   id: Int
 }
 
-"""Exchange Price"""
-type ExchangePrice {
+"""Exchange Rate"""
+type ExchangeRate {
+  amount: String!
   buyAmount: String!
   date: String!
   hour: Int!
-  rateAmount: String!
   sellAmount: String!
   tokenId: Int!
 }
@@ -710,10 +710,10 @@ type Query {
   getBuildings: [Building!]!
   getBuildingsByAddress(address: String!): [Building!]!
   getBuildingsByRealm(realmId: Float!): [Building!]!
-  getCurrentExchangePrices: [ExchangePrice!]!
   getDesiege(id: Float!): Desiege!
   getDesiegeCurrent: Desiege!
   getDesiegeGames: [Desiege!]!
+  getExchangeRates: [ExchangeRate!]!
   getLoreEntities(skip: Float = 0, take: Float = 100): [LoreEntity!]!
   getLoreEntity(entityId: Float!): LoreEntity!
   getLorePois(skip: Float = 0, take: Float = 100): [LorePoi!]!

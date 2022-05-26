@@ -66,10 +66,10 @@ export default class ExchangeIndexer extends BaseContractIndexer {
       const hour = today.getUTCHours();
 
       const batchUpserts = RESOURCE_IDS.map((tokenId: number, idx: number) => {
-        const rateAmount = uint256ToBN(rates[0][idx]).toString();
+        const amount = uint256ToBN(rates[0][idx]).toString();
         const buyAmount = uint256ToBN(buys[0][idx]).toString();
         const sellAmount = uint256ToBN(sells[0][idx]).toString();
-        return this.context.prisma.exchangePrice.upsert({
+        return this.context.prisma.exchangeRate.upsert({
           where: {
             date_hour_tokenId: {
               date,
@@ -77,12 +77,12 @@ export default class ExchangeIndexer extends BaseContractIndexer {
               tokenId
             }
           },
-          update: { rateAmount, buyAmount, sellAmount },
+          update: { amount, buyAmount, sellAmount },
           create: {
             date,
             hour,
             tokenId,
-            rateAmount,
+            amount,
             buyAmount,
             sellAmount
           }

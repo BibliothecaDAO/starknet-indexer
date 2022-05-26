@@ -4,7 +4,7 @@ import { Resource } from "./Resource";
 import { BuildingCost } from "./BuildingCost";
 import { RealmTrait } from "./RealmTrait";
 import { TroopCost } from "./TroopCost";
-import { ExchangePrice } from "./ExchangePrice";
+import { ExchangeRate } from "./ExchangeRate";
 
 export {
   Realm,
@@ -13,5 +13,5 @@ export {
   Resource,
   BuildingCost,
   RealmTrait,
-  ExchangePrice
+  ExchangeRate
 };

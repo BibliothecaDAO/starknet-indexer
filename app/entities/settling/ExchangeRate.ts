@@ -1,8 +1,8 @@
 import { ObjectType, Field, Int } from "type-graphql";
 import { __Type } from "graphql";
 
-@ObjectType({ description: "Exchange Price" })
-export class ExchangePrice {
+@ObjectType({ description: "Exchange Rate" })
+export class ExchangeRate {
   @Field(() => String)
   date: string;
 
@@ -13,7 +13,7 @@ export class ExchangePrice {
   tokenId: number;
 
   @Field(() => String)
-  rateAmount: string;
+  amount: string;
 
   @Field(() => String)
   buyAmount: string;
