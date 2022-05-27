@@ -67,6 +67,17 @@ input DateTimeFilter {
   notIn: [DateTime!]
 }
 
+input DateTimeNullableFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeNullableFilter
+  notIn: [DateTime!]
+}
+
 input DateTimeWithAggregatesFilter {
   _count: NestedIntFilter
   _max: NestedDateTimeFilter
@@ -486,6 +497,11 @@ type LoreEntity {
   revisions: [LoreEntityRevision!]!
 }
 
+input LoreEntityRelationFilter {
+  is: LoreEntityWhereInput
+  isNot: LoreEntityWhereInput
+}
+
 """Lore Entity Revision"""
 type LoreEntityRevision {
   createdAt: DateTime!
@@ -496,6 +512,62 @@ type LoreEntityRevision {
   props: [LorePropsOnEntityRevisions!]!
   revisionNumber: Float!
   title: String
+}
+
+input LoreEntityRevisionListRelationFilter {
+  every: LoreEntityRevisionWhereInput
+  none: LoreEntityRevisionWhereInput
+  some: LoreEntityRevisionWhereInput
+}
+
+input LoreEntityRevisionRelationFilter {
+  is: LoreEntityRevisionWhereInput
+  isNot: LoreEntityRevisionWhereInput
+}
+
+input LoreEntityRevisionWhereInput {
+  AND: [LoreEntityRevisionWhereInput!]
+  NOT: [LoreEntityRevisionWhereInput!]
+  OR: [LoreEntityRevisionWhereInput!]
+  arweaveId: StringFilter
+  createdAt: DateTimeNullableFilter
+  entity: LoreEntityRelationFilter
+  entityId: IntFilter
+  eventIndexed: StringNullableFilter
+  excerpt: StringNullableFilter
+  id: IntFilter
+  markdown: StringNullableFilter
+  media_url: StringNullableFilter
+  pois: LorePoisOnEntityRevisionsListRelationFilter
+  props: LorePropsOnEntityRevisionsListRelationFilter
+  revisionNumber: IntFilter
+  title: StringNullableFilter
+}
+
+input LoreEntityWhereInput {
+  AND: [LoreEntityWhereInput!]
+  NOT: [LoreEntityWhereInput!]
+  OR: [LoreEntityWhereInput!]
+  eventIndexed: StringNullableFilter
+  id: IntFilter
+  kind: IntFilter
+  owner: StringNullableFilter
+  revisions: LoreEntityRevisionListRelationFilter
+}
+
+input LorePOIRelationFilter {
+  is: LorePOIWhereInput
+  isNot: LorePOIWhereInput
+}
+
+input LorePOIWhereInput {
+  AND: [LorePOIWhereInput!]
+  NOT: [LorePOIWhereInput!]
+  OR: [LorePOIWhereInput!]
+  assetType: StringNullableFilter
+  entities: LorePoisOnEntityRevisionsListRelationFilter
+  id: IntFilter
+  name: StringFilter
 }
 
 """Lore POI"""
@@ -512,11 +584,59 @@ type LorePoisOnEntityRevisions {
   poiId: ID!
 }
 
+input LorePoisOnEntityRevisionsListRelationFilter {
+  every: LorePoisOnEntityRevisionsWhereInput
+  none: LorePoisOnEntityRevisionsWhereInput
+  some: LorePoisOnEntityRevisionsWhereInput
+}
+
+input LorePoisOnEntityRevisionsWhereInput {
+  AND: [LorePoisOnEntityRevisionsWhereInput!]
+  NOT: [LorePoisOnEntityRevisionsWhereInput!]
+  OR: [LorePoisOnEntityRevisionsWhereInput!]
+  assetId: StringNullableFilter
+  entityRevision: LoreEntityRevisionRelationFilter
+  entityRevisionId: IntFilter
+  poi: LorePOIRelationFilter
+  poiId: IntFilter
+}
+
+input LorePropRelationFilter {
+  is: LorePropWhereInput
+  isNot: LorePropWhereInput
+}
+
+input LorePropWhereInput {
+  AND: [LorePropWhereInput!]
+  NOT: [LorePropWhereInput!]
+  OR: [LorePropWhereInput!]
+  entities: LorePropsOnEntityRevisionsListRelationFilter
+  id: IntFilter
+  name: StringFilter
+}
+
 """Lore Entity Revision"""
 type LorePropsOnEntityRevisions {
   entityRevisionId: ID!
   propId: ID!
   value: String
+}
+
+input LorePropsOnEntityRevisionsListRelationFilter {
+  every: LorePropsOnEntityRevisionsWhereInput
+  none: LorePropsOnEntityRevisionsWhereInput
+  some: LorePropsOnEntityRevisionsWhereInput
+}
+
+input LorePropsOnEntityRevisionsWhereInput {
+  AND: [LorePropsOnEntityRevisionsWhereInput!]
+  NOT: [LorePropsOnEntityRevisionsWhereInput!]
+  OR: [LorePropsOnEntityRevisionsWhereInput!]
+  entityRevision: LoreEntityRevisionRelationFilter
+  entityRevisionId: IntFilter
+  prop: LorePropRelationFilter
+  propId: IntFilter
+  value: StringNullableFilter
 }
 
 type Mutation {
@@ -540,6 +660,17 @@ input NestedDateTimeFilter {
   lt: DateTime
   lte: DateTime
   not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
+
+input NestedDateTimeNullableFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeNullableFilter
   notIn: [DateTime!]
 }
 
@@ -703,7 +834,7 @@ type Query {
   getDesiege(id: Float!): Desiege!
   getDesiegeCurrent: Desiege!
   getDesiegeGames: [Desiege!]!
-  getLoreEntities(skip: Float = 0, take: Float = 100): [LoreEntity!]!
+  getLoreEntities(filter: LoreEntityWhereInput, skip: Float = 0, take: Float = 100): [LoreEntity!]!
   getLoreEntity(entityId: Float!): LoreEntity!
   getLorePois(skip: Float = 0, take: Float = 100): [LorePoi!]!
   getRealm(realmId: Float!): Realm!
