@@ -438,7 +438,9 @@ input EventWhereUniqueInput {
   id: Int
 }
 
-"""Exchange Rate"""
+"""
+Exchange Rate
+"""
 type ExchangeRate {
   amount: String!
   buyAmount: String!
@@ -892,16 +894,12 @@ type Query {
   getDesiege(id: Float!): Desiege!
   getDesiegeCurrent: Desiege!
   getDesiegeGames: [Desiege!]!
-<<<<<<< HEAD
   getExchangeRates: [ExchangeRate!]!
-  getLoreEntities(filter: LoreEntityWhereInput, skip: Float = 0, take: Float = 100): [LoreEntity!]!
-=======
   getLoreEntities(
     filter: LoreEntityWhereInput
     skip: Float = 0
     take: Float = 100
   ): [LoreEntity!]!
->>>>>>> 19f49a6 (rebase)
   getLoreEntity(entityId: Float!): LoreEntity!
   getLorePois(skip: Float = 0, take: Float = 100): [LorePoi!]!
   getRealm(realmId: Float!): Realm!
