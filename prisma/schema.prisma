@@ -261,8 +261,13 @@ model LoreEntityRevision {
   // For Starknet indexing
   eventIndexed String?
 
+<<<<<<< HEAD
   pois  LorePoisOnEntityRevisions[]
   props LorePropsOnEntityRevisions[]
+=======
+  pois              LorePoisOnEntityRevisions[]
+  props             LorePropsOnEntityRevisions[]
+>>>>>>> 8fffc3f (Lore: remove duplicate eventIndexed)
 }
 
 model LorePOI {
