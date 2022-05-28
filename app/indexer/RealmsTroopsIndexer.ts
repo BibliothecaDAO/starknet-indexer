@@ -6,7 +6,7 @@ import { BigNumberish } from "starknet/utils/number";
 import {
   TroopStat,
   TroopName,
-  Troop,
+  TroopId,
   ATTACKING_SQUAD_SLOT,
   DEFENDING_SQUAD_SLOT
 } from "../utils/game_constants";
@@ -24,7 +24,7 @@ function findTroopIdFromStats(stats: any[]): number {
   for (let name of names) {
     const currentKey = TroopStat[name].slice(0, 4).join("");
     if (statsKey === currentKey) {
-      return Troop[name];
+      return TroopId[name];
     }
   }
   return 0;

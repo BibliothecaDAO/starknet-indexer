@@ -1,6 +1,7 @@
 import { ObjectType, Field, ID, Int } from "type-graphql";
 import { __Type } from "graphql";
 import { Realm } from "./Realm";
+import { ResourceNameById } from "../../utils/game_constants";
 
 @ObjectType({ description: "The Resource Model" })
 export class Resource {
@@ -9,6 +10,9 @@ export class Resource {
 
   @Field(() => Int, { nullable: false })
   resourceId: number;
+
+  // @Field()
+  // resourceName: string;
 
   @Field({ nullable: true })
   realmId: number;
@@ -21,4 +25,12 @@ export class Resource {
 
   @Field(() => [String])
   upgrades: string[];
+
+  @Field(() => String)
+  get resourceName(): string {
+    if (!this.resourceId) {
+      return "";
+    }
+    return ResourceNameById[String(this.resourceId)] ?? "";
+  }
 }

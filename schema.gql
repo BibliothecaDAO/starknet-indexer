@@ -18,6 +18,7 @@ type AggregateEvent {
 """The Buildings Model"""
 type Building {
   buildingId: Int
+  buildingName: String!
   id: ID!
   realm: Realm
   realmId: Float!
@@ -440,6 +441,7 @@ type ExchangeRate {
   hour: Int!
   sellAmount: String!
   tokenId: Int!
+  tokenName: String!
 }
 
 input FloatFilter {
@@ -976,6 +978,7 @@ type Resource {
   realm: Realm!
   realmId: Float
   resourceId: Int!
+  resourceName: String!
   upgrades: [String!]!
 }
 
@@ -1111,6 +1114,7 @@ type Troop {
   squadSlot: Int!
   tier: Int!
   troopId: Int!
+  troopName: String!
   type: Int!
   vitality: Int!
   wisdom: Int!

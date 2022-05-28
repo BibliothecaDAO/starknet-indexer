@@ -1,4 +1,4 @@
-export const Troop = {
+export const TroopId = {
   Watchman: 1,
   Guard: 2,
   GuardCaptain: 3,
@@ -17,9 +17,11 @@ export const Troop = {
   GrandMarshal: 16
 };
 
-export type TroopName = keyof typeof Troop;
+export type TroopName = keyof typeof TroopId;
 
-export const Resource = {
+export const TroopNameById = createIdToNameMap(TroopId);
+
+export const ResourceId = {
   Wood: 1,
   Stone: 2,
   Coal: 3,
@@ -44,9 +46,11 @@ export const Resource = {
   Dragonhide: 22
 };
 
-export type ResourceName = keyof typeof Resource;
+export type ResourceName = keyof typeof ResourceId;
 
-export const Building = {
+export const ResourceNameById = createIdToNameMap(ResourceId);
+
+export const BuildingId = {
   Fairgrounds: 1,
   RoyalReserve: 2,
   GrandMarket: 3,
@@ -69,7 +73,9 @@ export const Building = {
   Hamlet: 20
 };
 
-export type BuildingName = keyof typeof Building;
+export type BuildingName = keyof typeof BuildingId;
+
+export const BuildingNameById = createIdToNameMap(BuildingId);
 
 interface ResourceCost {
   resourceId: number;
@@ -85,192 +91,192 @@ export const BuildingCost: { [key in BuildingName]: Cost } = {
   Castle: {
     amount: 50,
     resources: [
-      { resourceId: Resource.Wood, amount: 30 },
-      { resourceId: Resource.Stone, amount: 50 },
-      { resourceId: Resource.Copper, amount: 100 },
-      { resourceId: Resource.Adamantine, amount: 4 },
-      { resourceId: Resource.Mithral, amount: 1 },
-      { resourceId: Resource.Dragonhide, amount: 1 }
+      { resourceId: ResourceId.Wood, amount: 30 },
+      { resourceId: ResourceId.Stone, amount: 50 },
+      { resourceId: ResourceId.Copper, amount: 100 },
+      { resourceId: ResourceId.Adamantine, amount: 4 },
+      { resourceId: ResourceId.Mithral, amount: 1 },
+      { resourceId: ResourceId.Dragonhide, amount: 1 }
     ]
   },
   Fairgrounds: {
     amount: 50,
     resources: [
-      { resourceId: Resource.Wood, amount: 40 },
-      { resourceId: Resource.Stone, amount: 50 },
-      { resourceId: Resource.Silver, amount: 40 },
-      { resourceId: Resource.AlchemicalSilver, amount: 8 },
-      { resourceId: Resource.Mithral, amount: 1 },
-      { resourceId: Resource.Dragonhide, amount: 1 }
+      { resourceId: ResourceId.Wood, amount: 40 },
+      { resourceId: ResourceId.Stone, amount: 50 },
+      { resourceId: ResourceId.Silver, amount: 40 },
+      { resourceId: ResourceId.AlchemicalSilver, amount: 8 },
+      { resourceId: ResourceId.Mithral, amount: 1 },
+      { resourceId: ResourceId.Dragonhide, amount: 1 }
     ]
   },
   GrandMarket: {
     amount: 50,
     resources: [
-      { resourceId: Resource.Wood, amount: 35 },
-      { resourceId: Resource.Stone, amount: 40 },
-      { resourceId: Resource.Gold, amount: 20 },
-      { resourceId: Resource.TwilightQuartz, amount: 10 },
-      { resourceId: Resource.Mithral, amount: 1 },
-      { resourceId: Resource.Dragonhide, amount: 1 }
+      { resourceId: ResourceId.Wood, amount: 35 },
+      { resourceId: ResourceId.Stone, amount: 40 },
+      { resourceId: ResourceId.Gold, amount: 20 },
+      { resourceId: ResourceId.TwilightQuartz, amount: 10 },
+      { resourceId: ResourceId.Mithral, amount: 1 },
+      { resourceId: ResourceId.Dragonhide, amount: 1 }
     ]
   },
   Guild: {
     amount: 50,
     resources: [
-      { resourceId: Resource.Wood, amount: 50 },
-      { resourceId: Resource.Stone, amount: 50 },
-      { resourceId: Resource.Coal, amount: 120 },
-      { resourceId: Resource.EtherealSilica, amount: 12 },
-      { resourceId: Resource.Mithral, amount: 2 },
-      { resourceId: Resource.Dragonhide, amount: 1 }
+      { resourceId: ResourceId.Wood, amount: 50 },
+      { resourceId: ResourceId.Stone, amount: 50 },
+      { resourceId: ResourceId.Coal, amount: 120 },
+      { resourceId: ResourceId.EtherealSilica, amount: 12 },
+      { resourceId: ResourceId.Mithral, amount: 2 },
+      { resourceId: ResourceId.Dragonhide, amount: 1 }
     ]
   },
   OfficerAcademy: {
     amount: 50,
     resources: [
-      { resourceId: Resource.Wood, amount: 40 },
-      { resourceId: Resource.Stone, amount: 20 },
-      { resourceId: Resource.ColdIron, amount: 45 },
-      { resourceId: Resource.Ignium, amount: 12 },
-      { resourceId: Resource.Mithral, amount: 1 },
-      { resourceId: Resource.Dragonhide, amount: 1 }
+      { resourceId: ResourceId.Wood, amount: 40 },
+      { resourceId: ResourceId.Stone, amount: 20 },
+      { resourceId: ResourceId.ColdIron, amount: 45 },
+      { resourceId: ResourceId.Ignium, amount: 12 },
+      { resourceId: ResourceId.Mithral, amount: 1 },
+      { resourceId: ResourceId.Dragonhide, amount: 1 }
     ]
   },
   RoyalReserve: {
     amount: 50,
     resources: [
-      { resourceId: Resource.Wood, amount: 50 },
-      { resourceId: Resource.Stone, amount: 20 },
-      { resourceId: Resource.Ironwood, amount: 50 },
-      { resourceId: Resource.TrueIce, amount: 10 },
-      { resourceId: Resource.Mithral, amount: 1 },
-      { resourceId: Resource.Dragonhide, amount: 1 }
+      { resourceId: ResourceId.Wood, amount: 50 },
+      { resourceId: ResourceId.Stone, amount: 20 },
+      { resourceId: ResourceId.Ironwood, amount: 50 },
+      { resourceId: ResourceId.TrueIce, amount: 10 },
+      { resourceId: ResourceId.Mithral, amount: 1 },
+      { resourceId: ResourceId.Dragonhide, amount: 1 }
     ]
   },
   Amphitheater: {
     amount: 10,
     resources: [
-      { resourceId: Resource.Stone, amount: 5 },
-      { resourceId: Resource.Diamonds, amount: 5 },
-      { resourceId: Resource.Sapphire, amount: 1 },
-      { resourceId: Resource.TwilightQuartz, amount: 2 }
+      { resourceId: ResourceId.Stone, amount: 5 },
+      { resourceId: ResourceId.Diamonds, amount: 5 },
+      { resourceId: ResourceId.Sapphire, amount: 1 },
+      { resourceId: ResourceId.TwilightQuartz, amount: 2 }
     ]
   },
   ArcherTower: {
     amount: 5,
     resources: [
-      { resourceId: Resource.Wood, amount: 10 },
-      { resourceId: Resource.Stone, amount: 10 },
-      { resourceId: Resource.Obsidian, amount: 25 },
-      { resourceId: Resource.Ironwood, amount: 5 }
+      { resourceId: ResourceId.Wood, amount: 10 },
+      { resourceId: ResourceId.Stone, amount: 10 },
+      { resourceId: ResourceId.Obsidian, amount: 25 },
+      { resourceId: ResourceId.Ironwood, amount: 5 }
     ]
   },
   Architect: {
     amount: 15,
     resources: [
-      { resourceId: Resource.Wood, amount: 10 },
-      { resourceId: Resource.Stone, amount: 10 },
-      { resourceId: Resource.Hartwood, amount: 13 },
-      { resourceId: Resource.DeepCrystal, amount: 8 }
+      { resourceId: ResourceId.Wood, amount: 10 },
+      { resourceId: ResourceId.Stone, amount: 10 },
+      { resourceId: ResourceId.Hartwood, amount: 13 },
+      { resourceId: ResourceId.DeepCrystal, amount: 8 }
     ]
   },
   Barracks: {
     amount: 5,
     resources: [
-      { resourceId: Resource.Wood, amount: 13 },
-      { resourceId: Resource.Stone, amount: 10 },
-      { resourceId: Resource.Obsidian, amount: 20 },
-      { resourceId: Resource.Silver, amount: 10 }
+      { resourceId: ResourceId.Wood, amount: 13 },
+      { resourceId: ResourceId.Stone, amount: 10 },
+      { resourceId: ResourceId.Obsidian, amount: 20 },
+      { resourceId: ResourceId.Silver, amount: 10 }
     ]
   },
   Dock: {
     amount: 5,
     resources: [
-      { resourceId: Resource.Stone, amount: 2 },
-      { resourceId: Resource.Coal, amount: 15 },
-      { resourceId: Resource.Ruby, amount: 4 }
+      { resourceId: ResourceId.Stone, amount: 2 },
+      { resourceId: ResourceId.Coal, amount: 15 },
+      { resourceId: ResourceId.Ruby, amount: 4 }
     ]
   },
   Farms: {
     amount: 10,
     resources: [
-      { resourceId: Resource.Wood, amount: 20 },
-      { resourceId: Resource.Copper, amount: 5 },
-      { resourceId: Resource.Silver, amount: 30 },
-      { resourceId: Resource.Hartwood, amount: 10 }
+      { resourceId: ResourceId.Wood, amount: 20 },
+      { resourceId: ResourceId.Copper, amount: 5 },
+      { resourceId: ResourceId.Silver, amount: 30 },
+      { resourceId: ResourceId.Hartwood, amount: 10 }
     ]
   },
   Fishmonger: {
     amount: 10,
     resources: [
-      { resourceId: Resource.Wood, amount: 30 },
-      { resourceId: Resource.Obsidian, amount: 55 },
-      { resourceId: Resource.Silver, amount: 6 },
-      { resourceId: Resource.ColdIron, amount: 5 }
+      { resourceId: ResourceId.Wood, amount: 30 },
+      { resourceId: ResourceId.Obsidian, amount: 55 },
+      { resourceId: ResourceId.Silver, amount: 6 },
+      { resourceId: ResourceId.ColdIron, amount: 5 }
     ]
   },
   Granary: {
     amount: 15,
     resources: [
-      { resourceId: Resource.Wood, amount: 10 },
-      { resourceId: Resource.Obsidian, amount: 10 },
-      { resourceId: Resource.EtherealSilica, amount: 4 },
-      { resourceId: Resource.TrueIce, amount: 4 }
+      { resourceId: ResourceId.Wood, amount: 10 },
+      { resourceId: ResourceId.Obsidian, amount: 10 },
+      { resourceId: ResourceId.EtherealSilica, amount: 4 },
+      { resourceId: ResourceId.TrueIce, amount: 4 }
     ]
   },
   TradeOffice: {
     amount: 15,
     resources: [
-      { resourceId: Resource.Wood, amount: 10 },
-      { resourceId: Resource.Stone, amount: 4 },
-      { resourceId: Resource.Gold, amount: 15 },
-      { resourceId: Resource.Sapphire, amount: 10 }
+      { resourceId: ResourceId.Wood, amount: 10 },
+      { resourceId: ResourceId.Stone, amount: 4 },
+      { resourceId: ResourceId.Gold, amount: 15 },
+      { resourceId: ResourceId.Sapphire, amount: 10 }
     ]
   },
   Hamlet: {
     amount: 20,
     resources: [
-      { resourceId: Resource.Wood, amount: 25 },
-      { resourceId: Resource.ColdIron, amount: 20 },
-      { resourceId: Resource.Gold, amount: 20 },
-      { resourceId: Resource.Ruby, amount: 10 }
+      { resourceId: ResourceId.Wood, amount: 25 },
+      { resourceId: ResourceId.ColdIron, amount: 20 },
+      { resourceId: ResourceId.Gold, amount: 20 },
+      { resourceId: ResourceId.Ruby, amount: 10 }
     ]
   },
   Housing: {
     amount: 35,
     resources: [
-      { resourceId: Resource.Stone, amount: 50 },
-      { resourceId: Resource.Coal, amount: 120 },
-      { resourceId: Resource.Copper, amount: 120 },
-      { resourceId: Resource.Ironwood, amount: 70 }
+      { resourceId: ResourceId.Stone, amount: 50 },
+      { resourceId: ResourceId.Coal, amount: 120 },
+      { resourceId: ResourceId.Copper, amount: 120 },
+      { resourceId: ResourceId.Ironwood, amount: 70 }
     ]
   },
   MageTower: {
     amount: 5,
     resources: [
-      { resourceId: Resource.Wood, amount: 2 },
-      { resourceId: Resource.Stone, amount: 2 },
-      { resourceId: Resource.Diamonds, amount: 4 },
-      { resourceId: Resource.Ignium, amount: 1 }
+      { resourceId: ResourceId.Wood, amount: 2 },
+      { resourceId: ResourceId.Stone, amount: 2 },
+      { resourceId: ResourceId.Diamonds, amount: 4 },
+      { resourceId: ResourceId.Ignium, amount: 1 }
     ]
   },
   ParadeGrounds: {
     amount: 15,
     resources: [
-      { resourceId: Resource.Stone, amount: 10 },
-      { resourceId: Resource.Sapphire, amount: 4 },
-      { resourceId: Resource.Ignium, amount: 4 },
-      { resourceId: Resource.Adamantine, amount: 1 }
+      { resourceId: ResourceId.Stone, amount: 10 },
+      { resourceId: ResourceId.Sapphire, amount: 4 },
+      { resourceId: ResourceId.Ignium, amount: 4 },
+      { resourceId: ResourceId.Adamantine, amount: 1 }
     ]
   },
   School: {
     amount: 1,
     resources: [
-      { resourceId: Resource.Stone, amount: 10 },
-      { resourceId: Resource.Diamonds, amount: 4 },
-      { resourceId: Resource.DeepCrystal, amount: 3 },
-      { resourceId: Resource.AlchemicalSilver, amount: 3 }
+      { resourceId: ResourceId.Stone, amount: 10 },
+      { resourceId: ResourceId.Diamonds, amount: 4 },
+      { resourceId: ResourceId.DeepCrystal, amount: 3 },
+      { resourceId: ResourceId.AlchemicalSilver, amount: 3 }
     ]
   }
 };
@@ -307,3 +313,11 @@ export const TroopStat: { [key in TroopName]: number[] } = {
 
 export const ATTACKING_SQUAD_SLOT = 1;
 export const DEFENDING_SQUAD_SLOT = 2;
+
+function createIdToNameMap(map: Record<string, any>) {
+  const result: Record<string, any> = {};
+  for (const key in map) {
+    result[String(map[key])] = key.replace(/[a-z]([A-Z])/g, " $1");
+  }
+  return result;
+}

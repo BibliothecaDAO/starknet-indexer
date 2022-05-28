@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int } from "type-graphql";
 import { __Type } from "graphql";
+import { ResourceNameById } from "../../utils/game_constants";
 
 @ObjectType({ description: "Exchange Rate" })
 export class ExchangeRate {
@@ -9,7 +10,7 @@ export class ExchangeRate {
   @Field(() => Int)
   hour: number;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: false })
   tokenId: number;
 
   @Field(() => String)
@@ -20,4 +21,12 @@ export class ExchangeRate {
 
   @Field(() => String)
   sellAmount: string;
+
+  @Field(() => String)
+  get tokenName(): string {
+    if (!this.tokenId) {
+      return "";
+    }
+    return ResourceNameById[String(this.tokenId)] ?? "";
+  }
 }
