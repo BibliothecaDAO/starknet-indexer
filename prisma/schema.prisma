@@ -261,6 +261,9 @@ model LoreEntityRevision {
   // For Starknet indexing
   eventIndexed      String?
 
+  // For Starknet indexing
+  eventIndexed      String?
+
   pois              LorePoisOnEntityRevisions[]
   props             LorePropsOnEntityRevisions[]
 }
