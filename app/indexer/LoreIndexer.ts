@@ -1,46 +1,21 @@
-// import { DesiegeResolver } from "../resolvers";
 import { Event } from "../entities/starknet/Event";
 import { Context } from "../context";
-import { Indexer } from "./../types";
 import { Contract } from "starknet";
 import { uint256ToBN } from "starknet/utils/uint256";
 import fetch from "node-fetch";
-
 import LoreABI from "../abis/Lore.json";
-import { toBN } from "starknet/utils/number";
+import BaseContractIndexer from "./BaseContractIndexer";
 
-export default class LoreIndexer implements Indexer<Event> {
-  private CONTRACTS = [
-    "0x521151a3e28d2efff7d7d34c4f8bbe45c4c9f37424bae4dc63836fd659c51e6"
-  ];
-  // @ts-ignore
-  private context: Context;
-  private contract: Contract = new Contract(LoreABI as any, this.CONTRACTS[0]);
+const CONTRACT =
+  "0x06894a6766b4763d8bea8d43f433d25e577ed8bf057942c861df4e9951282c64";
+
+export default class LoreIndexer extends BaseContractIndexer {
+  private contract: Contract = new Contract(LoreABI as any, CONTRACT);
 
   constructor(context: Context) {
-    this.context = context;
-  }
+    super(context, CONTRACT);
 
-  contracts(): string[] {
-    // this.createEntity(1)
-
-    return this.CONTRACTS;
-  }
-
-  async index(events: Event[]): Promise<void> {
-    let lastIndexedEventId = await this.lastIndexId();
-
-    for (const event of events) {
-      const eventId = event.eventId;
-      if (eventId <= lastIndexedEventId) {
-        continue;
-      }
-
-      const params: string[] = event.parameters ?? [];
-
-      await this.createEntity(params[0]);
-    }
-    return;
+    this.on("entity_created", this.entityCreated.bind(this));
   }
 
   async wait(milliseconds: number) {
@@ -49,17 +24,35 @@ export default class LoreIndexer implements Indexer<Event> {
     });
   }
 
-  async createEntity(entityId: string) {
-    const entity = await this.contract.get_entity(
-      entityId.toString(), // entity_id
-      "0", // revision_id
-    )
+  async entityCreated(event: Event): Promise<void> {
+    console.log(event);
+
+    const params = event.parameters ?? [];
+    const entityId = parseInt(params[0]);
+
+    let entity;
+    try {
+      entity = await this.contract.get_entity(
+        entityId.toString(), // entity_id
+        "1" // revision_id
+      );
+    } catch (error) {
+      console.log(error);
+
+      return;
+    }
 
     // console.log(entityId)
-    // console.log(entity)
-    
-    const part1 = Buffer.from(entity.content.Part1.toString(16), "hex").toString();
-    const part2 = Buffer.from(entity.content.Part2.toString(16), "hex").toString();
+    // console.log(entity);
+
+    const part1 = Buffer.from(
+      entity.content.Part1.toString(16),
+      "hex"
+    ).toString();
+    const part2 = Buffer.from(
+      entity.content.Part2.toString(16),
+      "hex"
+    ).toString();
 
     const arweaveId = `${part1}${part2}`;
 
@@ -69,6 +62,7 @@ export default class LoreIndexer implements Indexer<Event> {
       const response = await fetch(`https://arweave.net/${arweaveId}`, {
         timeout: 20000
       });
+
       arweaveJSON = await response.json();
     } catch (error) {
       console.log(error);
@@ -77,27 +71,27 @@ export default class LoreIndexer implements Indexer<Event> {
       return;
     }
 
-    // console.log(arweaveJSON)
-
     try {
       await this.context.prisma.loreEntity.upsert({
         where: {
-          id: entityId,
+          id: entityId
         },
         create: {
           id: entityId,
           owner: entity.owner.toString(),
-          kind: entity.kind.toNumber()
+          kind: entity.kind.toNumber(),
+          eventIndexed: event.eventId
         },
         update: {
           owner: entity.owner.toString(),
-          kind: entity.kind.toNumber()
-        },
+          kind: entity.kind.toNumber(),
+          eventIndexed: event.eventId
+        }
       });
 
       const data: any = {
         entityId,
-        revisionNumber: 0,
+        revisionNumber: 1,
         arweaveId,
         title: arweaveJSON.title,
         markdown: arweaveJSON.markdown
@@ -112,54 +106,47 @@ export default class LoreIndexer implements Indexer<Event> {
         };
       }
 
-      if (entity.props.length > 0 && entity.props[0].id) {
-        // StarkNet cannot return empty arrays?
-        if (
-          !entity.props[0].id.eq(toBN(0)) &&
-          !entity.props[0].value.eq(toBN(0))
-        ) {
-          data.props = {
-            create: entity.props.map((prop: any) => ({
-              propId: prop.id.toNumber(),
-              value: prop.value.toNumber()
-            }))
-          };
-        }
+      if (entity.props.length > 0) {
+        data.props = {
+          create: entity.props.map((prop: any) => ({
+            propId: prop.id.toNumber(),
+            value: prop.value.toString()
+          }))
+        };
       }
 
       // Temporary while testing only 1 revision
-      const firstRevision = await this.context.prisma.loreEntityRevision.findFirst({
-        where: {
-          entityId,
-          revisionNumber: 0
-        }
-      })
+      const firstRevision =
+        await this.context.prisma.loreEntityRevision.findFirst({
+          where: {
+            entityId,
+            revisionNumber: 1
+          }
+        });
 
       // Omit pois and props
-      const { pois, props, ...updateData } = data; 
+      // const { pois, props, ...updateData } = data;
 
       await this.context.prisma.loreEntityRevision.upsert({
         where: {
           id: firstRevision ? firstRevision.id : -1
         },
         create: data,
-        update: updateData
+        update: data
       });
     } catch (error) {
       console.log(error);
-      return false;
+      return;
     }
-
-    return;
   }
 
-  async lastIndexId(): Promise<string> {
-    const lastRevision = await this.context.prisma.loreEntity.findFirst({
-      orderBy: {
-        eventIndexed: "desc"
-      }
-    });
+  // async lastIndexId(): Promise<string> {
+  //   const lastRevision = await this.context.prisma.loreEntity.findFirst({
+  //     orderBy: {
+  //       eventIndexed: "desc"
+  //     }
+  //   });
 
-    return lastRevision?.eventIndexed ?? "0";
-  }
+  //   return lastRevision?.eventIndexed ?? "0";
+  // }
 }
