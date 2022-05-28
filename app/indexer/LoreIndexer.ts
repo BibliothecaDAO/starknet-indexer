@@ -1,6 +1,6 @@
 import { Event } from "../entities/starknet/Event";
 import { Context } from "../context";
-import { Contract } from "starknet";
+import { Contract, Provider } from "starknet";
 import { uint256ToBN } from "starknet/utils/uint256";
 import fetch from "node-fetch";
 import LoreABI from "../abis/Lore.json";
@@ -9,7 +9,10 @@ import BaseContractIndexer from "./BaseContractIndexer";
 const CONTRACT = "0x06894a6766b4763d8bea8d43f433d25e577ed8bf057942c861df4e9951282c64";
 
 export default class LoreIndexer extends BaseContractIndexer {
-  private contract: Contract = new Contract(LoreABI as any, CONTRACT);
+  private provider: Provider = new Provider({
+    network: process.env.NETWORK === "goerli" ? "goerli-alpha" : "mainnet-alpha"
+  })
+  private contract: Contract = new Contract(LoreABI as any, CONTRACT, this.provider)
   
   constructor(context: Context) {
     super(context, CONTRACT);
