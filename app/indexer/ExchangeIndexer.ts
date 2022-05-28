@@ -1,7 +1,6 @@
 import { Context } from "../context";
 import BaseContractIndexer from "./BaseContractIndexer";
-import { Contract } from "starknet";
-import { PROVIDER } from "../utils/constants";
+import { Contract, Provider } from "starknet";
 import { bnToUint256, uint256ToBN } from "starknet/utils/uint256";
 import ExchangeABI from "../abis/Exchange_ERC20_1155.json";
 
@@ -23,14 +22,20 @@ const TOKEN_AMOUNTS = [...TOKEN_IDS].fill(
 );
 
 export default class ExchangeIndexer extends BaseContractIndexer {
-  private contract: Contract;
+  private provider: Provider = new Provider({
+    network: process.env.NETWORK === "goerli" ? "goerli-alpha" : "mainnet-alpha"
+  });
+
+  private contract: Contract = new Contract(
+    ExchangeABI as any,
+    CONTRACT,
+    this.provider
+  );
   interval: NodeJS.Timer;
   isUpdatingPrices: boolean;
 
   constructor(context: Context) {
     super(context, CONTRACT);
-
-    this.contract = new Contract(ExchangeABI as any, CONTRACT, PROVIDER as any);
 
     this.on("LiquidityAdded", this.addLiquidity.bind(this));
     this.on("LiquidityRemoved", this.removeLiquidity.bind(this));

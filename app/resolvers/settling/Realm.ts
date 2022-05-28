@@ -15,7 +15,8 @@ export class RealmResolver {
         buildings: true,
         traits: true,
         resources: true,
-        wallet: true
+        wallet: true,
+        squad: true
       }
     });
     return data;
