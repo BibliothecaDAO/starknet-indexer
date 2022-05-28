@@ -36,7 +36,8 @@ export class RealmResolver {
         buildings: true,
         traits: true,
         resources: true,
-        wallet: true
+        wallet: true,
+        squad: true
       },
       orderBy: orderBy
         ? Object.keys(orderBy).map((key: any) => ({
