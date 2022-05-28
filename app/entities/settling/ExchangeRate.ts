@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int } from "type-graphql";
+import { ObjectType, Field, Int, Float } from "type-graphql";
 import { __Type } from "graphql";
 import { ResourceNameById } from "../../utils/game_constants";
 
@@ -21,6 +21,9 @@ export class ExchangeRate {
 
   @Field(() => String)
   sellAmount: string;
+
+  @Field(() => Float, { defaultValue: 0 })
+  percentChange24Hr: number;
 
   @Field(() => String)
   get tokenName(): string {

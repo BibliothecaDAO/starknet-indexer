@@ -439,6 +439,7 @@ type ExchangeRate {
   buyAmount: String!
   date: String!
   hour: Int!
+  percentChange24Hr: Float
   sellAmount: String!
   tokenId: Int!
   tokenName: String!
