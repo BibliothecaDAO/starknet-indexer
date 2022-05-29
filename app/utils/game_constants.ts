@@ -317,7 +317,7 @@ export const DEFENDING_SQUAD_SLOT = 2;
 function createIdToNameMap(map: Record<string, any>) {
   const result: Record<string, any> = {};
   for (const key in map) {
-    result[String(map[key])] = key.replace(/[a-z]([A-Z])/g, " $1");
+    result[String(map[key])] = key.replace(/([a-z])([A-Z])/g, "$1 $2");
   }
   return result;
 }
