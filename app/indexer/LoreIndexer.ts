@@ -1,6 +1,6 @@
 import { Event } from "../entities/starknet/Event";
 import { Context } from "../context";
-import { Contract, Provider } from "starknet";
+import { Contract } from "starknet";
 import { uint256ToBN } from "starknet/utils/uint256";
 import fetch from "node-fetch";
 import LoreABI from "../abis/Lore.json";
@@ -10,18 +10,11 @@ const CONTRACT =
   "0x06894a6766b4763d8bea8d43f433d25e577ed8bf057942c861df4e9951282c64";
 
 export default class LoreIndexer extends BaseContractIndexer {
-  private provider: Provider = new Provider({
-    network: process.env.NETWORK === "goerli" ? "goerli-alpha" : "mainnet-alpha"
-  });
-  private contract: Contract = new Contract(
-    LoreABI as any,
-    CONTRACT,
-    this.provider
-  );
+  private contract: Contract;
 
   constructor(context: Context) {
     super(context, CONTRACT);
-
+    this.contract = new Contract(LoreABI as any, CONTRACT, context.provider);
     this.on("entity_created", this.entityCreated.bind(this));
   }
 
@@ -32,8 +25,6 @@ export default class LoreIndexer extends BaseContractIndexer {
   }
 
   async entityCreated(event: Event): Promise<void> {
-    console.log(event);
-
     const params = event.parameters ?? [];
     const entityId = parseInt(params[0]);
 
@@ -44,9 +35,8 @@ export default class LoreIndexer extends BaseContractIndexer {
         "1" // revision_id
       );
     } catch (error) {
-      console.log(error);
-
-      return;
+      console.error(`Error fetching lore entity: ${entityId}`);
+      throw error;
     }
 
     // console.log(entityId)
@@ -72,10 +62,12 @@ export default class LoreIndexer extends BaseContractIndexer {
 
       arweaveJSON = await response.json();
     } catch (error) {
-      console.log(error);
       // await this.wait(6000);
       // await this.createEntity(entityId);
-      return;
+      console.error(
+        `Error fetching from arweave: Entity: ${entityId}, arweaveId: ${arweaveId}`
+      );
+      throw error;
     }
 
     try {
@@ -142,8 +134,8 @@ export default class LoreIndexer extends BaseContractIndexer {
         update: data
       });
     } catch (error) {
-      console.log(error);
-      return;
+      console.error(`Error fetching lore entity: ${entityId}`);
+      throw error;
     }
   }
 

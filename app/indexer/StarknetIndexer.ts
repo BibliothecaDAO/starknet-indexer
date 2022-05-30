@@ -164,33 +164,13 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
       const contracts = indexer.contracts();
       const events = await this.context.prisma.event.findMany({
         where: {
-          eventId: {
-            gt: lastId
-          },
-          contract: {
-            in: contracts
-          },
+          eventId: { gt: lastId },
+          contract: { in: contracts },
           status: 1
         },
-        orderBy: {
-          eventId: "asc"
-        }
+        orderBy: { eventId: "asc" }
       });
       await indexer.index(events);
-      await this.context.prisma.event.updateMany({
-        data: {
-          status: 2
-        },
-        where: {
-          eventId: {
-            gt: lastId
-          },
-          contract: {
-            in: contracts
-          },
-          status: 1
-        }
-      });
     }
   }
 

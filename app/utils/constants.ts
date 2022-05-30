@@ -1,5 +1,3 @@
-import { Provider } from "starknet";
-
 export const NETWORK = process.env.NETWORK === "goerli" ? "goerli" : "mainnet";
 
 export const REALMS_L1_SUBGRAPH_URL =
@@ -21,7 +19,3 @@ const NETWORKS = {
 };
 
 export const CONTRACTS = NETWORKS[NETWORK];
-
-export const PROVIDER = new Provider({
-  network: NETWORK === "goerli" ? "goerli-alpha" : "mainnet-alpha"
-});

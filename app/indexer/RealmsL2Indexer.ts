@@ -52,7 +52,7 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
         `Invalid realms update: Event: ${event.eventId}, Params: `,
         JSON.stringify(params)
       );
-      console.log(e);
+      throw e;
     }
   }
 }

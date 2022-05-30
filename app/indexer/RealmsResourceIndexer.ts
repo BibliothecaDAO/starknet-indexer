@@ -32,6 +32,7 @@ export default class RealmsResourceIndexer extends BaseContractIndexer {
         `Invalid resource upgrade: Event: ${event.eventId}, Params: `,
         JSON.stringify(params)
       );
+      throw e;
     }
 
     if (resource) {
