@@ -18,7 +18,7 @@ const TOKEN_IDS = RESOURCE_IDS.map((resourceId) =>
 const TOKEN_AMOUNTS = [...TOKEN_IDS].fill(
   bnToUint256(String(1e18)),
   0,
-  TOKEN_IDS.length - 1
+  TOKEN_IDS.length
 );
 
 export default class ExchangeIndexer extends BaseContractIndexer {
