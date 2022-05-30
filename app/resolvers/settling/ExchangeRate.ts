@@ -1,4 +1,5 @@
 import { BigNumber } from "ethers";
+import { formatEther } from "ethers/lib/utils";
 import { Resolver, Query, Ctx } from "type-graphql";
 import { Context } from "../../context";
 
@@ -51,13 +52,14 @@ export class ExchangeRateResolver {
       ) {
         (rate as ExchangeRate).percentChange24Hr = 0;
       } else {
-        const diff = BigNumber.from(rate.amount).sub(
-          BigNumber.from(previousAmount)
-        );
-
-        (rate as ExchangeRate).percentChange24Hr = diff
-          .div(BigNumber.from(previousAmount))
-          .toNumber();
+        const current = +formatEther(BigNumber.from(rate.amount));
+        const previous = +formatEther(BigNumber.from(previousAmount));
+        const diff = current - previous;
+        try {
+          (rate as ExchangeRate).percentChange24Hr = diff / previous;
+        } catch (e) {
+          (rate as ExchangeRate).percentChange24Hr = 0;
+        }
       }
     }
 
