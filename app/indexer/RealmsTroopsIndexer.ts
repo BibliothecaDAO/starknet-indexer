@@ -91,6 +91,12 @@ export default class RealmsTroopsIndexer extends BaseContractIndexer {
       this.updateSquad(defendingRealmId, defendingSquad, DEFENDING_SQUAD_SLOT)
     ]);
 
+    const defendingRealm = await this.context.prisma.realm.findFirst({
+      where: { realmId: defendingRealmId }
+    });
+    const defendingRealmOwner =
+      defendingRealm?.settledOwner || defendingRealm?.ownerL2 || "";
+
     await Promise.all([
       this.saveRealmEvent({
         realmId: attackingRealmId,
@@ -99,16 +105,19 @@ export default class RealmsTroopsIndexer extends BaseContractIndexer {
         account: event.toAddress,
         timestamp: event.timestamp,
         data: {
-          success: outcome === 1
+          success: outcome === 1,
+          defendRealmOwner: defendingRealmOwner
         }
       }),
       this.saveRealmEvent({
         realmId: defendingRealmId,
         eventId,
+        account: defendingRealmOwner,
         eventType: "realm_combat_defend",
         timestamp: event.timestamp,
         data: {
-          success: outcome === 2
+          success: outcome === 2,
+          attackRealmOwner: event.toAddress
         }
       })
     ]);

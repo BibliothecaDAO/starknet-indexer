@@ -33,7 +33,7 @@ export default class RealmsBuildingIndexer extends BaseContractIndexer {
       timestamp: event.timestamp,
       data: {
         buildingId,
-        buildName: BuildingNameById[buildingId + ""]
+        buildingName: BuildingNameById[buildingId + ""]
       }
     });
   }
