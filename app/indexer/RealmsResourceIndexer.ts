@@ -1,7 +1,7 @@
 import { Event } from "./../entities/starknet/Event";
 import { Context } from "./../context";
 import BaseContractIndexer from "./BaseContractIndexer";
-import { ResourceNameById } from "./../../app/utils/game_constants";
+import { ResourceNameById } from "./../utils/game_constants";
 
 const CONTRACT =
   "0x04a29535b95b85aca744a0b1bcc2faa1972f0769db1ec10780bb7c01ce3fe8fd";
