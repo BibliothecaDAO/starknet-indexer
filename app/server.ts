@@ -11,18 +11,12 @@ import {
   ResourceResolver,
   BuildingCostResolver,
   // RealmTraitResolver,
+  RealmEventResolver,
   DesiegeResolver,
   ExchangeRateResolver
 } from "./resolvers";
 import { StarkNet } from "./indexer/Starknet";
 import { RealmsL1Indexer } from "./indexer/RealmsL1Indexer";
-import {
-  EventCrudResolver
-  // DesiegeCrudResolver,
-  // LoreEntityCrudResolver,
-  // LoreEntityRelationsResolver,
-  // LoreEntityRevisionRelationsResolver
-} from "@generated/type-graphql";
 import { LoreResolver } from "./resolvers/lore/Lore";
 import { LorePOIResolver } from "./resolvers/lore/LorePOI";
 // import { LoreResolver } from "./resolvers/lore/Lore";
@@ -39,7 +33,7 @@ const main = async () => {
       // Generated
       DesiegeResolver,
       // DesiegeCrudResolver,
-      EventCrudResolver,
+      RealmEventResolver,
       LoreResolver,
       LorePOIResolver
       // LoreEntityCrudResolver,

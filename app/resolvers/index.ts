@@ -5,6 +5,7 @@ import {
   ResourceResolver,
   BuildingCostResolver,
   RealmTraitResolver,
+  RealmEventResolver,
   ExchangeRateResolver
 } from "./settling";
 import { DesiegeResolver } from "./desiege/Desiege";
@@ -19,5 +20,6 @@ export {
   EventResolver,
   BuildingCostResolver,
   RealmTraitResolver,
-  ExchangeRateResolver
+  ExchangeRateResolver,
+  RealmEventResolver
 };

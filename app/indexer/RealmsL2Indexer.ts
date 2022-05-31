@@ -23,12 +23,12 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
     const params = event.parameters ?? [];
 
     try {
-      const where = {
-        realmId: parseInt(params[2])
-      };
+      const realmId = parseInt(params[2]);
+      const eventId = event.eventId;
+      const where = { realmId };
       const fromAddress = BigNumber.from(params[0]).toHexString();
       const toAddress = BigNumber.from(params[1]).toHexString();
-
+      let account = "";
       //ensure wallet is created
       await this.context.prisma.wallet.upsert({
         where: { address: toAddress },
@@ -36,17 +36,38 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
         create: { address: toAddress }
       });
 
+      let eventType = "realm_settle";
       if (this.isSettlingContract(toAddress)) {
         await this.context.prisma.realm.update({
           data: { ownerL2: toAddress, settledOwner: fromAddress },
           where
         });
+        account = fromAddress;
       } else {
+        if (params[0] === "0") {
+          eventType = "realm_mint";
+        } else if (this.isSettlingContract(fromAddress)) {
+          eventType = "realm_unsettle";
+        } else {
+          eventType = "realm_transfer";
+        }
         await this.context.prisma.realm.update({
           data: { ownerL2: toAddress, settledOwner: null },
           where
         });
+        account = toAddress;
       }
+      await this.saveRealmEvent({
+        realmId,
+        eventId,
+        eventType,
+        account,
+        timestamp: event.timestamp,
+        data: {
+          fromAddress,
+          toAddress
+        }
+      });
     } catch (e) {
       console.error(
         `Invalid realms update: Event: ${event.eventId}, Params: `,

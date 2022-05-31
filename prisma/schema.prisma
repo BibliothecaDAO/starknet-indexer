@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["extendedIndexes"]
 }
 
 generator docs {
@@ -217,6 +218,7 @@ model Event {
   eventId           String   @unique
   blockNumber       Int      @default(0)
   transactionNumber Int      @default(0)
+  toAddress         String   @default("")
   chainId           String
   contract          String
   name              String
@@ -327,4 +329,19 @@ model ExchangeRate {
   sellAmount String @default("")
 
   @@id([date, hour, tokenId])
+}
+
+model RealmEvent {
+  id         Int      @id @default(autoincrement())
+  eventId    String
+  eventType  String
+  realmId    Int
+  realmOwner String
+  data       Json
+  timestamp  DateTime
+
+  @@unique([eventId, eventType])
+  @@index([realmOwner, eventId(sort: Desc)])
+  @@index([realmId, eventId(sort: Desc)])
+  @@index([eventType, eventId(sort: Desc)])
 }

@@ -81,6 +81,7 @@ export default class StarknetVoyagerApi {
       contract: voyagerEvent.contract,
       transactionHash: voyagerEvent.transactionHash,
       timestamp: new Date(details.header.timestamp * 1000),
+      toAddress: details.header.to ?? "",
       parameters: eventDetails ? eventDetails.data : [],
       keys: eventDetails ? eventDetails.keys : []
     };

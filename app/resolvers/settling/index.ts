@@ -4,6 +4,7 @@ import { ResourceResolver } from "./Resource";
 import { BuildingCostResolver } from "./BuildingCost";
 import { RealmTraitResolver } from "./RealmTrait";
 import { ExchangeRateResolver } from "./ExchangeRate";
+import { RealmEventResolver } from "./RealmEvent";
 
 export {
   BuildingResolver,
@@ -11,5 +12,6 @@ export {
   RealmResolver,
   BuildingCostResolver,
   RealmTraitResolver,
-  ExchangeRateResolver
+  ExchangeRateResolver,
+  RealmEventResolver
 };

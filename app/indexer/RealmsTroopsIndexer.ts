@@ -71,23 +71,46 @@ export default class RealmsTroopsIndexer extends BaseContractIndexer {
 
   async combatOutcome(event: Event) {
     const params = event.parameters ?? [];
+    const eventId = event.eventId;
     if (params.length < SQUAD_LENGTH * TROOP_STATS_LENGTH) {
       // IGNORE OLD EVENT
       return;
     }
     const attackingRealmId = arrayUInt256ToNumber(params.slice(0, 2));
     const defendingRealmId = arrayUInt256ToNumber(params.slice(2, 4));
-
     const endAttackSquad = 4 + SQUAD_LENGTH * TROOP_STATS_LENGTH;
     const attackingSquad = params.slice(4, endAttackSquad);
     const defendingSquad = params.slice(
       endAttackSquad,
       endAttackSquad + SQUAD_LENGTH * TROOP_STATS_LENGTH
     );
+    const outcome = parseInt(params[params.length - 1]);
 
     await Promise.all([
       this.updateSquad(attackingRealmId, attackingSquad, ATTACKING_SQUAD_SLOT),
       this.updateSquad(defendingRealmId, defendingSquad, DEFENDING_SQUAD_SLOT)
+    ]);
+
+    await Promise.all([
+      this.saveRealmEvent({
+        realmId: attackingRealmId,
+        eventId,
+        eventType: "realm_combat_attack",
+        account: event.toAddress,
+        timestamp: event.timestamp,
+        data: {
+          success: outcome === 1
+        }
+      }),
+      this.saveRealmEvent({
+        realmId: defendingRealmId,
+        eventId,
+        eventType: "realm_combat_defend",
+        timestamp: event.timestamp,
+        data: {
+          success: outcome === 2
+        }
+      })
     ]);
 
     //TODO: handle hit points

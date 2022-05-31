@@ -1,6 +1,6 @@
 import { Event } from "../entities/starknet/Event";
 import { Context } from "../context";
-import { Indexer } from "./../types";
+import { Indexer, RealmEvent } from "./../types";
 import { BigNumber } from "ethers";
 import { hash } from "starknet";
 
@@ -71,5 +71,36 @@ export default class BaseContractIndexer implements Indexer<Event> {
       }
     });
     return event?.eventId ?? "";
+  }
+
+  async saveRealmEvent({
+    realmId,
+    eventId,
+    eventType,
+    account,
+    data,
+    timestamp
+  }: RealmEvent): Promise<void> {
+    let realmOwner = account;
+    if (!realmOwner) {
+      const realm = await this.context.prisma.realm.findFirst({
+        where: { realmId }
+      });
+      realmOwner = realm?.settledOwner || realm?.ownerL2 || "";
+    }
+    await this.context.prisma.realmEvent.upsert({
+      where: {
+        eventId_eventType: { eventId: eventId, eventType: eventType }
+      },
+      update: { realmId, realmOwner, data, timestamp },
+      create: {
+        eventId,
+        eventType,
+        realmId,
+        realmOwner,
+        data,
+        timestamp
+      }
+    });
   }
 }

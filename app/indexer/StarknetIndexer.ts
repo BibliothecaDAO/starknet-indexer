@@ -23,12 +23,14 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
   }
 
   async index(events: StarkNetEvent[]): Promise<void> {
+    const upserts = [];
     for (let event of events) {
       const updates: any = {
         chainId: event.chainId ?? NETWORK,
         contract: event.contract,
         name: event.name,
         parameters: event.parameters,
+        toAddress: event.toAddress,
         keys: event.keys,
         blockNumber: event.blockNumber,
         transactionNumber: event.transactionNumber
@@ -38,17 +40,22 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
         updates.timestamp = event.timestamp;
       }
 
-      await this.context.prisma.event.upsert({
-        where: { eventId: event.eventId },
-        update: { ...updates, status: event.status },
-        create: {
-          ...updates,
-          eventId: event.eventId,
-          name: event.name ?? "",
-          timestamp: event.timestamp ?? new Date(0),
-          txHash: event.transactionHash ?? ""
-        }
-      });
+      upserts.push(
+        this.context.prisma.event.upsert({
+          where: { eventId: event.eventId },
+          update: { ...updates, status: event.status },
+          create: {
+            ...updates,
+            eventId: event.eventId,
+            name: event.name ?? "",
+            timestamp: event.timestamp ?? new Date(0),
+            txHash: event.transactionHash ?? ""
+          }
+        })
+      );
+    }
+    if (upserts.length > 0) {
+      await this.context.prisma.$transaction(upserts);
     }
     return;
   }

@@ -3,18 +3,6 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-type AffectedRowsOutput {
-  count: Int!
-}
-
-type AggregateEvent {
-  _avg: EventAvgAggregate
-  _count: EventCountAggregate
-  _max: EventMaxAggregate
-  _min: EventMinAggregate
-  _sum: EventSumAggregate
-}
-
 """The Buildings Model"""
 type Building {
   buildingId: Int
@@ -53,10 +41,6 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
-input DateTimeFieldUpdateOperationsInput {
-  set: DateTime
-}
-
 input DateTimeFilter {
   equals: DateTime
   gt: DateTime
@@ -76,20 +60,6 @@ input DateTimeNullableFilter {
   lt: DateTime
   lte: DateTime
   not: NestedDateTimeNullableFilter
-  notIn: [DateTime!]
-}
-
-input DateTimeWithAggregatesFilter {
-  _count: NestedIntFilter
-  _max: NestedDateTimeFilter
-  _min: NestedDateTimeFilter
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  not: NestedDateTimeWithAggregatesFilter
   notIn: [DateTime!]
 }
 
@@ -121,318 +91,6 @@ input EnumRealmTraitTypeFilter {
   notIn: [RealmTraitType!]
 }
 
-type Event {
-  blockNumber: Int!
-  chainId: String!
-  contract: String!
-  eventId: String!
-  id: Int!
-  keys: [String!]!
-  name: String!
-  parameters: [String!]!
-  status: Int!
-  timestamp: DateTime!
-  transactionNumber: Int!
-  txHash: String!
-}
-
-type EventAvgAggregate {
-  blockNumber: Float
-  id: Float
-  status: Float
-  transactionNumber: Float
-}
-
-input EventAvgOrderByAggregateInput {
-  blockNumber: SortOrder
-  id: SortOrder
-  status: SortOrder
-  transactionNumber: SortOrder
-}
-
-type EventCountAggregate {
-  _all: Int!
-  blockNumber: Int!
-  chainId: Int!
-  contract: Int!
-  eventId: Int!
-  id: Int!
-  keys: Int!
-  name: Int!
-  parameters: Int!
-  status: Int!
-  timestamp: Int!
-  transactionNumber: Int!
-  txHash: Int!
-}
-
-input EventCountOrderByAggregateInput {
-  blockNumber: SortOrder
-  chainId: SortOrder
-  contract: SortOrder
-  eventId: SortOrder
-  id: SortOrder
-  keys: SortOrder
-  name: SortOrder
-  parameters: SortOrder
-  status: SortOrder
-  timestamp: SortOrder
-  transactionNumber: SortOrder
-  txHash: SortOrder
-}
-
-input EventCreateInput {
-  blockNumber: Int
-  chainId: String!
-  contract: String!
-  eventId: String!
-  keys: EventCreatekeysInput
-  name: String!
-  parameters: EventCreateparametersInput
-  status: Int
-  timestamp: DateTime!
-  transactionNumber: Int
-  txHash: String!
-}
-
-input EventCreateManyInput {
-  blockNumber: Int
-  chainId: String!
-  contract: String!
-  eventId: String!
-  id: Int
-  keys: EventCreatekeysInput
-  name: String!
-  parameters: EventCreateparametersInput
-  status: Int
-  timestamp: DateTime!
-  transactionNumber: Int
-  txHash: String!
-}
-
-input EventCreatekeysInput {
-  set: [String!]!
-}
-
-input EventCreateparametersInput {
-  set: [String!]!
-}
-
-type EventGroupBy {
-  _avg: EventAvgAggregate
-  _count: EventCountAggregate
-  _max: EventMaxAggregate
-  _min: EventMinAggregate
-  _sum: EventSumAggregate
-  blockNumber: Int!
-  chainId: String!
-  contract: String!
-  eventId: String!
-  id: Int!
-  keys: [String!]
-  name: String!
-  parameters: [String!]
-  status: Int!
-  timestamp: DateTime!
-  transactionNumber: Int!
-  txHash: String!
-}
-
-type EventMaxAggregate {
-  blockNumber: Int
-  chainId: String
-  contract: String
-  eventId: String
-  id: Int
-  name: String
-  status: Int
-  timestamp: DateTime
-  transactionNumber: Int
-  txHash: String
-}
-
-input EventMaxOrderByAggregateInput {
-  blockNumber: SortOrder
-  chainId: SortOrder
-  contract: SortOrder
-  eventId: SortOrder
-  id: SortOrder
-  name: SortOrder
-  status: SortOrder
-  timestamp: SortOrder
-  transactionNumber: SortOrder
-  txHash: SortOrder
-}
-
-type EventMinAggregate {
-  blockNumber: Int
-  chainId: String
-  contract: String
-  eventId: String
-  id: Int
-  name: String
-  status: Int
-  timestamp: DateTime
-  transactionNumber: Int
-  txHash: String
-}
-
-input EventMinOrderByAggregateInput {
-  blockNumber: SortOrder
-  chainId: SortOrder
-  contract: SortOrder
-  eventId: SortOrder
-  id: SortOrder
-  name: SortOrder
-  status: SortOrder
-  timestamp: SortOrder
-  transactionNumber: SortOrder
-  txHash: SortOrder
-}
-
-input EventOrderByWithAggregationInput {
-  _avg: EventAvgOrderByAggregateInput
-  _count: EventCountOrderByAggregateInput
-  _max: EventMaxOrderByAggregateInput
-  _min: EventMinOrderByAggregateInput
-  _sum: EventSumOrderByAggregateInput
-  blockNumber: SortOrder
-  chainId: SortOrder
-  contract: SortOrder
-  eventId: SortOrder
-  id: SortOrder
-  keys: SortOrder
-  name: SortOrder
-  parameters: SortOrder
-  status: SortOrder
-  timestamp: SortOrder
-  transactionNumber: SortOrder
-  txHash: SortOrder
-}
-
-input EventOrderByWithRelationInput {
-  blockNumber: SortOrder
-  chainId: SortOrder
-  contract: SortOrder
-  eventId: SortOrder
-  id: SortOrder
-  keys: SortOrder
-  name: SortOrder
-  parameters: SortOrder
-  status: SortOrder
-  timestamp: SortOrder
-  transactionNumber: SortOrder
-  txHash: SortOrder
-}
-
-enum EventScalarFieldEnum {
-  blockNumber
-  chainId
-  contract
-  eventId
-  id
-  keys
-  name
-  parameters
-  status
-  timestamp
-  transactionNumber
-  txHash
-}
-
-input EventScalarWhereWithAggregatesInput {
-  AND: [EventScalarWhereWithAggregatesInput!]
-  NOT: [EventScalarWhereWithAggregatesInput!]
-  OR: [EventScalarWhereWithAggregatesInput!]
-  blockNumber: IntWithAggregatesFilter
-  chainId: StringWithAggregatesFilter
-  contract: StringWithAggregatesFilter
-  eventId: StringWithAggregatesFilter
-  id: IntWithAggregatesFilter
-  keys: StringNullableListFilter
-  name: StringWithAggregatesFilter
-  parameters: StringNullableListFilter
-  status: IntWithAggregatesFilter
-  timestamp: DateTimeWithAggregatesFilter
-  transactionNumber: IntWithAggregatesFilter
-  txHash: StringWithAggregatesFilter
-}
-
-type EventSumAggregate {
-  blockNumber: Int
-  id: Int
-  status: Int
-  transactionNumber: Int
-}
-
-input EventSumOrderByAggregateInput {
-  blockNumber: SortOrder
-  id: SortOrder
-  status: SortOrder
-  transactionNumber: SortOrder
-}
-
-input EventUpdateInput {
-  blockNumber: IntFieldUpdateOperationsInput
-  chainId: StringFieldUpdateOperationsInput
-  contract: StringFieldUpdateOperationsInput
-  eventId: StringFieldUpdateOperationsInput
-  keys: EventUpdatekeysInput
-  name: StringFieldUpdateOperationsInput
-  parameters: EventUpdateparametersInput
-  status: IntFieldUpdateOperationsInput
-  timestamp: DateTimeFieldUpdateOperationsInput
-  transactionNumber: IntFieldUpdateOperationsInput
-  txHash: StringFieldUpdateOperationsInput
-}
-
-input EventUpdateManyMutationInput {
-  blockNumber: IntFieldUpdateOperationsInput
-  chainId: StringFieldUpdateOperationsInput
-  contract: StringFieldUpdateOperationsInput
-  eventId: StringFieldUpdateOperationsInput
-  keys: EventUpdatekeysInput
-  name: StringFieldUpdateOperationsInput
-  parameters: EventUpdateparametersInput
-  status: IntFieldUpdateOperationsInput
-  timestamp: DateTimeFieldUpdateOperationsInput
-  transactionNumber: IntFieldUpdateOperationsInput
-  txHash: StringFieldUpdateOperationsInput
-}
-
-input EventUpdatekeysInput {
-  push: [String!]
-  set: [String!]
-}
-
-input EventUpdateparametersInput {
-  push: [String!]
-  set: [String!]
-}
-
-input EventWhereInput {
-  AND: [EventWhereInput!]
-  NOT: [EventWhereInput!]
-  OR: [EventWhereInput!]
-  blockNumber: IntFilter
-  chainId: StringFilter
-  contract: StringFilter
-  eventId: StringFilter
-  id: IntFilter
-  keys: StringNullableListFilter
-  name: StringFilter
-  parameters: StringNullableListFilter
-  status: IntFilter
-  timestamp: DateTimeFilter
-  transactionNumber: IntFilter
-  txHash: StringFilter
-}
-
-input EventWhereUniqueInput {
-  eventId: String
-  id: Int
-}
-
 """Exchange Rate"""
 type ExchangeRate {
   amount: String!
@@ -454,14 +112,6 @@ input FloatFilter {
   lte: Float
   not: NestedFloatFilter
   notIn: [Float!]
-}
-
-input IntFieldUpdateOperationsInput {
-  decrement: Int
-  divide: Int
-  increment: Int
-  multiply: Int
-  set: Int
 }
 
 input IntFilter {
@@ -486,20 +136,14 @@ input IntNullableFilter {
   notIn: [Int!]
 }
 
-input IntWithAggregatesFilter {
-  _avg: NestedFloatFilter
-  _count: NestedIntFilter
-  _max: NestedIntFilter
-  _min: NestedIntFilter
-  _sum: NestedIntFilter
-  equals: Int
-  gt: Int
-  gte: Int
-  in: [Int!]
-  lt: Int
-  lte: Int
-  not: NestedIntWithAggregatesFilter
-  notIn: [Int!]
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+input JsonFilter {
+  equals: JSON
+  not: JSON
 }
 
 """Lore Entity"""
@@ -653,16 +297,9 @@ input LorePropsOnEntityRevisionsWhereInput {
 }
 
 type Mutation {
-  createEvent(data: EventCreateInput!): Event!
-  createManyEvent(data: [EventCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createOrUpdateRealm(data: RealmInput!): Realm!
   createOrUpdateResources(data: ResourceInput!): Resource!
-  deleteEvent(where: EventWhereUniqueInput!): Event
-  deleteManyEvent(where: EventWhereInput): AffectedRowsOutput!
   reindexDesiege: Boolean!
-  updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
-  updateManyEvent(data: EventUpdateManyMutationInput!, where: EventWhereInput): AffectedRowsOutput!
-  upsertEvent(create: EventCreateInput!, update: EventUpdateInput!, where: EventWhereUniqueInput!): Event!
 }
 
 input NestedDateTimeFilter {
@@ -684,20 +321,6 @@ input NestedDateTimeNullableFilter {
   lt: DateTime
   lte: DateTime
   not: NestedDateTimeNullableFilter
-  notIn: [DateTime!]
-}
-
-input NestedDateTimeWithAggregatesFilter {
-  _count: NestedIntFilter
-  _max: NestedDateTimeFilter
-  _min: NestedDateTimeFilter
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  not: NestedDateTimeWithAggregatesFilter
   notIn: [DateTime!]
 }
 
@@ -748,22 +371,6 @@ input NestedIntNullableFilter {
   notIn: [Int!]
 }
 
-input NestedIntWithAggregatesFilter {
-  _avg: NestedFloatFilter
-  _count: NestedIntFilter
-  _max: NestedIntFilter
-  _min: NestedIntFilter
-  _sum: NestedIntFilter
-  equals: Int
-  gt: Int
-  gte: Int
-  in: [Int!]
-  lt: Int
-  lte: Int
-  not: NestedIntWithAggregatesFilter
-  notIn: [Int!]
-}
-
 input NestedStringFilter {
   contains: String
   endsWith: String
@@ -788,23 +395,6 @@ input NestedStringNullableFilter {
   lt: String
   lte: String
   not: NestedStringNullableFilter
-  notIn: [String!]
-  startsWith: String
-}
-
-input NestedStringWithAggregatesFilter {
-  _count: NestedIntFilter
-  _max: NestedStringFilter
-  _min: NestedStringFilter
-  contains: String
-  endsWith: String
-  equals: String
-  gt: String
-  gte: String
-  in: [String!]
-  lt: String
-  lte: String
-  not: NestedStringWithAggregatesFilter
   notIn: [String!]
   startsWith: String
 }
@@ -835,10 +425,6 @@ enum OrderType {
 }
 
 type Query {
-  aggregateEvent(cursor: EventWhereUniqueInput, orderBy: [EventOrderByWithRelationInput!], skip: Int, take: Int, where: EventWhereInput): AggregateEvent!
-  event(where: EventWhereUniqueInput!): Event
-  events(cursor: EventWhereUniqueInput, distinct: [EventScalarFieldEnum!], orderBy: [EventOrderByWithRelationInput!], skip: Int, take: Int, where: EventWhereInput): [Event!]!
-  findFirstEvent(cursor: EventWhereUniqueInput, distinct: [EventScalarFieldEnum!], orderBy: [EventOrderByWithRelationInput!], skip: Int, take: Int, where: EventWhereInput): Event
   getBuilding(id: Float!): Building!
   getBuildingCosts: [BuildingCost!]!
   getBuildings: [Building!]!
@@ -852,12 +438,12 @@ type Query {
   getLoreEntity(entityId: Float!): LoreEntity!
   getLorePois(skip: Float = 0, take: Float = 100): [LorePoi!]!
   getRealm(realmId: Float!): Realm!
+  getRealmEvents(filter: RealmEventWhereInput, skip: Float = 0, take: Float = 20): [RealmEvent!]!
   getRealms(filter: RealmWhereInput, orderBy: RealmOrderByInput, skip: Float = 0, take: Float = 100): [Realm!]!
   getResource(id: Float!): Resource!
   getResources: [Resource!]!
   getResourcesByAddress(address: String!): [Resource!]!
   getWallet(address: String!): Wallet!
-  groupByEvent(by: [EventScalarFieldEnum!]!, having: EventScalarWhereWithAggregatesInput, orderBy: [EventOrderByWithAggregationInput!], skip: Int, take: Int, where: EventWhereInput): [EventGroupBy!]!
 }
 
 enum QueryMode {
@@ -884,6 +470,30 @@ type Realm {
   traits: [RealmTrait!]
   wallet: Wallet
   wonder: String
+}
+
+"""The Realm Event Model"""
+type RealmEvent {
+  data: JSON
+  eventId: String
+  eventType: String
+  id: Int!
+  realmId: Int!
+  realmOwner: String
+  timestamp: String
+}
+
+input RealmEventWhereInput {
+  AND: [RealmEventWhereInput!]
+  NOT: [RealmEventWhereInput!]
+  OR: [RealmEventWhereInput!]
+  data: JsonFilter
+  eventId: StringFilter
+  eventType: StringFilter
+  id: IntFilter
+  realmId: IntFilter
+  realmOwner: StringFilter
+  timestamp: DateTimeFilter
 }
 
 input RealmInput {
@@ -1040,15 +650,6 @@ input SRealmWhereInput {
   wallet: WalletRelationFilter
 }
 
-enum SortOrder {
-  asc
-  desc
-}
-
-input StringFieldUpdateOperationsInput {
-  set: String
-}
-
 input StringFilter {
   contains: String
   endsWith: String
@@ -1085,24 +686,6 @@ input StringNullableListFilter {
   hasEvery: [String!]
   hasSome: [String!]
   isEmpty: Boolean
-}
-
-input StringWithAggregatesFilter {
-  _count: NestedIntFilter
-  _max: NestedStringFilter
-  _min: NestedStringFilter
-  contains: String
-  endsWith: String
-  equals: String
-  gt: String
-  gte: String
-  in: [String!]
-  lt: String
-  lte: String
-  mode: QueryMode
-  not: NestedStringWithAggregatesFilter
-  notIn: [String!]
-  startsWith: String
 }
 
 """Troop"""

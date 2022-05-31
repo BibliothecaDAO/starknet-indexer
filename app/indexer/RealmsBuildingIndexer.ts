@@ -1,6 +1,7 @@
 import { Event } from "../entities/starknet/Event";
 import { Context } from "../context";
 import BaseContractIndexer from "./BaseContractIndexer";
+import { BuildingNameById } from "../../app/utils/game_constants";
 
 const CONTRACT =
   "0x04d2078fade1855b48ad11d711d11afa107f050637572eecbab244a4cd7f35cc";
@@ -23,6 +24,17 @@ export default class RealmsBuildingIndexer extends BaseContractIndexer {
       },
       create: { realmId, eventId, buildingId },
       update: { buildingId }
+    });
+    await this.saveRealmEvent({
+      realmId,
+      eventId,
+      eventType: "realm_building_built",
+      account: event.toAddress,
+      timestamp: event.timestamp,
+      data: {
+        buildingId,
+        buildName: BuildingNameById[buildingId + ""]
+      }
     });
   }
 }
