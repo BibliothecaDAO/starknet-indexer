@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int } from "type-graphql";
 import { __Type } from "graphql";
-import { TroopNameById } from "../../utils/game_constants";
+import { TroopNameById } from "./../../utils/game_constants";
 
 @ObjectType({ description: "Troop" })
 export class Troop {

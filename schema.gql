@@ -297,7 +297,6 @@ input LorePropsOnEntityRevisionsWhereInput {
 }
 
 type Mutation {
-  createOrUpdateRealm(data: RealmInput!): Realm!
   createOrUpdateResources(data: ResourceInput!): Resource!
   reindexDesiege: Boolean!
 }
@@ -494,20 +493,6 @@ input RealmEventWhereInput {
   realmId: IntFilter
   realmOwner: StringFilter
   timestamp: DateTimeFilter
-}
-
-input RealmInput {
-  bridgedOwner: String
-  imageUrl: String
-  name: String!
-  orderType: String
-  owner: String
-  ownerL2: String
-  rarityRank: Int
-  rarityScore: Float
-  realmId: Int!
-  settledOwner: String
-  wonder: String
 }
 
 input RealmListRelationFilter {

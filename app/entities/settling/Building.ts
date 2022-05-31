@@ -1,7 +1,7 @@
 import { ObjectType, Field, ID, Int } from "type-graphql";
 import { __Type } from "graphql";
 import { Realm } from "./Realm";
-import { BuildingNameById } from "../../utils/game_constants";
+import { BuildingNameById } from "./../../utils/game_constants";
 
 @ObjectType({ description: "The Buildings Model" })
 export class Building {

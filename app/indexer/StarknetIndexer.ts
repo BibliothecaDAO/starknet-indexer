@@ -1,8 +1,8 @@
-import { Event } from "../entities/starknet/Event";
-import { Context } from "../context";
+import { Event } from "./../entities/starknet/Event";
+import { Context } from "./../context";
 import { Indexer, StarkNetEvent } from "./../types";
 import StarknetVoyagerApi from "./StarknetVoyagerApi";
-import { NETWORK } from "../utils/constants";
+import { NETWORK } from "./../utils/constants";
 
 export default class StarknetIndexer implements Indexer<StarkNetEvent> {
   indexers: Indexer<Event>[];

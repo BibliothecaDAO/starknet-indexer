@@ -1,6 +1,6 @@
 import { Resolver, Arg, Query, Ctx } from "type-graphql";
-import { Context } from "../../context";
-import { Building } from "../../entities";
+import { Context } from "./../../context";
+import { Building } from "./../../entities";
 
 @Resolver((_of) => Building)
 export class BuildingResolver {

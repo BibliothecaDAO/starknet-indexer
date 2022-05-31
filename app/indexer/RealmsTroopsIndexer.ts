@@ -1,5 +1,5 @@
-import { Event } from "../entities/starknet/Event";
-import { Context } from "../context";
+import { Event } from "./../entities/starknet/Event";
+import { Context } from "./../context";
 import BaseContractIndexer from "./BaseContractIndexer";
 import { uint256ToBN } from "starknet/utils/uint256";
 import { BigNumberish } from "starknet/utils/number";
@@ -9,7 +9,7 @@ import {
   TroopId,
   ATTACKING_SQUAD_SLOT,
   DEFENDING_SQUAD_SLOT
-} from "../utils/game_constants";
+} from "./../utils/game_constants";
 
 const CONTRACT =
   "0x0143c2b110961626f46c4b35c55fa565227ffdb803155e917df790bad29240b9";

@@ -1,8 +1,8 @@
-import { Event } from "../entities/starknet/Event";
-import { Context } from "../context";
+import { Event } from "./../entities/starknet/Event";
+import { Context } from "./../context";
 import { BigNumber } from "ethers";
 import { Contract } from "starknet";
-import TowerDefenceABI from "../abis/01_TowerDefence.json";
+import TowerDefenceABI from "./../abis/01_TowerDefence.json";
 import { toBN } from "starknet/utils/number";
 import BaseContractIndexer from "./BaseContractIndexer";
 

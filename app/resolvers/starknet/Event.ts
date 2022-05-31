@@ -1,7 +1,7 @@
 import { Resolver, Arg, Query, Ctx } from "type-graphql";
-import { Context } from "../../context";
+import { Context } from "./../../context";
 
-import { Event } from "../../entities/starknet/Event";
+import { Event } from "./../../entities/starknet/Event";
 
 @Resolver((_of) => Event)
 export class EventResolver {

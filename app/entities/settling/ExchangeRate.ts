@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int, Float } from "type-graphql";
 import { __Type } from "graphql";
-import { ResourceNameById } from "../../utils/game_constants";
+import { ResourceNameById } from "./../../utils/game_constants";
 
 @ObjectType({ description: "Exchange Rate" })
 export class ExchangeRate {

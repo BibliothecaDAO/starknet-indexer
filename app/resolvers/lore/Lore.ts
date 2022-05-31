@@ -1,7 +1,7 @@
 import { Resolver, Arg, Query, Ctx } from "type-graphql";
-import { Context } from "../../context";
+import { Context } from "./../../context";
 
-import { LoreEntity } from "../../entities";
+import { LoreEntity } from "./../../entities";
 import { LoreEntityWhereInput } from "@generated/type-graphql";
 
 @Resolver()
@@ -9,14 +9,14 @@ export class LoreResolver {
   @Query((_returns) => LoreEntity, { nullable: false })
   async getLoreEntity(
     @Ctx() ctx: Context,
-    @Arg("entityId") entityId: number,
+    @Arg("entityId") entityId: number
     // @Arg("revisionNumber", { nullable: true, defaultValue: 0 }) revisionNumber: number
   ) {
     return await ctx.prisma.loreEntity.findFirst({
       where: {
         id: entityId
       },
-      include: { revisions: { orderBy: { revisionNumber: "desc" }, take: 1 } },
+      include: { revisions: { orderBy: { revisionNumber: "desc" }, take: 1 } }
     });
   }
 

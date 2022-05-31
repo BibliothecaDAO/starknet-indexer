@@ -1,7 +1,7 @@
 import { ObjectType, Field, ID, Int } from "type-graphql";
 import { __Type } from "graphql";
 import { Realm } from "./Realm";
-import { ResourceNameById } from "../../utils/game_constants";
+import { ResourceNameById } from "./../../utils/game_constants";
 
 @ObjectType({ description: "The Resource Model" })
 export class Resource {

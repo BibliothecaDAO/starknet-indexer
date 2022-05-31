@@ -1,17 +1,17 @@
 import "reflect-metadata";
 import { ethers } from "ethers";
-import LootRealm from "../abis/LootRealm.json";
+import LootRealm from "./../abis/LootRealm.json";
 import fetch from "node-fetch";
 import { readFileSync } from "fs";
-import { Context } from "../context";
+import { Context } from "./../context";
 
 import {
   WalletResolver,
   RealmResolver,
   RealmTraitResolver,
   ResourceResolver
-} from "../resolvers";
-import { CONTRACTS, REALMS_L1_SUBGRAPH_URL } from "../utils/constants";
+} from "./../resolvers";
+import { CONTRACTS, REALMS_L1_SUBGRAPH_URL } from "./../utils/constants";
 
 const REALMS_L1_MAINNET_URL =
   "https://api.thegraph.com/subgraphs/name/bibliothecaforadventurers/realms";

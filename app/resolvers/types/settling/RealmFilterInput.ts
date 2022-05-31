@@ -1,7 +1,7 @@
 // import { Prisma } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 import { InputType, Field, Int } from "type-graphql";
-import { IntFilterInput, StringFilterInput } from "../common";
+import { IntFilterInput, StringFilterInput } from "./../common";
 import { OrderTypeInput } from "./OrderInput";
 // import { RealmTraitFilterInput } from "./RealmTraitInput";
 

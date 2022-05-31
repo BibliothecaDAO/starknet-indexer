@@ -1,5 +1,5 @@
-import { Event } from "../entities/starknet/Event";
-import { Context } from "../context";
+import { Event } from "./../entities/starknet/Event";
+import { Context } from "./../context";
 import { BigNumber } from "ethers";
 import BaseContractIndexer from "./BaseContractIndexer";
 

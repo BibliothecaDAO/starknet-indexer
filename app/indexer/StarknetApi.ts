@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import { StarkNetResponse } from "../types";
+import { StarkNetResponse } from "./../types";
 
 const StarkNetUrl = "http://starknet.events/api/v1/get_events?";
 

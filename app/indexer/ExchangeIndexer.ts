@@ -1,8 +1,8 @@
-import { Context } from "../context";
+import { Context } from "./../context";
 import BaseContractIndexer from "./BaseContractIndexer";
 import { Contract } from "starknet";
 import { bnToUint256, uint256ToBN } from "starknet/utils/uint256";
-import ExchangeABI from "../abis/Exchange_ERC20_1155.json";
+import ExchangeABI from "./../abis/Exchange_ERC20_1155.json";
 
 const CONTRACT =
   "0x040cfa14714dcd6899f034c4df8396c0b2851598a58d58846da05c5e7743cbfd";

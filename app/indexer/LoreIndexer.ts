@@ -1,9 +1,9 @@
-import { Event } from "../entities/starknet/Event";
-import { Context } from "../context";
+import { Event } from "./../entities/starknet/Event";
+import { Context } from "./../context";
 import { Contract } from "starknet";
 import { uint256ToBN } from "starknet/utils/uint256";
 import fetch from "node-fetch";
-import LoreABI from "../abis/Lore.json";
+import LoreABI from "./../abis/Lore.json";
 import BaseContractIndexer from "./BaseContractIndexer";
 
 const CONTRACT =

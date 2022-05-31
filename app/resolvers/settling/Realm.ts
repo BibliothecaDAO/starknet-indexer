@@ -1,8 +1,8 @@
-import { Resolver, Arg, Mutation, Query, Ctx } from "type-graphql";
-import { Context } from "../../context";
-import { Realm } from "../../entities";
-import { RealmInput } from "../types";
-import { RealmOrderByInput } from "../types/settling";
+import { Resolver, Arg, Query, Ctx } from "type-graphql";
+import { Context } from "./../../context";
+import { Realm } from "./../../entities";
+import { RealmInput } from "./../types";
+import { RealmOrderByInput } from "./../types/settling";
 import { RealmWhereInput } from "@generated/type-graphql";
 
 @Resolver((_of) => Realm)
@@ -50,9 +50,9 @@ export class RealmResolver {
     return data;
   }
 
-  @Mutation(() => Realm)
+  // @Mutation(() => Realm)
   async createOrUpdateRealm(
-    @Arg("data")
+    // @Arg("data")
     data: RealmInput,
     @Ctx() ctx: Context
   ) {

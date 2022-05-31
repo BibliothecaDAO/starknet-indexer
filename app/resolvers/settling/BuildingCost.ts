@@ -1,6 +1,6 @@
 import { Resolver, Query, Ctx } from "type-graphql";
-import { Context } from "../../context";
-import { BuildingCost } from "../../entities";
+import { Context } from "./../../context";
+import { BuildingCost } from "./../../entities";
 
 @Resolver((_of) => BuildingCost)
 export class BuildingCostResolver {

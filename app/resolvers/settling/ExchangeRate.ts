@@ -1,9 +1,9 @@
 import { BigNumber } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { Resolver, Query, Ctx } from "type-graphql";
-import { Context } from "../../context";
+import { Context } from "./../../context";
 
-import { ExchangeRate } from "../../entities";
+import { ExchangeRate } from "./../../entities";
 
 @Resolver((_of) => ExchangeRate)
 export class ExchangeRateResolver {

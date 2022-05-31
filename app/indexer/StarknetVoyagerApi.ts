@@ -1,6 +1,6 @@
-import { NETWORK } from "../utils/constants";
+import { NETWORK } from "./../utils/constants";
 import fetch from "node-fetch";
-import { StarkNetEvent } from "../types";
+import { StarkNetEvent } from "./../types";
 
 const StarknetVoyagerApiUrl = "https://goerli.voyager.online/api";
 

@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int, Float } from "type-graphql";
 import { __Type } from "graphql";
-import { Wallet } from "../wallet/Wallet";
+import { Wallet } from "./../wallet/Wallet";
 import { Building } from "./Building";
 import { Resource } from "./Resource";
 import { RealmTrait } from "./RealmTrait";

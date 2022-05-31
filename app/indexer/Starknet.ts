@@ -1,4 +1,4 @@
-import { context } from "../context";
+import { context } from "./../context";
 import DesiegeIndexer from "./DesiegeIndexer";
 import LoreIndexer from "./LoreIndexer";
 import RealmsBuildingIndexer from "./RealmsBuildingIndexer";

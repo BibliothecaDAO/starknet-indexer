@@ -1,5 +1,5 @@
-import { Event } from "../entities/starknet/Event";
-import { Context } from "../context";
+import { Event } from "./../entities/starknet/Event";
+import { Context } from "./../context";
 import { Indexer, RealmEvent } from "./../types";
 import { BigNumber } from "ethers";
 import { hash } from "starknet";

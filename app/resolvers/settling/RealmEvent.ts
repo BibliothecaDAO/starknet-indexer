@@ -1,6 +1,6 @@
 import { Resolver, Query, Ctx, Arg } from "type-graphql";
-import { Context } from "../../context";
-import { RealmEvent } from "../../entities/settling/RealmEvent";
+import { Context } from "./../../context";
+import { RealmEvent } from "./../../entities/settling/RealmEvent";
 import { RealmEventWhereInput } from "@generated/type-graphql";
 
 @Resolver((_of) => RealmEvent)
