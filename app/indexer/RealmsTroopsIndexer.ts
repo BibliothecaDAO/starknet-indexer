@@ -18,35 +18,60 @@ function arrayUInt256ToNumber([low, high]: any[]): BigNumberish {
   return parseInt(uint256ToBN({ low, high }).toString());
 }
 
-function findTroopIdFromStats(stats: any[]): number {
+function findTroopIdFromStats(stats: any[]): string {
   const statsKey = stats.slice(0, 4).join("");
   const names = Object.keys(TroopStat) as TroopName[];
   for (let name of names) {
     const currentKey = TroopStat[name].slice(0, 4).join("");
     if (statsKey === currentKey) {
-      return TroopId[name];
+      return TroopId[name].toString();
     }
   }
-  return 0;
+  return "0";
+}
+
+function convertSquadV1ToSquadV2(squadV1: string[]): string[] {
+  const troopLen = 7;
+  let squadV2: string[] = [];
+  for (let i = 0; i < SQUAD_LENGTH; i++) {
+    const troop = squadV1.slice(i * troopLen, (i + 1) * troopLen);
+    const troopId = findTroopIdFromStats(troop);
+    squadV2 = [...squadV2, troopId, ...troop];
+  }
+  return squadV2;
 }
 //Troop(type=TroopType.Melee, tier=1, agility=1, attack=1, defense=3, vitality=4, wisdom=1),
 
-const TROOP_STATS_LENGTH = 7;
 const SQUAD_LENGTH = 25;
 
 export default class RealmsTroopsIndexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);
 
-    this.on("BuildTroops_1", this.buildTroops.bind(this));
+    this.on("BuildTroops_1", this.buildTroops_1.bind(this));
     this.on("CombatStart_1", this.combatStart.bind(this));
     this.on("CombatStep_1", this.combatStep.bind(this));
-    this.on("CombatOutcome_1", this.combatOutcome.bind(this));
+    this.on("CombatOutcome_1", this.combatOutcome_1.bind(this));
+
+    this.on("BuildTroops_2", this.buildTroops_2.bind(this));
+    this.on("CombatStart_2", this.combatStart.bind(this));
+    this.on("CombatStep_2", this.combatStep.bind(this));
+    this.on("CombatOutcome_2", this.combatOutcome_2.bind(this));
   }
 
-  async buildTroops(event: Event) {
+  async buildTroops_1(event: Event) {
     const params = event.parameters ?? [];
-    const squad = params.slice(0, TROOP_STATS_LENGTH * SQUAD_LENGTH);
+    const squad = params.slice(0, 7 * SQUAD_LENGTH);
+    const squadSlot = parseInt(params[params.length - 1]);
+    const realmId = arrayUInt256ToNumber(
+      params.slice(params.length - 3, params.length - 1)
+    );
+    await this.updateSquad(realmId, convertSquadV1ToSquadV2(squad), squadSlot);
+  }
+
+  async buildTroops_2(event: Event) {
+    const params = event.parameters ?? [];
+    const squad = params.slice(0, 8 * SQUAD_LENGTH);
     const squadSlot = parseInt(params[params.length - 1]);
     const realmId = arrayUInt256ToNumber(
       params.slice(params.length - 3, params.length - 1)
@@ -69,23 +94,67 @@ export default class RealmsTroopsIndexer extends BaseContractIndexer {
     // const defendingRealmId = arrayUInt256ToNumber(params.slice(2, 4));
   }
 
-  async combatOutcome(event: Event) {
+  async combatOutcome_1(event: Event) {
     const params = event.parameters ?? [];
-    const eventId = event.eventId;
-    if (params.length < SQUAD_LENGTH * TROOP_STATS_LENGTH) {
+    const troopLength = 7;
+    if (params.length < SQUAD_LENGTH * troopLength) {
+      return;
+    }
+    const attackingRealmId = arrayUInt256ToNumber(params.slice(0, 2));
+    const defendingRealmId = arrayUInt256ToNumber(params.slice(2, 4));
+    const endAttackSquad = 4 + SQUAD_LENGTH * troopLength;
+    const attackingSquad = params.slice(4, endAttackSquad);
+
+    const defendingSquad = params.slice(
+      endAttackSquad,
+      endAttackSquad + SQUAD_LENGTH * troopLength
+    );
+    const outcome = parseInt(params[params.length - 1]);
+    await this.combatOutcome(
+      event,
+      attackingRealmId,
+      defendingRealmId,
+      convertSquadV1ToSquadV2(attackingSquad),
+      convertSquadV1ToSquadV2(defendingSquad),
+      outcome
+    );
+  }
+
+  async combatOutcome_2(event: Event) {
+    const troopLength = 8;
+    const params = event.parameters ?? [];
+    if (params.length < SQUAD_LENGTH * troopLength) {
       // IGNORE OLD EVENT
       return;
     }
     const attackingRealmId = arrayUInt256ToNumber(params.slice(0, 2));
     const defendingRealmId = arrayUInt256ToNumber(params.slice(2, 4));
-    const endAttackSquad = 4 + SQUAD_LENGTH * TROOP_STATS_LENGTH;
+    const endAttackSquad = 4 + SQUAD_LENGTH * troopLength;
     const attackingSquad = params.slice(4, endAttackSquad);
     const defendingSquad = params.slice(
       endAttackSquad,
-      endAttackSquad + SQUAD_LENGTH * TROOP_STATS_LENGTH
+      endAttackSquad + SQUAD_LENGTH * troopLength
     );
     const outcome = parseInt(params[params.length - 1]);
+    await this.combatOutcome(
+      event,
+      attackingRealmId,
+      defendingRealmId,
+      attackingSquad,
+      defendingSquad,
+      outcome
+    );
+  }
 
+  async combatOutcome(
+    event: Event,
+    attackingRealmId: number,
+    defendingRealmId: number,
+    attackingSquad: string[],
+    defendingSquad: string[],
+    outcome: number
+  ) {
+    const eventId = event.eventId;
     await Promise.all([
       this.updateSquad(attackingRealmId, attackingSquad, ATTACKING_SQUAD_SLOT),
       this.updateSquad(defendingRealmId, defendingSquad, DEFENDING_SQUAD_SLOT)
@@ -121,25 +190,22 @@ export default class RealmsTroopsIndexer extends BaseContractIndexer {
         }
       })
     ]);
-
-    //TODO: handle hit points
+    // handle hit points
   }
 
   async updateSquad(realmId: number, squad: any[], squadSlot: number) {
+    const troopLen = 8;
     const updateSquad = [];
     for (let i = 0; i < SQUAD_LENGTH; i++) {
-      const troop = squad.slice(
-        i * TROOP_STATS_LENGTH,
-        (i + 1) * TROOP_STATS_LENGTH
-      );
-      const troopId = findTroopIdFromStats(troop);
-      const type = parseInt(troop[0]);
-      const tier = parseInt(troop[1]);
-      const agility = parseInt(troop[2]);
-      const attack = parseInt(troop[3]);
-      const defense = parseInt(troop[4]);
-      const vitality = parseInt(troop[5]);
-      const wisdom = parseInt(troop[6]);
+      const troop = squad.slice(i * troopLen, (i + 1) * troopLen);
+      const troopId = parseInt(troop[0]);
+      const type = parseInt(troop[1]);
+      const tier = parseInt(troop[2]);
+      const agility = parseInt(troop[3]);
+      const attack = parseInt(troop[4]);
+      const defense = parseInt(troop[5]);
+      const vitality = parseInt(troop[6]);
+      const wisdom = parseInt(troop[7]);
       const stats = {
         troopId,
         type,
