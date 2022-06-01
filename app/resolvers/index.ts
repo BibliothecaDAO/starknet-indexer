@@ -3,7 +3,6 @@ import {
   RealmResolver,
   BuildingResolver,
   ResourceResolver,
-  BuildingCostResolver,
   RealmTraitResolver,
   RealmEventResolver,
   ExchangeRateResolver
@@ -18,7 +17,6 @@ export {
   DesiegeResolver,
   ResourceResolver,
   EventResolver,
-  BuildingCostResolver,
   RealmTraitResolver,
   ExchangeRateResolver,
   RealmEventResolver

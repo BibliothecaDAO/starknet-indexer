@@ -5,17 +5,17 @@
 
 """The Buildings Model"""
 type Building {
-  buildingId: Int
+  buildingCost: BuildingCost!
+  buildingId: Int!
   buildingName: String!
   builds: [String!]!
   count: Int!
   culture: Int!
   food: Int!
-  id: ID!
+  limit: Float
   limitTraitId: Int!
   limitTraitName: String!
   population: Int!
-  realm: Realm
   realmId: Float!
 }
 
@@ -433,11 +433,9 @@ enum OrderType {
 }
 
 type Query {
-  getBuilding(id: Float!): Building!
+  getBuildingCostById: BuildingCost!
   getBuildingCosts: [BuildingCost!]!
-  getBuildings: [Building!]!
-  getBuildingsByAddress(address: String!): [Building!]!
-  getBuildingsByRealm(realmId: Float!): [Building!]!
+  getBuildingsByRealmId(id: Float!): [Building!]!
   getDesiege(id: Float!): Desiege!
   getDesiegeCurrent: Desiege!
   getDesiegeGames: [Desiege!]!

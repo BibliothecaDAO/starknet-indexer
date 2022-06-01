@@ -9,8 +9,6 @@ import {
   RealmResolver,
   BuildingResolver,
   ResourceResolver,
-  BuildingCostResolver,
-  // RealmTraitResolver,
   RealmEventResolver,
   DesiegeResolver,
   ExchangeRateResolver
@@ -19,7 +17,6 @@ import { StarkNet } from "./indexer/Starknet";
 import { RealmsL1Indexer } from "./indexer/RealmsL1Indexer";
 import { LoreResolver } from "./resolvers/lore/Lore";
 import { LorePOIResolver } from "./resolvers/lore/LorePOI";
-// import { LoreResolver } from "./resolvers/lore/Lore";
 
 const main = async () => {
   const schema = await buildSchema({
@@ -28,17 +25,11 @@ const main = async () => {
       WalletResolver,
       BuildingResolver,
       ResourceResolver,
-      BuildingCostResolver,
       ExchangeRateResolver,
-      // Generated
       DesiegeResolver,
-      // DesiegeCrudResolver,
       RealmEventResolver,
       LoreResolver,
       LorePOIResolver
-      // LoreEntityCrudResolver,
-      // LoreEntityRelationsResolver,
-      // LoreEntityRevisionRelationsResolver
     ],
     emitSchemaFile: true,
     validate: false

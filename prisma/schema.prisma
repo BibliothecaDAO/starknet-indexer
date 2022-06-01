@@ -95,14 +95,6 @@ model BuildingRealmTraitConstraint {
   @@unique([buildingId])
 }
 
-model BuildingCost {
-  buildingId Int @id
-  resourceId Int
-  qty        Int @default(0)
-
-  @@unique([buildingId, resourceId])
-}
-
 // MILSTONE 1
 model Resource {
   id         Int      @id @default(autoincrement())
@@ -138,14 +130,6 @@ model SRealm {
   realmId Int     @unique
   wallet  Wallet? @relation(fields: [owner], references: [address])
   owner   String?
-}
-
-model TroopCost {
-  troopId    Int @id
-  resourceId Int
-  qty        Int
-
-  @@unique([troopId, resourceId])
 }
 
 model Troop {
