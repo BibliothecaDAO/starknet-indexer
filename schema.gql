@@ -7,16 +7,24 @@
 type Building {
   buildingId: Int
   buildingName: String!
+  builds: [String!]!
+  count: Int!
+  culture: Int!
+  food: Int!
   id: ID!
+  limitTraitId: Int!
+  limitTraitName: String!
+  population: Int!
   realm: Realm
   realmId: Float!
 }
 
 """Building Cost Model"""
 type BuildingCost {
+  amount: Float!
   buildingId: Int!
-  qty: Float!
-  resourceId: Int!
+  buildingName: String!
+  resources: JSON!
 }
 
 input BuildingListRelationFilter {
@@ -30,6 +38,7 @@ input BuildingWhereInput {
   NOT: [BuildingWhereInput!]
   OR: [BuildingWhereInput!]
   buildingId: IntFilter
+  builds: StringNullableListFilter
   eventId: StringFilter
   id: IntFilter
   realm: RealmRelationFilter

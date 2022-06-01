@@ -18,12 +18,25 @@ export default class RealmsBuildingIndexer extends BaseContractIndexer {
     const params = event.parameters ?? [];
     const realmId = parseInt(params[0]);
     const buildingId = parseInt(params[2]);
+    const where = {
+      realmId_eventId: { realmId, eventId }
+    };
+
+    let builds: string[] = [];
+    const building = await this.context.prisma.building.findUnique({ where });
+    if (building) {
+      builds = building.builds ?? [];
+    }
+
+    const timestamp = event.timestamp.toISOString();
+    if (builds.indexOf(timestamp) === -1) {
+      builds.push(timestamp);
+    }
+
     await this.context.prisma.building.upsert({
-      where: {
-        realmId_eventId: { realmId, eventId }
-      },
-      create: { realmId, eventId, buildingId },
-      update: { buildingId }
+      where,
+      create: { realmId, eventId, buildingId, builds: [...builds] },
+      update: { buildingId, builds: [...builds] }
     });
     await this.saveRealmEvent({
       realmId,

@@ -77,8 +77,19 @@ export type BuildingName = keyof typeof BuildingId;
 
 export const BuildingNameById = createIdToNameMap(BuildingId);
 
+export const TraitId = {
+  Region: 1,
+  City: 2,
+  Harbour: 3,
+  River: 4
+};
+export type TraitName = keyof typeof TraitId;
+
+export const TraitNameById = createIdToNameMap(TraitId);
+
 interface ResourceCost {
   resourceId: number;
+  resourceName: string;
   amount: number;
 }
 
@@ -87,198 +98,296 @@ interface Cost {
   resources: ResourceCost[];
 }
 
+const createResourceCost = (resourceId: number, amount: number) => ({
+  resourceId,
+  resourceName: ResourceNameById[resourceId],
+  amount
+});
+
 export const BuildingCost: { [key in BuildingName]: Cost } = {
   Castle: {
     amount: 50,
     resources: [
-      { resourceId: ResourceId.Wood, amount: 30 },
-      { resourceId: ResourceId.Stone, amount: 50 },
-      { resourceId: ResourceId.Copper, amount: 100 },
-      { resourceId: ResourceId.Adamantine, amount: 4 },
-      { resourceId: ResourceId.Mithral, amount: 1 },
-      { resourceId: ResourceId.Dragonhide, amount: 1 }
+      createResourceCost(ResourceId.Wood, 30),
+      createResourceCost(ResourceId.Stone, 50),
+      createResourceCost(ResourceId.Copper, 100),
+      createResourceCost(ResourceId.Adamantine, 4),
+      createResourceCost(ResourceId.Mithral, 1),
+      createResourceCost(ResourceId.Dragonhide, 1)
     ]
   },
   Fairgrounds: {
     amount: 50,
     resources: [
-      { resourceId: ResourceId.Wood, amount: 40 },
-      { resourceId: ResourceId.Stone, amount: 50 },
-      { resourceId: ResourceId.Silver, amount: 40 },
-      { resourceId: ResourceId.AlchemicalSilver, amount: 8 },
-      { resourceId: ResourceId.Mithral, amount: 1 },
-      { resourceId: ResourceId.Dragonhide, amount: 1 }
+      createResourceCost(ResourceId.Wood, 40),
+      createResourceCost(ResourceId.Stone, 50),
+      createResourceCost(ResourceId.Silver, 40),
+      createResourceCost(ResourceId.AlchemicalSilver, 8),
+      createResourceCost(ResourceId.Mithral, 1),
+      createResourceCost(ResourceId.Dragonhide, 1)
     ]
   },
   GrandMarket: {
     amount: 50,
     resources: [
-      { resourceId: ResourceId.Wood, amount: 35 },
-      { resourceId: ResourceId.Stone, amount: 40 },
-      { resourceId: ResourceId.Gold, amount: 20 },
-      { resourceId: ResourceId.TwilightQuartz, amount: 10 },
-      { resourceId: ResourceId.Mithral, amount: 1 },
-      { resourceId: ResourceId.Dragonhide, amount: 1 }
+      createResourceCost(ResourceId.Wood, 35),
+      createResourceCost(ResourceId.Stone, 40),
+      createResourceCost(ResourceId.Gold, 20),
+      createResourceCost(ResourceId.TwilightQuartz, 10),
+      createResourceCost(ResourceId.Mithral, 1),
+      createResourceCost(ResourceId.Dragonhide, 1)
     ]
   },
   Guild: {
     amount: 50,
     resources: [
-      { resourceId: ResourceId.Wood, amount: 50 },
-      { resourceId: ResourceId.Stone, amount: 50 },
-      { resourceId: ResourceId.Coal, amount: 120 },
-      { resourceId: ResourceId.EtherealSilica, amount: 12 },
-      { resourceId: ResourceId.Mithral, amount: 2 },
-      { resourceId: ResourceId.Dragonhide, amount: 1 }
+      createResourceCost(ResourceId.Wood, 50),
+      createResourceCost(ResourceId.Stone, 50),
+      createResourceCost(ResourceId.Coal, 120),
+      createResourceCost(ResourceId.EtherealSilica, 12),
+      createResourceCost(ResourceId.Mithral, 2),
+      createResourceCost(ResourceId.Dragonhide, 1)
     ]
   },
   OfficerAcademy: {
     amount: 50,
     resources: [
-      { resourceId: ResourceId.Wood, amount: 40 },
-      { resourceId: ResourceId.Stone, amount: 20 },
-      { resourceId: ResourceId.ColdIron, amount: 45 },
-      { resourceId: ResourceId.Ignium, amount: 12 },
-      { resourceId: ResourceId.Mithral, amount: 1 },
-      { resourceId: ResourceId.Dragonhide, amount: 1 }
+      createResourceCost(ResourceId.Wood, 40),
+      createResourceCost(ResourceId.Stone, 20),
+      createResourceCost(ResourceId.ColdIron, 45),
+      createResourceCost(ResourceId.Ignium, 12),
+      createResourceCost(ResourceId.Mithral, 1),
+      createResourceCost(ResourceId.Dragonhide, 1)
     ]
   },
   RoyalReserve: {
     amount: 50,
     resources: [
-      { resourceId: ResourceId.Wood, amount: 50 },
-      { resourceId: ResourceId.Stone, amount: 20 },
-      { resourceId: ResourceId.Ironwood, amount: 50 },
-      { resourceId: ResourceId.TrueIce, amount: 10 },
-      { resourceId: ResourceId.Mithral, amount: 1 },
-      { resourceId: ResourceId.Dragonhide, amount: 1 }
+      createResourceCost(ResourceId.Wood, 50),
+      createResourceCost(ResourceId.Stone, 20),
+      createResourceCost(ResourceId.Ironwood, 50),
+      createResourceCost(ResourceId.TrueIce, 10),
+      createResourceCost(ResourceId.Mithral, 1),
+      createResourceCost(ResourceId.Dragonhide, 1)
     ]
   },
   Amphitheater: {
     amount: 10,
     resources: [
-      { resourceId: ResourceId.Stone, amount: 5 },
-      { resourceId: ResourceId.Diamonds, amount: 5 },
-      { resourceId: ResourceId.Sapphire, amount: 1 },
-      { resourceId: ResourceId.TwilightQuartz, amount: 2 }
+      createResourceCost(ResourceId.Stone, 5),
+      createResourceCost(ResourceId.Diamonds, 5),
+      createResourceCost(ResourceId.Sapphire, 1),
+      createResourceCost(ResourceId.TwilightQuartz, 2)
     ]
   },
   ArcherTower: {
     amount: 5,
     resources: [
-      { resourceId: ResourceId.Wood, amount: 10 },
-      { resourceId: ResourceId.Stone, amount: 10 },
-      { resourceId: ResourceId.Obsidian, amount: 25 },
-      { resourceId: ResourceId.Ironwood, amount: 5 }
+      createResourceCost(ResourceId.Wood, 10),
+      createResourceCost(ResourceId.Stone, 10),
+      createResourceCost(ResourceId.Obsidian, 25),
+      createResourceCost(ResourceId.Ironwood, 5)
     ]
   },
   Architect: {
     amount: 15,
     resources: [
-      { resourceId: ResourceId.Wood, amount: 10 },
-      { resourceId: ResourceId.Stone, amount: 10 },
-      { resourceId: ResourceId.Hartwood, amount: 13 },
-      { resourceId: ResourceId.DeepCrystal, amount: 8 }
+      createResourceCost(ResourceId.Wood, 10),
+      createResourceCost(ResourceId.Stone, 10),
+      createResourceCost(ResourceId.Hartwood, 13),
+      createResourceCost(ResourceId.DeepCrystal, 8)
     ]
   },
   Barracks: {
     amount: 5,
     resources: [
-      { resourceId: ResourceId.Wood, amount: 13 },
-      { resourceId: ResourceId.Stone, amount: 10 },
-      { resourceId: ResourceId.Obsidian, amount: 20 },
-      { resourceId: ResourceId.Silver, amount: 10 }
+      createResourceCost(ResourceId.Wood, 13),
+      createResourceCost(ResourceId.Stone, 10),
+      createResourceCost(ResourceId.Obsidian, 20),
+      createResourceCost(ResourceId.Silver, 10)
     ]
   },
   Dock: {
     amount: 5,
     resources: [
-      { resourceId: ResourceId.Stone, amount: 2 },
-      { resourceId: ResourceId.Coal, amount: 15 },
-      { resourceId: ResourceId.Ruby, amount: 4 }
+      createResourceCost(ResourceId.Stone, 2),
+      createResourceCost(ResourceId.Coal, 15),
+      createResourceCost(ResourceId.Ruby, 4)
     ]
   },
   Farms: {
     amount: 10,
     resources: [
-      { resourceId: ResourceId.Wood, amount: 20 },
-      { resourceId: ResourceId.Copper, amount: 5 },
-      { resourceId: ResourceId.Silver, amount: 30 },
-      { resourceId: ResourceId.Hartwood, amount: 10 }
+      createResourceCost(ResourceId.Wood, 20),
+      createResourceCost(ResourceId.Copper, 5),
+      createResourceCost(ResourceId.Silver, 30),
+      createResourceCost(ResourceId.Hartwood, 10)
     ]
   },
   Fishmonger: {
     amount: 10,
     resources: [
-      { resourceId: ResourceId.Wood, amount: 30 },
-      { resourceId: ResourceId.Obsidian, amount: 55 },
-      { resourceId: ResourceId.Silver, amount: 6 },
-      { resourceId: ResourceId.ColdIron, amount: 5 }
+      createResourceCost(ResourceId.Wood, 30),
+      createResourceCost(ResourceId.Obsidian, 55),
+      createResourceCost(ResourceId.Silver, 6),
+      createResourceCost(ResourceId.ColdIron, 5)
     ]
   },
   Granary: {
     amount: 15,
     resources: [
-      { resourceId: ResourceId.Wood, amount: 10 },
-      { resourceId: ResourceId.Obsidian, amount: 10 },
-      { resourceId: ResourceId.EtherealSilica, amount: 4 },
-      { resourceId: ResourceId.TrueIce, amount: 4 }
+      createResourceCost(ResourceId.Wood, 10),
+      createResourceCost(ResourceId.Obsidian, 10),
+      createResourceCost(ResourceId.EtherealSilica, 4),
+      createResourceCost(ResourceId.TrueIce, 4)
     ]
   },
   TradeOffice: {
     amount: 15,
     resources: [
-      { resourceId: ResourceId.Wood, amount: 10 },
-      { resourceId: ResourceId.Stone, amount: 4 },
-      { resourceId: ResourceId.Gold, amount: 15 },
-      { resourceId: ResourceId.Sapphire, amount: 10 }
+      createResourceCost(ResourceId.Wood, 10),
+      createResourceCost(ResourceId.Stone, 4),
+      createResourceCost(ResourceId.Gold, 15),
+      createResourceCost(ResourceId.Sapphire, 10)
     ]
   },
   Hamlet: {
     amount: 20,
     resources: [
-      { resourceId: ResourceId.Wood, amount: 25 },
-      { resourceId: ResourceId.ColdIron, amount: 20 },
-      { resourceId: ResourceId.Gold, amount: 20 },
-      { resourceId: ResourceId.Ruby, amount: 10 }
+      createResourceCost(ResourceId.Wood, 25),
+      createResourceCost(ResourceId.ColdIron, 20),
+      createResourceCost(ResourceId.Gold, 20),
+      createResourceCost(ResourceId.Ruby, 10)
     ]
   },
   Housing: {
     amount: 35,
     resources: [
-      { resourceId: ResourceId.Stone, amount: 50 },
-      { resourceId: ResourceId.Coal, amount: 120 },
-      { resourceId: ResourceId.Copper, amount: 120 },
-      { resourceId: ResourceId.Ironwood, amount: 70 }
+      createResourceCost(ResourceId.Stone, 50),
+      createResourceCost(ResourceId.Coal, 120),
+      createResourceCost(ResourceId.Copper, 120),
+      createResourceCost(ResourceId.Ironwood, 70)
     ]
   },
   MageTower: {
     amount: 5,
     resources: [
-      { resourceId: ResourceId.Wood, amount: 2 },
-      { resourceId: ResourceId.Stone, amount: 2 },
-      { resourceId: ResourceId.Diamonds, amount: 4 },
-      { resourceId: ResourceId.Ignium, amount: 1 }
+      createResourceCost(ResourceId.Wood, 2),
+      createResourceCost(ResourceId.Stone, 2),
+      createResourceCost(ResourceId.Diamonds, 4),
+      createResourceCost(ResourceId.Ignium, 1)
     ]
   },
   ParadeGrounds: {
     amount: 15,
     resources: [
-      { resourceId: ResourceId.Stone, amount: 10 },
-      { resourceId: ResourceId.Sapphire, amount: 4 },
-      { resourceId: ResourceId.Ignium, amount: 4 },
-      { resourceId: ResourceId.Adamantine, amount: 1 }
+      createResourceCost(ResourceId.Stone, 10),
+      createResourceCost(ResourceId.Sapphire, 4),
+      createResourceCost(ResourceId.Ignium, 4),
+      createResourceCost(ResourceId.Adamantine, 1)
     ]
   },
   School: {
     amount: 1,
     resources: [
-      { resourceId: ResourceId.Stone, amount: 10 },
-      { resourceId: ResourceId.Diamonds, amount: 4 },
-      { resourceId: ResourceId.DeepCrystal, amount: 3 },
-      { resourceId: ResourceId.AlchemicalSilver, amount: 3 }
+      createResourceCost(ResourceId.Stone, 10),
+      createResourceCost(ResourceId.Diamonds, 4),
+      createResourceCost(ResourceId.DeepCrystal, 3),
+      createResourceCost(ResourceId.AlchemicalSilver, 3)
     ]
   }
+};
+
+export const BuildingLimitTrait: { [key in BuildingName]: number } = {
+  Fairgrounds: TraitId.Region,
+  RoyalReserve: TraitId.Region,
+  GrandMarket: TraitId.Region,
+  Castle: TraitId.Region,
+  Guild: TraitId.Region,
+  OfficerAcademy: TraitId.Region,
+  Granary: TraitId.City,
+  Housing: TraitId.City,
+  Amphitheater: TraitId.City,
+  ArcherTower: TraitId.City,
+  School: TraitId.City,
+  MageTower: TraitId.City,
+  TradeOffice: TraitId.City,
+  Architect: TraitId.City,
+  ParadeGrounds: TraitId.City,
+  Barracks: TraitId.City,
+  Dock: TraitId.Harbour,
+  Fishmonger: TraitId.Harbour,
+  Farms: TraitId.River,
+  Hamlet: TraitId.River
+};
+
+export const BuildingFood: { [key in BuildingName]: number } = {
+  Fairgrounds: 5,
+  RoyalReserve: 5,
+  GrandMarket: 5,
+  Castle: -1,
+  Guild: -1,
+  OfficerAcademy: -1,
+  Granary: 3,
+  Housing: -1,
+  Amphitheater: -1,
+  ArcherTower: -1,
+  School: -1,
+  MageTower: -1,
+  TradeOffice: -1,
+  Architect: -1,
+  ParadeGrounds: -1,
+  Barracks: -1,
+  Dock: -1,
+  Fishmonger: 2,
+  Farms: 1,
+  Hamlet: 1
+};
+
+export const BuildingCulture: { [key in BuildingName]: number } = {
+  Fairgrounds: 5,
+  RoyalReserve: 5,
+  GrandMarket: 0,
+  Castle: 5,
+  Guild: 5,
+  OfficerAcademy: 0,
+  Granary: 0,
+  Housing: 0,
+  Amphitheater: 2,
+  ArcherTower: 0,
+  School: 3,
+  MageTower: 0,
+  TradeOffice: 1,
+  Architect: 1,
+  ParadeGrounds: 1,
+  Barracks: 0,
+  Dock: 0,
+  Fishmonger: 0,
+  Farms: 0,
+  Hamlet: 0
+};
+
+export const BuildingPopulation: { [key in BuildingName]: number } = {
+  Fairgrounds: -10,
+  RoyalReserve: -10,
+  GrandMarket: -10,
+  Castle: -10,
+  Guild: -10,
+  OfficerAcademy: -10,
+  Granary: -10,
+  Housing: 75,
+  Amphitheater: -10,
+  ArcherTower: -10,
+  School: -10,
+  MageTower: -10,
+  TradeOffice: -10,
+  Architect: -10,
+  ParadeGrounds: -10,
+  Barracks: -10,
+  Dock: -10,
+  Fishmonger: -10,
+  Farms: 10,
+  Hamlet: 35
 };
 
 export const TroopType = {

@@ -77,11 +77,12 @@ model Realm {
 
 // MILSTONE 1
 model Building {
-  id         Int    @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   buildingId Int
   realmId    Int?
   eventId    String
-  realm      Realm? @relation(fields: [realmId], references: [realmId])
+  realm      Realm?   @relation(fields: [realmId], references: [realmId])
+  builds     String[]
 
   @@unique([realmId, eventId])
 }
