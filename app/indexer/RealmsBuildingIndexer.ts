@@ -44,6 +44,7 @@ export default class RealmsBuildingIndexer extends BaseContractIndexer {
       eventType: "realm_building_built",
       account: event.toAddress,
       timestamp: event.timestamp,
+      transactionHash: event.txHash,
       data: {
         buildingId,
         buildingName: BuildingNameById[buildingId + ""]

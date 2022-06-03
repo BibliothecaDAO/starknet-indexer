@@ -73,6 +73,7 @@ model Realm {
   resources    Resource[]
   traits       RealmTrait[]
   squad        Troop[]
+  lastAttacked DateTime?
 }
 
 // MILSTONE 1
@@ -317,13 +318,14 @@ model ExchangeRate {
 }
 
 model RealmEvent {
-  id         Int      @id @default(autoincrement())
-  eventId    String
-  eventType  String
-  realmId    Int
-  realmOwner String
-  data       Json
-  timestamp  DateTime
+  id              Int      @id @default(autoincrement())
+  eventId         String
+  eventType       String
+  realmId         Int
+  realmOwner      String
+  data            Json
+  timestamp       DateTime
+  transactionHash String   @default("")
 
   @@unique([eventId, eventType])
   @@index([realmOwner, eventId(sort: Desc)])

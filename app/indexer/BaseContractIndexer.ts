@@ -79,7 +79,8 @@ export default class BaseContractIndexer implements Indexer<Event> {
     eventType,
     account,
     data,
-    timestamp
+    timestamp,
+    transactionHash
   }: RealmEvent): Promise<void> {
     let realmOwner = account;
     if (!realmOwner) {
@@ -99,7 +100,8 @@ export default class BaseContractIndexer implements Indexer<Event> {
         realmId,
         realmOwner,
         data,
-        timestamp
+        timestamp,
+        transactionHash
       }
     });
   }

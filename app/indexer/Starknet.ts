@@ -5,8 +5,9 @@ import RealmsBuildingIndexer from "./RealmsBuildingIndexer";
 import RealmsL2Indexer from "./RealmsL2Indexer";
 import RealmsResourceIndexer from "./RealmsResourceIndexer";
 import StarknetIndexer from "./StarknetIndexer";
-import RealmsTroopsIndexer from "./RealmsTroopsIndexer";
+import RealmsCombatIndexer from "./RealmsCombatIndexer";
 import ExchangeIndexer from "./ExchangeIndexer";
+import ResourceERC1155Indexer from "./ResourceERC1155Indexer";
 
 export const StarkNet = () => {
   return {
@@ -18,8 +19,9 @@ export const StarkNet = () => {
           new RealmsL2Indexer(context),
           new RealmsResourceIndexer(context),
           new RealmsBuildingIndexer(context),
-          new RealmsTroopsIndexer(context),
-          new ExchangeIndexer(context)
+          new RealmsCombatIndexer(context),
+          new ExchangeIndexer(context),
+          new ResourceERC1155Indexer(context)
         ],
         context
       );

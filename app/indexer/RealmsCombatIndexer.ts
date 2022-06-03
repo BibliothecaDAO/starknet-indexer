@@ -1,5 +1,5 @@
-import { Event } from "./../entities/starknet/Event";
-import { Context } from "./../context";
+import { Event } from "../entities/starknet/Event";
+import { Context } from "../context";
 import BaseContractIndexer from "./BaseContractIndexer";
 import { uint256ToBN } from "starknet/utils/uint256";
 import { BigNumberish } from "starknet/utils/number";
@@ -9,7 +9,7 @@ import {
   TroopId,
   ATTACKING_SQUAD_SLOT,
   DEFENDING_SQUAD_SLOT
-} from "./../utils/game_constants";
+} from "../utils/game_constants";
 
 const CONTRACT =
   "0x0143c2b110961626f46c4b35c55fa565227ffdb803155e917df790bad29240b9";
@@ -44,7 +44,7 @@ function convertSquadV1ToSquadV2(squadV1: string[]): string[] {
 
 const SQUAD_LENGTH = 25;
 
-export default class RealmsTroopsIndexer extends BaseContractIndexer {
+export default class RealmsCombatIndexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);
 
@@ -167,12 +167,17 @@ export default class RealmsTroopsIndexer extends BaseContractIndexer {
       defendingRealm?.settledOwner || defendingRealm?.ownerL2 || "";
 
     await Promise.all([
+      this.context.prisma.realm.update({
+        where: { realmId: defendingRealmId },
+        data: { lastAttacked: event.timestamp }
+      }),
       this.saveRealmEvent({
         realmId: attackingRealmId,
         eventId,
         eventType: "realm_combat_attack",
         account: event.toAddress,
         timestamp: event.timestamp,
+        transactionHash: event.txHash,
         data: {
           success: outcome === 1,
           defendRealmOwner: defendingRealmOwner
@@ -184,6 +189,7 @@ export default class RealmsTroopsIndexer extends BaseContractIndexer {
         account: defendingRealmOwner,
         eventType: "realm_combat_defend",
         timestamp: event.timestamp,
+        transactionHash: event.txHash,
         data: {
           success: outcome === 2,
           attackRealmOwner: event.toAddress

@@ -63,6 +63,7 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
         eventType,
         account,
         timestamp: event.timestamp,
+        transactionHash: event.txHash,
         data: {
           fromAddress,
           toAddress

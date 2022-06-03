@@ -39,4 +39,5 @@ export interface RealmEvent {
   account?: string;
   data: any;
   timestamp: Date;
+  transactionHash: string;
 }

@@ -487,6 +487,7 @@ type RealmEvent {
   realmId: Int!
   realmOwner: String
   timestamp: String
+  transactionHash: String
 }
 
 input RealmEventWhereInput {
@@ -500,6 +501,7 @@ input RealmEventWhereInput {
   realmId: IntFilter
   realmOwner: StringFilter
   timestamp: DateTimeFilter
+  transactionHash: StringFilter
 }
 
 input RealmListRelationFilter {
@@ -559,6 +561,7 @@ input RealmWhereInput {
   buildings: BuildingListRelationFilter
   id: IntFilter
   imageUrl: StringFilter
+  lastAttacked: DateTimeNullableFilter
   name: StringNullableFilter
   orderType: EnumOrderTypeNullableFilter
   owner: StringNullableFilter

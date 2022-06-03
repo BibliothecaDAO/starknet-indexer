@@ -24,4 +24,7 @@ export class RealmEvent {
 
   @Field(() => String, { nullable: true })
   timestamp: string;
+
+  @Field(() => String, { nullable: true })
+  transactionHash: string;
 }

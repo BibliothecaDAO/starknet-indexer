@@ -29,6 +29,7 @@ const PAGE_SIZE = 50;
 
 export default class StarknetVoyagerApi {
   private chainId: string;
+  private cache: { [key: string]: any } = {};
   constructor() {
     this.chainId = NETWORK;
   }
@@ -63,15 +64,17 @@ export default class StarknetVoyagerApi {
   ): Promise<StarkNetEvent> {
     const url = `${StarknetVoyagerApiUrl}/txn/${voyagerEvent.transactionHash}`;
 
-    const response = await fetch(url, { timeout: 20000 });
-    const details = await response.json();
+    let details: any = this.cache[voyagerEvent.transactionHash];
+    if (!details) {
+      const response = await fetch(url, { timeout: 20000 });
+      details = await response.json();
+      this.cache[voyagerEvent.transactionHash] = details;
+    }
+
     const eventDetails = details.receipt.events.find(
       (ev: any) => ev.id === voyagerEvent.id
     );
 
-    //   data.map((value: any) => {
-    //   return value.indexOf("0x") === 0 ? parseInt(value, 16) : parseInt(value);
-    // });
     return {
       name: "",
       chainId: this.chainId,
@@ -85,5 +88,9 @@ export default class StarknetVoyagerApi {
       parameters: eventDetails ? eventDetails.data : [],
       keys: eventDetails ? eventDetails.keys : []
     };
+  }
+
+  purgeCache() {
+    this.cache = {};
   }
 }
