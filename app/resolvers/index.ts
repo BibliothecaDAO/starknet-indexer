@@ -1,4 +1,4 @@
-import { WalletResolver } from "./wallet/Wallet";
+import { WalletResolver } from "./wallet/WalletResolver";
 import {
   RealmResolver,
   BuildingResolver,
@@ -7,8 +7,8 @@ import {
   RealmEventResolver,
   ExchangeRateResolver
 } from "./settling";
-import { DesiegeResolver } from "./desiege/Desiege";
-import { EventResolver } from "./starknet/Event";
+import { DesiegeResolver } from "./desiege/DesiegeResolver";
+import { EventResolver } from "./starknet/EventResolver";
 
 export {
   WalletResolver,

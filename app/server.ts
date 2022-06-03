@@ -15,8 +15,8 @@ import {
 } from "./resolvers";
 import { StarkNet } from "./indexer/Starknet";
 import { RealmsL1Indexer } from "./indexer/RealmsL1Indexer";
-import { LoreResolver } from "./resolvers/lore/Lore";
-import { LorePOIResolver } from "./resolvers/lore/LorePOI";
+import { LoreResolver } from "./resolvers/lore/LoreResolver";
+import { LorePOIResolver } from "./resolvers/lore/LorePOIResolver";
 
 const main = async () => {
   const schema = await buildSchema({

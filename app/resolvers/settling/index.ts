@@ -1,9 +1,9 @@
-import { BuildingResolver } from "./Building";
-import { RealmResolver } from "./Realm";
-import { ResourceResolver } from "./Resource";
-import { RealmTraitResolver } from "./RealmTrait";
-import { ExchangeRateResolver } from "./ExchangeRate";
-import { RealmEventResolver } from "./RealmEvent";
+import { BuildingResolver } from "./BuildingResolver";
+import { RealmResolver } from "./RealmResolver";
+import { ResourceResolver } from "./ResourceResolver";
+import { RealmTraitResolver } from "./RealmTraitResolver";
+import { ExchangeRateResolver } from "./ExchangeRateResolver";
+import { RealmEventResolver } from "./RealmEventResolver";
 
 export {
   BuildingResolver,
