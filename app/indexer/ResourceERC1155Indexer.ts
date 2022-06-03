@@ -65,7 +65,7 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
     const toAddress = BigNumber.from(params[2]).toHexString() as string;
     const arrayLen = parseInt(params[3]);
     const startIdIdx = 4;
-    const startAmountIdx = startIdIdx + arrayLen;
+    const startAmountIdx = startIdIdx + arrayLen * 2;
 
     const upserts: any[] = [];
     for (let i = 0; i < arrayLen; i++) {
