@@ -2,8 +2,8 @@ import { ObjectType, Field, Int } from "type-graphql";
 import { __Type } from "graphql";
 import { GraphQLJSON } from "graphql-scalars";
 
-@ObjectType({ description: "The Realm Event Model" })
-export class RealmEvent {
+@ObjectType({ description: "The Realm History Model" })
+export class RealmHistory {
   @Field(() => Int, { nullable: false })
   id: number;
 
@@ -22,8 +22,8 @@ export class RealmEvent {
   @Field(() => GraphQLJSON, { nullable: true })
   data: any;
 
-  @Field(() => String, { nullable: true })
-  timestamp: string;
+  @Field({ nullable: true })
+  timestamp: Date;
 
   @Field(() => String, { nullable: true })
   transactionHash: string;

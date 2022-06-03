@@ -9,7 +9,7 @@ import {
   RealmResolver,
   BuildingResolver,
   ResourceResolver,
-  RealmEventResolver,
+  // RealmHistoryResolver,
   DesiegeResolver,
   ExchangeRateResolver
 } from "./resolvers";
@@ -27,12 +27,13 @@ const main = async () => {
       ResourceResolver,
       ExchangeRateResolver,
       DesiegeResolver,
-      RealmEventResolver,
+      // RealmHistoryResolver,
       LoreResolver,
       LorePOIResolver
     ],
     emitSchemaFile: true,
-    validate: false
+    validate: false,
+    dateScalarMode: "timestamp"
   });
 
   const server = new ApolloServer({

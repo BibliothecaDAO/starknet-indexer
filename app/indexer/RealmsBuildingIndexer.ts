@@ -38,7 +38,7 @@ export default class RealmsBuildingIndexer extends BaseContractIndexer {
       create: { realmId, eventId, buildingId, builds: [...builds] },
       update: { buildingId, builds: [...builds] }
     });
-    await this.saveRealmEvent({
+    await this.saveRealmHistory({
       realmId,
       eventId,
       eventType: "realm_building_built",

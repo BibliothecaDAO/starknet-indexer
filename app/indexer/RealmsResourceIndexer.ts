@@ -53,7 +53,7 @@ export default class RealmsResourceIndexer extends BaseContractIndexer {
         }
       });
 
-      await this.saveRealmEvent({
+      await this.saveRealmHistory({
         realmId,
         eventId,
         eventType: "realm_resource_upgraded",

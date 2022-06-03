@@ -317,7 +317,7 @@ model ExchangeRate {
   @@id([date, hour, tokenId])
 }
 
-model RealmEvent {
+model RealmHistory {
   id              Int      @id @default(autoincrement())
   eventId         String
   eventType       String
@@ -331,4 +331,41 @@ model RealmEvent {
   @@index([realmOwner, eventId(sort: Desc)])
   @@index([realmId, eventId(sort: Desc)])
   @@index([eventType, eventId(sort: Desc)])
+}
+
+model CombatHistory {
+  id               Int      @id @default(autoincrement())
+  eventId          String
+  eventType        String
+  attackRealmId    Int
+  attackRealmOwner String
+  attackSquad      Json
+  defendRealmId    Int
+  defendRealmOwner String
+  defendSquad      Json
+  timestamp        DateTime
+  transactionHash  String   @default("")
+  outcome          Int      @default(0) // 0 = NON OUTCOME, 1 = COMBAT_OUTCOME_ATTACKER_WINS , 2 = COMBAT_OUTCOME_DEFENDER_WINS
+  attackType       Int      @default(0) // 0 = NON OUTCOME, 1 = COMBAT_TYPE_ATTACK_VS_DEFENSE, 2 = COMBAT_TYPE_WISDOM_VS_AGILITY
+  hitPoints        Int      @default(0)
+
+
+  @@unique([defendRealmId, eventId])
+  @@index([transactionHash, defendRealmId, eventId(sort: Desc)])
+}
+
+model ResourceTransfer {
+  resourceId        Int
+  eventId           String
+  blockNumber       Int      @default(0)
+  transactionNumber Int      @default(0)
+  fromAddress       String
+  toAddress         String
+  amount            String
+  transactionHash   String   @default("")
+  timestamp         DateTime
+
+  @@unique([resourceId, eventId])
+  @@index([fromAddress, toAddress, eventId(sort: Desc)])
+  @@index([blockNumber, transactionNumber, eventId(sort: Desc)])
 }

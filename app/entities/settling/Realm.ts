@@ -60,6 +60,6 @@ export class Realm {
   @Field(() => [String])
   defendTroopIds: string[];
 
-  @Field(() => String, { nullable: true })
-  lastAttacked: string;
+  @Field({ nullable: true })
+  lastAttacked: Date;
 }

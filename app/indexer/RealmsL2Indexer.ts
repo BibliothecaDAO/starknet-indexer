@@ -57,7 +57,7 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
         });
         account = toAddress;
       }
-      await this.saveRealmEvent({
+      await this.saveRealmHistory({
         realmId,
         eventId,
         eventType,

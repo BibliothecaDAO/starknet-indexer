@@ -73,7 +73,7 @@ export default class BaseContractIndexer implements Indexer<Event> {
     return event?.eventId ?? "";
   }
 
-  async saveRealmEvent({
+  async saveRealmHistory({
     realmId,
     eventId,
     eventType,
@@ -89,7 +89,7 @@ export default class BaseContractIndexer implements Indexer<Event> {
       });
       realmOwner = realm?.settledOwner || realm?.ownerL2 || "";
     }
-    await this.context.prisma.realmEvent.upsert({
+    await this.context.prisma.realmHistory.upsert({
       where: {
         eventId_eventType: { eventId: eventId, eventType: eventType }
       },

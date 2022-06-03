@@ -45,31 +45,55 @@ input BuildingWhereInput {
   realmId: IntNullableFilter
 }
 
-"""
-The javascript `Date` as string. Type represents date and time as the ISO Date string.
-"""
-scalar DateTime
+"""The Combat History Model"""
+type CombatHistory {
+  attackRealmId: Int!
+  attackRealmOwner: String
+  attackSquad: JSON
+  attackType: Int
+  defendRealmId: Int!
+  defendRealmOwner: String
+  defendSquad: JSON
+  eventId: String!
+  eventType: String!
+  hitPoints: Int
+  id: Int!
+  outcome: Int
+  timestamp: Timestamp
+  transactionHash: String
+}
+
+"""The CombatResult Model"""
+type CombatResult {
+  attackRealmId: Int!
+  defendRealmId: Int!
+  history: [CombatHistory!]
+  outcome: Int
+  resourcesPillaged: [ResourceAmount!]
+  timestamp: Timestamp
+  transactionHash: String!
+}
 
 input DateTimeFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
+  equals: Timestamp
+  gt: Timestamp
+  gte: Timestamp
+  in: [Timestamp!]
+  lt: Timestamp
+  lte: Timestamp
   not: NestedDateTimeFilter
-  notIn: [DateTime!]
+  notIn: [Timestamp!]
 }
 
 input DateTimeNullableFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
+  equals: Timestamp
+  gt: Timestamp
+  gte: Timestamp
+  in: [Timestamp!]
+  lt: Timestamp
+  lte: Timestamp
   not: NestedDateTimeNullableFilter
-  notIn: [DateTime!]
+  notIn: [Timestamp!]
 }
 
 """The Desiege Model"""
@@ -82,7 +106,7 @@ type Desiege {
   id: ID!
   initialHealth: Int!
   startBlock: Int!
-  startedOn: DateTime!
+  startedOn: Timestamp!
   winner: Int!
 }
 
@@ -170,7 +194,7 @@ input LoreEntityRelationFilter {
 
 """Lore Entity Revision"""
 type LoreEntityRevision {
-  createdAt: DateTime!
+  createdAt: Timestamp!
   excerpt: String
   id: ID!
   markdown: String
@@ -311,25 +335,25 @@ type Mutation {
 }
 
 input NestedDateTimeFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
+  equals: Timestamp
+  gt: Timestamp
+  gte: Timestamp
+  in: [Timestamp!]
+  lt: Timestamp
+  lte: Timestamp
   not: NestedDateTimeFilter
-  notIn: [DateTime!]
+  notIn: [Timestamp!]
 }
 
 input NestedDateTimeNullableFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
+  equals: Timestamp
+  gt: Timestamp
+  gte: Timestamp
+  in: [Timestamp!]
+  lt: Timestamp
+  lte: Timestamp
   not: NestedDateTimeNullableFilter
-  notIn: [DateTime!]
+  notIn: [Timestamp!]
 }
 
 input NestedEnumOrderTypeNullableFilter {
@@ -444,7 +468,8 @@ type Query {
   getLoreEntity(entityId: Float!): LoreEntity!
   getLorePois(skip: Float = 0, take: Float = 100): [LorePoi!]!
   getRealm(realmId: Float!): Realm!
-  getRealmEvents(filter: RealmEventWhereInput, skip: Float = 0, take: Float = 20): [RealmEvent!]!
+  getRealmCombatResult(defendRealmId: Float!, transactionHash: String!): CombatResult!
+  getRealmHistory(filter: RealmHistoryWhereInput, skip: Float = 0, take: Float = 20): [RealmHistory!]!
   getRealms(filter: RealmWhereInput, orderBy: RealmOrderByInput, skip: Float = 0, take: Float = 100): [Realm!]!
   getResource(id: Float!): Resource!
   getResources: [Resource!]!
@@ -463,6 +488,7 @@ type Realm {
   buildings: [Building!]
   defendTroopIds: [String!]!
   imageUrl: String
+  lastAttacked: Timestamp
   name: String
   orderType: String!
   owner: String
@@ -478,22 +504,22 @@ type Realm {
   wonder: String
 }
 
-"""The Realm Event Model"""
-type RealmEvent {
+"""The Realm History Model"""
+type RealmHistory {
   data: JSON
   eventId: String
   eventType: String
   id: Int!
   realmId: Int!
   realmOwner: String
-  timestamp: String
+  timestamp: Timestamp
   transactionHash: String
 }
 
-input RealmEventWhereInput {
-  AND: [RealmEventWhereInput!]
-  NOT: [RealmEventWhereInput!]
-  OR: [RealmEventWhereInput!]
+input RealmHistoryWhereInput {
+  AND: [RealmHistoryWhereInput!]
+  NOT: [RealmHistoryWhereInput!]
+  OR: [RealmHistoryWhereInput!]
   data: JsonFilter
   eventId: StringFilter
   eventType: StringFilter
@@ -586,6 +612,13 @@ type Resource {
   resourceId: Int!
   resourceName: String!
   upgrades: [String!]!
+}
+
+"""The Token Amount Model"""
+type ResourceAmount {
+  amount: String!
+  resourceId: Int!
+  resourceName: String!
 }
 
 input ResourceInput {
@@ -682,6 +715,11 @@ input StringNullableListFilter {
   hasSome: [String!]
   isEmpty: Boolean
 }
+
+"""
+The javascript `Date` as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
 
 """Troop"""
 type Troop {

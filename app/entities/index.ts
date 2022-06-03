@@ -4,18 +4,26 @@ import {
   Realm,
   Building,
   Resource,
+  ResourceAmount,
   BuildingCost,
   RealmTrait,
-  ExchangeRate
+  ExchangeRate,
+  RealmHistory,
+  CombatHistory,
+  CombatResult
 } from "./settling";
 import { Wallet } from "./wallet/Wallet";
 
 export {
   Desiege,
   Realm,
+  RealmHistory,
   Wallet,
   Building,
+  CombatHistory,
+  CombatResult,
   Resource,
+  ResourceAmount,
   ExchangeRate,
   BuildingCost,
   RealmTrait,
