@@ -10,7 +10,10 @@ import {
   ExchangeRate,
   RealmHistory,
   CombatHistory,
-  CombatResult
+  CombatResult,
+  Troop,
+  TroopCost,
+  TroopStats
 } from "./settling";
 import { Wallet } from "./wallet/Wallet";
 
@@ -27,6 +30,9 @@ export {
   ExchangeRate,
   BuildingCost,
   RealmTrait,
-  LoreEntity
+  LoreEntity,
+  Troop,
+  TroopCost,
+  TroopStats
   // LorePOI,
 };

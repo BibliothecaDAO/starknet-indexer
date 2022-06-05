@@ -474,6 +474,7 @@ type Query {
   getResource(id: Float!): Resource!
   getResources: [Resource!]!
   getResourcesByAddress(address: String!): [Resource!]!
+  getTroopStats: [TroopStats!]!
   getWallet(address: String!): Wallet!
 }
 
@@ -730,6 +731,7 @@ type Troop {
   realmId: Int!
   squadSlot: Int!
   tier: Int!
+  troopCost: TroopCost
   troopId: Int!
   troopName: String!
   type: Int!
@@ -737,10 +739,32 @@ type Troop {
   wisdom: Int!
 }
 
+"""Troop Cost Model"""
+type TroopCost {
+  amount: Float!
+  resources: JSON!
+  troopId: Int!
+  troopName: String!
+}
+
 input TroopListRelationFilter {
   every: TroopWhereInput
   none: TroopWhereInput
   some: TroopWhereInput
+}
+
+"""TroopStats"""
+type TroopStats {
+  agility: Int!
+  attack: Int!
+  defense: Int!
+  tier: Int!
+  troopCost: TroopCost
+  troopId: Int!
+  troopName: String!
+  type: Int!
+  vitality: Int!
+  wisdom: Int!
 }
 
 input TroopWhereInput {

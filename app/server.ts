@@ -9,7 +9,7 @@ import {
   RealmResolver,
   BuildingResolver,
   ResourceResolver,
-  // RealmHistoryResolver,
+  TroopResolver,
   DesiegeResolver,
   ExchangeRateResolver
 } from "./resolvers";
@@ -22,6 +22,7 @@ const main = async () => {
   const schema = await buildSchema({
     resolvers: [
       RealmResolver,
+      TroopResolver,
       WalletResolver,
       BuildingResolver,
       ResourceResolver,

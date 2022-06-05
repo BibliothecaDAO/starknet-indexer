@@ -416,6 +416,138 @@ export const TroopStat: { [key in TroopName]: number[] } = {
   GrandMarshal: [TroopType.Melee, 3, 16, 16, 16, 16, 16]
 };
 
+export const TroopCost: { [key in TroopName]: Cost } = {
+  Watchman: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 2),
+      createResourceCost(ResourceId.Stone, 3),
+      createResourceCost(ResourceId.Copper, 5)
+    ]
+  },
+  Guard: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 4),
+      createResourceCost(ResourceId.Stone, 6),
+      createResourceCost(ResourceId.Copper, 10)
+    ]
+  },
+  GuardCaptain: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 12),
+      createResourceCost(ResourceId.Stone, 12),
+      createResourceCost(ResourceId.Diamonds, 2)
+    ]
+  },
+  Squire: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 4),
+      createResourceCost(ResourceId.Stone, 2),
+      createResourceCost(ResourceId.Silver, 3)
+    ]
+  },
+  Knight: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 10),
+      createResourceCost(ResourceId.Stone, 3),
+      createResourceCost(ResourceId.Silver, 6)
+    ]
+  },
+  KnightCommander: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 13),
+      createResourceCost(ResourceId.Stone, 5),
+      createResourceCost(ResourceId.Ruby, 2)
+    ]
+  },
+  Scout: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 3),
+      createResourceCost(ResourceId.Stone, 1),
+      createResourceCost(ResourceId.Obsidian, 5)
+    ]
+  },
+  Archer: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 7),
+      createResourceCost(ResourceId.Stone, 4),
+      createResourceCost(ResourceId.Obsidian, 8)
+    ]
+  },
+  Sniper: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 20),
+      createResourceCost(ResourceId.Stone, 12),
+      createResourceCost(ResourceId.Hartwood, 3)
+    ]
+  },
+  Scorpio: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 1),
+      createResourceCost(ResourceId.Stone, 4),
+      createResourceCost(ResourceId.Coal, 7)
+    ]
+  },
+  Ballista: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 2),
+      createResourceCost(ResourceId.Stone, 8),
+      createResourceCost(ResourceId.Coal, 14)
+    ]
+  },
+  Catapult: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 4),
+      createResourceCost(ResourceId.Stone, 12),
+      createResourceCost(ResourceId.DeepCrystal, 2)
+    ]
+  },
+  Apprentice: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 3),
+      createResourceCost(ResourceId.Stone, 3),
+      createResourceCost(ResourceId.Ironwood, 2)
+    ]
+  },
+  Mage: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 4),
+      createResourceCost(ResourceId.Stone, 4),
+      createResourceCost(ResourceId.Ironwood, 5)
+    ]
+  },
+  Arcanist: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 10),
+      createResourceCost(ResourceId.Stone, 8),
+      createResourceCost(ResourceId.Sapphire, 2)
+    ]
+  },
+  GrandMarshal: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 2),
+      createResourceCost(ResourceId.Stone, 2),
+      createResourceCost(ResourceId.ColdIron, 1),
+      createResourceCost(ResourceId.Gold, 1)
+    ]
+  }
+};
+
 // # used to signal which side won the battle
 // const COMBAT_OUTCOME_ATTACKER_WINS = 1
 // const COMBAT_OUTCOME_DEFENDER_WINS = 2
