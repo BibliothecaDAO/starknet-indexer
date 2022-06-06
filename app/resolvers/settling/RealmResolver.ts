@@ -1,4 +1,4 @@
-import { Resolver, Arg, Query, Ctx } from "type-graphql";
+import { Resolver, Arg, Query, Ctx, Int } from "type-graphql";
 import { Context } from "../../context";
 import {
   Realm,
@@ -28,6 +28,16 @@ export class RealmResolver {
       }
     });
     return data;
+  }
+
+  @Query(() => Int)
+  async getRealmsCount(
+    @Ctx() ctx: Context,
+    @Arg("filter", { nullable: true }) filter: RealmWhereInput
+  ) {
+    return await ctx.prisma.realm.count({
+      where: filter
+    });
   }
 
   @Query(() => [Realm])

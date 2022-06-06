@@ -471,6 +471,7 @@ type Query {
   getRealmCombatResult(defendRealmId: Float!, transactionHash: String!): CombatResult!
   getRealmHistory(filter: RealmHistoryWhereInput, skip: Float = 0, take: Float = 20): [RealmHistory!]!
   getRealms(filter: RealmWhereInput, orderBy: RealmOrderByInput, skip: Float = 0, take: Float = 100): [Realm!]!
+  getRealmsCount(filter: RealmWhereInput): Int!
   getResource(id: Float!): Resource!
   getResources: [Resource!]!
   getResourcesByAddress(address: String!): [Resource!]!

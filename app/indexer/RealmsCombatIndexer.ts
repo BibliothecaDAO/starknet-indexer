@@ -345,7 +345,8 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
         transactionHash: event.txHash,
         data: {
           success: outcome === 1,
-          defendRealmOwner: defendingRealmOwner
+          defendRealmOwner: defendingRealmOwner,
+          defendRealmId: defendingRealmId
         }
       }),
       this.saveRealmHistory({
@@ -357,7 +358,8 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
         transactionHash: event.txHash,
         data: {
           success: outcome === 2,
-          attackRealmOwner: event.toAddress
+          attackRealmOwner: event.toAddress,
+          attackRealmId: attackingRealmId
         }
       })
     ]);

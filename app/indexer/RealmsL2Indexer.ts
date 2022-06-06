@@ -24,6 +24,11 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
 
     try {
       const realmId = parseInt(params[2]);
+
+      if (!realmId) {
+        console.log("Unknown Realm Transfer", event.txHash);
+        return;
+      }
       const eventId = event.eventId;
       const where = { realmId };
       const fromAddress = BigNumber.from(params[0]).toHexString();
