@@ -1,6 +1,7 @@
 import { NETWORK } from "./../utils/constants";
 import fetch from "node-fetch";
 import { StarkNetEvent } from "./../types";
+import { BigNumber } from "ethers";
 
 const StarknetVoyagerApiUrl = "https://goerli.voyager.online/api";
 
@@ -74,6 +75,9 @@ export default class StarknetVoyagerApi {
     const eventDetails = details.receipt.events.find(
       (ev: any) => ev.id === voyagerEvent.id
     );
+    const toAddress = details.header.to
+      ? BigNumber.from(details.header.to).toHexString()
+      : "";
 
     return {
       name: "",
@@ -84,7 +88,7 @@ export default class StarknetVoyagerApi {
       contract: voyagerEvent.contract,
       transactionHash: voyagerEvent.transactionHash,
       timestamp: new Date(details.header.timestamp * 1000),
-      toAddress: details.header.to ?? "",
+      toAddress,
       parameters: eventDetails ? eventDetails.data : [],
       keys: eventDetails ? eventDetails.keys : []
     };
