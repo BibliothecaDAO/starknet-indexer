@@ -39,17 +39,21 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
       if (event.timestamp) {
         updates.timestamp = event.timestamp;
       }
+      if (event.status) {
+        updates.status = event.status;
+      }
 
       upserts.push(
         this.context.prisma.event.upsert({
           where: { eventId: event.eventId },
-          update: { ...updates, status: event.status },
+          update: { ...updates },
           create: {
             ...updates,
             eventId: event.eventId,
             name: event.name ?? "",
             timestamp: event.timestamp ?? new Date(0),
-            txHash: event.transactionHash ?? ""
+            txHash: event.transactionHash ?? "",
+            status: 0
           }
         })
       );
@@ -77,8 +81,7 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
               contract,
               blockNumber: item.block_number,
               transactionNumber: item.transaction_number,
-              transactionHash: item.transactionHash,
-              status: 0
+              transactionHash: item.transactionHash
             };
           });
       }
@@ -89,8 +92,10 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
   }
 
   async syncEvents() {
-    const lastSynced = await this.lastIndexId();
+    let lastSynced = await this.lastIndexId();
     for (let contract of this.contracts()) {
+      const indexer = this.findIndexer(contract);
+      lastSynced = (await indexer?.lastIndexId()) ?? lastSynced;
       await this.indexContract(contract, lastSynced);
     }
   }
