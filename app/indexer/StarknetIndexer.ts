@@ -132,22 +132,6 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
             transaction_number: event.transactionNumber,
             contract: event.contract
           })
-          // .catch((e) => {
-          //   console.error(
-          //     `Sync contract ${event.contract} event: ${event.eventId} failed`,
-          //     e
-          //   );
-          //   return {
-          //     name: "",
-          //     eventId: event.eventId,
-          //     chainId: NETWORK,
-          //     contract: event.contract,
-          //     transactionHash: event.txHash,
-          //     timestamp: undefined,
-          //     parameters: [],
-          //     keys: []
-          //   };
-          // })
         );
       }
       await this.index(
@@ -166,7 +150,6 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
       );
       this.voyager.purgeCache();
     } catch (e) {
-      // console.log(e);
       // wait for voyager
       console.error(e);
       await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -175,11 +158,9 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
 
   async syncIndexers() {
     for (let indexer of this.indexers) {
-      const lastId = await indexer.lastIndexId();
       const contracts = indexer.contracts();
       const events = await this.context.prisma.event.findMany({
         where: {
-          eventId: { gt: lastId },
           contract: { in: contracts },
           status: 1
         },
