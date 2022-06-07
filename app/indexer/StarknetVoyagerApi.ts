@@ -69,7 +69,9 @@ export default class StarknetVoyagerApi {
     if (!details) {
       const response = await fetch(url, { timeout: 20000 });
       details = await response.json();
-      this.cache[voyagerEvent.transactionHash] = details;
+      if (details.receipt.events.length > 0) {
+        this.cache[voyagerEvent.transactionHash] = details;
+      }
     }
 
     const eventDetails = details.receipt.events.find(
