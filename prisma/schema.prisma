@@ -318,14 +318,16 @@ model ExchangeRate {
 }
 
 model RealmHistory {
-  id              Int      @id @default(autoincrement())
+  id              Int        @id @default(autoincrement())
   eventId         String
   eventType       String
   realmId         Int
   realmOwner      String
+  realmName       String     @default("")
+  realmOrder      OrderType?
   data            Json
   timestamp       DateTime
-  transactionHash String   @default("")
+  transactionHash String     @default("")
 
   @@unique([eventId, eventType])
   @@index([realmOwner, eventId(sort: Desc)])

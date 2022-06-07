@@ -3,6 +3,7 @@ import { Context } from "./../context";
 import { Indexer, RealmEvent } from "./../types";
 import { BigNumber } from "ethers";
 import { hash } from "starknet";
+import { OrderType } from "@prisma/client";
 
 type ContractEventHandler = {
   name: string;
@@ -82,18 +83,24 @@ export default class BaseContractIndexer implements Indexer<Event> {
     timestamp,
     transactionHash
   }: RealmEvent): Promise<void> {
-    let realmOwner = account;
+    let realmOwner = account ?? "";
+    // if (!realmOwner) {
+    const realm = await this.context.prisma.realm.findFirst({
+      where: { realmId }
+    });
+    let realmName = "";
+    let realmOrder = undefined;
     if (!realmOwner) {
-      const realm = await this.context.prisma.realm.findFirst({
-        where: { realmId }
-      });
       realmOwner = realm?.settledOwner || realm?.ownerL2 || "";
     }
+    realmName = realm?.name ?? "";
+    realmOrder = (realm?.orderType as OrderType) ?? undefined;
+
     await this.context.prisma.realmHistory.upsert({
       where: {
         eventId_eventType: { eventId: eventId, eventType: eventType }
       },
-      update: { realmId, realmOwner, data, timestamp },
+      update: { realmId, realmOwner, data, timestamp, realmName, realmOrder },
       create: {
         eventId,
         eventType,
@@ -101,7 +108,9 @@ export default class BaseContractIndexer implements Indexer<Event> {
         realmOwner,
         data,
         timestamp,
-        transactionHash
+        transactionHash,
+        realmName,
+        realmOrder
       }
     });
   }

@@ -515,6 +515,8 @@ type RealmHistory {
   id: Int!
   realm: Realm
   realmId: Int!
+  realmName: String
+  realmOrder: String
   realmOwner: String
   timestamp: Timestamp
   transactionHash: String
@@ -529,6 +531,8 @@ input RealmHistoryWhereInput {
   eventType: StringFilter
   id: IntFilter
   realmId: IntFilter
+  realmName: StringFilter
+  realmOrder: EnumOrderTypeNullableFilter
   realmOwner: StringFilter
   timestamp: DateTimeFilter
   transactionHash: StringFilter
