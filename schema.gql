@@ -33,10 +33,6 @@ input BuildingListRelationFilter {
   some: BuildingWhereInput
 }
 
-input BuildingOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
 input BuildingWhereInput {
   AND: [BuildingWhereInput!]
   NOT: [BuildingWhereInput!]
@@ -480,9 +476,7 @@ type Query {
   getResourcesByAddress(address: String!): [Resource!]!
   getTroopStats: [TroopStats!]!
   getWallet(address: String!): Wallet!
-  realm(id: Float!): Realm!
   realmHistory(filter: RealmHistoryWhereInput, skip: Float = 0, take: Float = 20): [RealmHistory!]!
-  realms(filter: RealmWhereInput, orderBy: RealmOrderByWithRelationInput, skip: Float = 0, take: Float = 100): [Realm!]!
   realmsCount(filter: RealmWhereInput): Int!
 }
 
@@ -552,31 +546,6 @@ input RealmOrderByInput {
   realmId: OrderByDirectionInput
 }
 
-input RealmOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
-input RealmOrderByWithRelationInput {
-  bridgedOwner: SortOrder
-  buildings: BuildingOrderByRelationAggregateInput
-  id: SortOrder
-  imageUrl: SortOrder
-  lastAttacked: SortOrder
-  name: SortOrder
-  orderType: SortOrder
-  owner: SortOrder
-  ownerL2: SortOrder
-  rarityRank: SortOrder
-  rarityScore: SortOrder
-  realmId: SortOrder
-  resources: ResourceOrderByRelationAggregateInput
-  settledOwner: SortOrder
-  squad: TroopOrderByRelationAggregateInput
-  traits: RealmTraitOrderByRelationAggregateInput
-  wallet: WalletOrderByWithRelationInput
-  wonder: SortOrder
-}
-
 input RealmRelationFilter {
   is: RealmWhereInput
   isNot: RealmWhereInput
@@ -595,10 +564,6 @@ input RealmTraitListRelationFilter {
   every: RealmTraitWhereInput
   none: RealmTraitWhereInput
   some: RealmTraitWhereInput
-}
-
-input RealmTraitOrderByRelationAggregateInput {
-  _count: SortOrder
 }
 
 enum RealmTraitType {
@@ -672,18 +637,10 @@ input ResourceListRelationFilter {
   some: ResourceWhereInput
 }
 
-input ResourceOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
 input ResourceTokenListRelationFilter {
   every: ResourceTokenWhereInput
   none: ResourceTokenWhereInput
   some: ResourceTokenWhereInput
-}
-
-input ResourceTokenOrderByRelationAggregateInput {
-  _count: SortOrder
 }
 
 input ResourceTokenWhereInput {
@@ -715,10 +672,6 @@ input SRealmListRelationFilter {
   some: SRealmWhereInput
 }
 
-input SRealmOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
 input SRealmWhereInput {
   AND: [SRealmWhereInput!]
   NOT: [SRealmWhereInput!]
@@ -727,11 +680,6 @@ input SRealmWhereInput {
   owner: StringNullableFilter
   realmId: IntFilter
   wallet: WalletRelationFilter
-}
-
-enum SortOrder {
-  asc
-  desc
 }
 
 input StringFilter {
@@ -808,10 +756,6 @@ input TroopListRelationFilter {
   some: TroopWhereInput
 }
 
-input TroopOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
 """TroopStats"""
 type TroopStats {
   agility: Int!
@@ -851,14 +795,6 @@ type Wallet {
   realmsL1Held: Int!
   realmsL2Held: Int!
   realmsSettledHeld: Int!
-}
-
-input WalletOrderByWithRelationInput {
-  address: SortOrder
-  id: SortOrder
-  realms: RealmOrderByRelationAggregateInput
-  sRealms: SRealmOrderByRelationAggregateInput
-  tokens: ResourceTokenOrderByRelationAggregateInput
 }
 
 input WalletRelationFilter {
