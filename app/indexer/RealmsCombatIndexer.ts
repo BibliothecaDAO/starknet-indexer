@@ -8,7 +8,8 @@ import {
   TroopName,
   TroopId,
   ATTACKING_SQUAD_SLOT,
-  DEFENDING_SQUAD_SLOT
+  DEFENDING_SQUAD_SLOT,
+  ResourceNameById
 } from "../utils/game_constants";
 
 const CONTRACT =
@@ -306,6 +307,20 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
 
     const defendingRealmOwner = await this.getRealmOwner(defendingRealmId);
 
+    const [blockNumber, transactionNumber] = eventId.split("_");
+    const pillagedResources = (
+      (await this.getPillagedResources(
+        parseInt(blockNumber),
+        parseInt(transactionNumber)
+      )) ?? []
+    ).map((resource) => {
+      return {
+        resourceId: resource.resourceId,
+        resourceName: ResourceNameById[String(resource.resourceId)] ?? "",
+        amount: resource.amount
+      };
+    });
+
     const combatHistoryUpdate = {
       eventType: "combat_outcome",
       attackRealmId: attackingRealmId,
@@ -346,7 +361,8 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
         data: {
           success: outcome === 1,
           defendRealmOwner: defendingRealmOwner,
-          defendRealmId: defendingRealmId
+          defendRealmId: defendingRealmId,
+          pillagedResources
         }
       }),
       this.saveRealmHistory({
@@ -359,7 +375,8 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
         data: {
           success: outcome === 2,
           attackRealmOwner: event.toAddress,
-          attackRealmId: attackingRealmId
+          attackRealmId: attackingRealmId,
+          pillagedResources
         }
       })
     ]);
@@ -437,6 +454,15 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
       defendingSquad,
       params: params.slice(endAttackSquad + SQUAD_LENGTH * troopLength)
     };
+  }
+
+  async getPillagedResources(blockNumber: number, transactionNumber: number) {
+    return await this.context.prisma.resourceTransfer.findMany({
+      where: {
+        blockNumber,
+        transactionNumber
+      }
+    });
   }
 
   parseTroop(troop: string[]) {

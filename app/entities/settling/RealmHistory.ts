@@ -1,6 +1,7 @@
 import { ObjectType, Field, Int } from "type-graphql";
 import { __Type } from "graphql";
 import { GraphQLJSON } from "graphql-scalars";
+import { Realm } from "./Realm";
 
 @ObjectType({ description: "The Realm History Model" })
 export class RealmHistory {
@@ -27,4 +28,7 @@ export class RealmHistory {
 
   @Field(() => String, { nullable: true })
   transactionHash: string;
+
+  @Field(() => Realm, { nullable: true })
+  realm?: Realm;
 }

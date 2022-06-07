@@ -1,6 +1,7 @@
 import { WalletResolver } from "./wallet/WalletResolver";
 import {
   RealmResolver,
+  RealmHistoryResolver,
   BuildingResolver,
   ResourceResolver,
   RealmTraitResolver,
@@ -13,6 +14,7 @@ import { EventResolver } from "./starknet/EventResolver";
 export {
   WalletResolver,
   RealmResolver,
+  RealmHistoryResolver,
   BuildingResolver,
   DesiegeResolver,
   ResourceResolver,
