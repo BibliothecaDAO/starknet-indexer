@@ -25,7 +25,8 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
     try {
       const realmId = parseInt(params[2]);
 
-      if (!realmId) {
+      if (!realmId || realmId > 8000) {
+        // TODO: update when realm count increases
         console.log("Unknown Realm Transfer", event.txHash);
         return;
       }
