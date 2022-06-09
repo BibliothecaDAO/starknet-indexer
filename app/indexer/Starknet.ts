@@ -3,6 +3,7 @@ import DesiegeIndexer from "./DesiegeIndexer";
 import LoreIndexer from "./LoreIndexer";
 import RealmsBuildingIndexer from "./RealmsBuildingIndexer";
 import RealmsL2Indexer from "./RealmsL2Indexer";
+import SRealmsIndexer from "./SRealmsIndexer";
 import RealmsResourceIndexer from "./RealmsResourceIndexer";
 import StarknetIndexer from "./StarknetIndexer";
 import RealmsCombatIndexer from "./RealmsCombatIndexer";
@@ -17,6 +18,7 @@ export const StarkNet = () => {
           new DesiegeIndexer(context),
           new LoreIndexer(context),
           new RealmsL2Indexer(context),
+          new SRealmsIndexer(context),
           new RealmsResourceIndexer(context),
           new RealmsBuildingIndexer(context),
           new RealmsCombatIndexer(context),

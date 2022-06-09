@@ -34,6 +34,7 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
       const where = { realmId };
       const fromAddress = BigNumber.from(params[0]).toHexString();
       const toAddress = BigNumber.from(params[1]).toHexString();
+
       let account = "";
       //ensure wallet is created
       await this.context.prisma.wallet.upsert({
@@ -42,39 +43,32 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
         create: { address: toAddress }
       });
 
-      let eventType = "realm_settle";
-      if (this.isSettlingContract(toAddress)) {
-        await this.context.prisma.realm.update({
-          data: { ownerL2: toAddress, settledOwner: fromAddress },
-          where
-        });
-        account = fromAddress;
-      } else {
-        if (params[0] === "0") {
-          eventType = "realm_mint";
-        } else if (this.isSettlingContract(fromAddress)) {
-          eventType = "realm_unsettle";
-        } else {
-          eventType = "realm_transfer";
-        }
-        await this.context.prisma.realm.update({
-          data: { ownerL2: toAddress, settledOwner: null },
-          where
-        });
-        account = toAddress;
-      }
-      await this.saveRealmHistory({
-        realmId,
-        eventId,
-        eventType,
-        account,
-        timestamp: event.timestamp,
-        transactionHash: event.txHash,
-        data: {
-          fromAddress,
-          toAddress
-        }
+      const isMint = params[0] === "0";
+      let isSettlingEvent =
+        this.isSettlingContract(toAddress) ||
+        this.isSettlingContract(fromAddress);
+      let eventType = isMint ? "realm_mint" : "realm_transfer";
+
+      await this.context.prisma.realm.update({
+        data: { ownerL2: toAddress },
+        where
       });
+
+      if (!isSettlingEvent) {
+        //SRealmIndexer will handle realm history
+        await this.saveRealmHistory({
+          realmId,
+          eventId,
+          eventType,
+          account,
+          timestamp: event.timestamp,
+          transactionHash: event.txHash,
+          data: {
+            fromAddress,
+            toAddress
+          }
+        });
+      }
     } catch (e) {
       console.error(
         `Invalid realms update: Event: ${event.eventId}, Params: `,
