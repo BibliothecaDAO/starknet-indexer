@@ -5,42 +5,38 @@ const prisma = new PrismaClient();
 
 const pois = {
   1: { name: "Scrolls" },
-  2: { name: "Canvases" },
-  100: { name: "Lords & Ladies" }, // players
-  200: { name: "Realms" },
-  201: { name: "Realms Orders" },
-  202: { name: "Realms Resources" },
-  203: { name: "Realms Wonders" },
-  204: { name: "Realms Resources Exchange (AMM)" },
-  300: { name: "Crypts and Caverns" }
-}
+  1000: { name: "Realms" },
+  1001: { name: "Realms Orders" },
+  1002: { name: "Realms Resources" },
+  1003: { name: "Realms Wonders" },
+  2000: { name: "Crypts and Caverns" }
+};
 
 const props = {
   1: { name: "Era" }
-}
+};
 
 export async function main() {
   try {
     for (let key in pois) {
-      prisma.lorePOI.create({
+      await prisma.lorePOI.create({
         data: {
           id: parseInt(key),
           // @ts-ignore
           name: pois[key].name
         }
-      })
+      });
     }
 
     for (let key in props) {
-      prisma.loreProp.create({
+      await prisma.loreProp.create({
         data: {
           id: parseInt(key),
           // @ts-ignore
           name: pois[key].name
         }
-      })
+      });
     }
-    
   } catch (e) {
     console.log(e);
   }
