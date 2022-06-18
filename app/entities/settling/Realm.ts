@@ -54,7 +54,10 @@ export class Realm {
   @Field(() => [RealmTrait], { nullable: true })
   traits: [RealmTrait];
 
-  @Field(() => [Troop])
+  @Field(() => [Troop], { nullable: true })
+  troops: Troop[];
+
+  @Field(() => [Troop], { nullable: true })
   squad: Troop[];
 
   @Field(() => [String])
@@ -62,4 +65,10 @@ export class Realm {
 
   @Field({ nullable: true })
   lastAttacked: Date;
+
+  @Field({ nullable: true })
+  lastClaimTime: Date;
+
+  @Field({ nullable: true })
+  lastVaultTime: Date;
 }

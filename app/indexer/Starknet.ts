@@ -9,6 +9,7 @@ import StarknetIndexer from "./StarknetIndexer";
 import RealmsCombatIndexer from "./RealmsCombatIndexer";
 import ExchangeIndexer from "./ExchangeIndexer";
 import ResourceERC1155Indexer from "./ResourceERC1155Indexer";
+import SettlingIndexer from "./SettlingIndexer";
 
 export const StarkNet = () => {
   return {
@@ -23,7 +24,8 @@ export const StarkNet = () => {
           new RealmsBuildingIndexer(context),
           new RealmsCombatIndexer(context),
           new ExchangeIndexer(context),
-          new ResourceERC1155Indexer(context)
+          new ResourceERC1155Indexer(context),
+          new SettlingIndexer(context)
         ],
         context
       );

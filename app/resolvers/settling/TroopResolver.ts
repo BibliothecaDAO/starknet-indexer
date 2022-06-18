@@ -4,10 +4,10 @@ import * as CONSTANTS from "../../utils/game_constants";
 
 @Resolver((_of) => Troop)
 export class TroopResolver {
-  private troopStats: TroopStats[];
+  private stats: TroopStats[];
   constructor() {
     const troopKeys = Object.keys(CONSTANTS.TroopId);
-    this.troopStats = troopKeys.map((troopKey) => {
+    this.stats = troopKeys.map((troopKey) => {
       const troopStats = new TroopStats();
       troopStats.troopId = CONSTANTS.TroopId[troopKey as CONSTANTS.TroopName];
       const stats = CONSTANTS.TroopStat[troopKey as CONSTANTS.TroopName];
@@ -24,6 +24,11 @@ export class TroopResolver {
 
   @Query(() => [TroopStats])
   async getTroopStats() {
-    return this.troopStats;
+    return this.troopStats();
+  }
+
+  @Query(() => [TroopStats])
+  troopStats(): TroopStats[] {
+    return this.stats;
   }
 }
