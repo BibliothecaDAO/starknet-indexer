@@ -1,10 +1,11 @@
 import { ObjectType, Field, Int, Float } from "type-graphql";
 import { __Type } from "graphql";
-import { Wallet } from "../wallet/Wallet";
+import { Wallet } from "./../wallet/Wallet";
 import { Building } from "./Building";
 import { Resource } from "./Resource";
 import { RealmTrait } from "./RealmTrait";
 import { OrderType } from "@prisma/client";
+import { Troop } from "./Troop";
 
 @ObjectType({ description: "The Realm Model" })
 export class Realm {
@@ -53,9 +54,21 @@ export class Realm {
   @Field(() => [RealmTrait], { nullable: true })
   traits: [RealmTrait];
 
-  @Field(() => [String])
-  attackTroopIds: string[];
+  @Field(() => [Troop], { nullable: true })
+  troops: Troop[];
+
+  @Field(() => [Troop], { nullable: true })
+  squad: Troop[];
 
   @Field(() => [String])
   defendTroopIds: string[];
+
+  @Field({ nullable: true })
+  lastAttacked: Date;
+
+  @Field({ nullable: true })
+  lastClaimTime: Date;
+
+  @Field({ nullable: true })
+  lastVaultTime: Date;
 }

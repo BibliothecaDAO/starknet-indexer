@@ -1,12 +1,13 @@
-import { Event } from "../entities/starknet/Event";
-import { Context } from "../context";
-import { Indexer } from "./../types";
+import { Event } from "./../entities/starknet/Event";
+import { Context } from "./../context";
+import { Indexer, RealmEvent } from "./../types";
 import { BigNumber } from "ethers";
 import { hash } from "starknet";
+import { OrderType } from "@prisma/client";
 
 type ContractEventHandler = {
   name: string;
-  handle: (event: Event) => Promise<void>;
+  handle: (event: Event) => Promise<boolean>;
 };
 
 function selectorHash(selector: string) {
@@ -28,7 +29,7 @@ export default class BaseContractIndexer implements Indexer<Event> {
     return this.addresses;
   }
 
-  on(name: string, handle: (event: Event) => Promise<void>) {
+  on(name: string, handle: (event: Event) => Promise<boolean>) {
     this.handlers[selectorHash(hash.getSelectorFromName(name))] = {
       name,
       handle
@@ -40,21 +41,23 @@ export default class BaseContractIndexer implements Indexer<Event> {
   }
 
   async index(events: Event[]): Promise<void> {
+    let indexed: string[] = [];
     try {
-      let lastIndexedEventId = await this.lastIndexId();
       for (const event of events) {
         const eventId = event.eventId;
-        if (eventId <= lastIndexedEventId) {
-          continue;
-        }
         const handlerObject = this.handlers[selectorHash(event.keys[0])];
         if (handlerObject) {
           await handlerObject.handle(event);
         }
+        indexed.push(eventId);
       }
     } catch (e) {
       console.error(e);
     }
+    await this.context.prisma.event.updateMany({
+      where: { eventId: { in: indexed } },
+      data: { status: 2 }
+    });
     return;
   }
 
@@ -69,5 +72,46 @@ export default class BaseContractIndexer implements Indexer<Event> {
       }
     });
     return event?.eventId ?? "";
+  }
+
+  async saveRealmHistory({
+    realmId,
+    eventId,
+    eventType,
+    account,
+    data,
+    timestamp,
+    transactionHash
+  }: RealmEvent): Promise<void> {
+    let realmOwner = account ?? "";
+    // if (!realmOwner) {
+    const realm = await this.context.prisma.realm.findFirst({
+      where: { realmId }
+    });
+    let realmName = "";
+    let realmOrder = undefined;
+    if (!realmOwner) {
+      realmOwner = realm?.settledOwner || realm?.ownerL2 || "";
+    }
+    realmName = realm?.name ?? "";
+    realmOrder = (realm?.orderType as OrderType) ?? undefined;
+
+    await this.context.prisma.realmHistory.upsert({
+      where: {
+        eventId_eventType: { eventId: eventId, eventType: eventType }
+      },
+      update: { realmId, realmOwner, data, timestamp, realmName, realmOrder },
+      create: {
+        eventId,
+        eventType,
+        realmId,
+        realmOwner,
+        data,
+        timestamp,
+        transactionHash,
+        realmName,
+        realmOrder
+      }
+    });
   }
 }

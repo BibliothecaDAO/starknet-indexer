@@ -1,23 +1,25 @@
-import { WalletResolver } from "./wallet/Wallet";
+import { WalletResolver } from "./wallet/WalletResolver";
 import {
   RealmResolver,
+  RealmHistoryResolver,
   BuildingResolver,
   ResourceResolver,
-  BuildingCostResolver,
   RealmTraitResolver,
-  ExchangeRateResolver
+  ExchangeRateResolver,
+  TroopResolver
 } from "./settling";
-import { DesiegeResolver } from "./desiege/Desiege";
-import { EventResolver } from "./starknet/Event";
+import { DesiegeResolver } from "./desiege/DesiegeResolver";
+import { EventResolver } from "./starknet/EventResolver";
 
 export {
   WalletResolver,
   RealmResolver,
+  RealmHistoryResolver,
   BuildingResolver,
   DesiegeResolver,
   ResourceResolver,
   EventResolver,
-  BuildingCostResolver,
   RealmTraitResolver,
-  ExchangeRateResolver
+  ExchangeRateResolver,
+  TroopResolver
 };

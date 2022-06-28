@@ -1,5 +1,5 @@
-import { Event } from "../entities/starknet/Event";
-import { Context } from "../context";
+import { Event } from "./../entities/starknet/Event";
+import { Context } from "./../context";
 import { BigNumber } from "ethers";
 import BaseContractIndexer from "./BaseContractIndexer";
 
@@ -23,12 +23,19 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
     const params = event.parameters ?? [];
 
     try {
-      const where = {
-        realmId: parseInt(params[2])
-      };
+      const realmId = parseInt(params[2]);
+
+      if (!realmId || realmId > 8000) {
+        // TODO: update when realm count increases
+        console.log("Unknown Realm Transfer", event.txHash);
+        return;
+      }
+      const eventId = event.eventId;
+      const where = { realmId };
       const fromAddress = BigNumber.from(params[0]).toHexString();
       const toAddress = BigNumber.from(params[1]).toHexString();
 
+      let account = "";
       //ensure wallet is created
       await this.context.prisma.wallet.upsert({
         where: { address: toAddress },
@@ -36,15 +43,30 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
         create: { address: toAddress }
       });
 
-      if (this.isSettlingContract(toAddress)) {
-        await this.context.prisma.realm.update({
-          data: { ownerL2: toAddress, settledOwner: fromAddress },
-          where
-        });
-      } else {
-        await this.context.prisma.realm.update({
-          data: { ownerL2: toAddress, settledOwner: null },
-          where
+      const isMint = params[0] === "0";
+      let isSettlingEvent =
+        this.isSettlingContract(toAddress) ||
+        this.isSettlingContract(fromAddress);
+      let eventType = isMint ? "realm_mint" : "realm_transfer";
+
+      await this.context.prisma.realm.update({
+        data: { ownerL2: toAddress },
+        where
+      });
+
+      if (!isSettlingEvent) {
+        //SRealmIndexer will handle realm history
+        await this.saveRealmHistory({
+          realmId,
+          eventId,
+          eventType,
+          account,
+          timestamp: event.timestamp,
+          transactionHash: event.txHash,
+          data: {
+            fromAddress,
+            toAddress
+          }
         });
       }
     } catch (e) {
@@ -52,7 +74,7 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
         `Invalid realms update: Event: ${event.eventId}, Params: `,
         JSON.stringify(params)
       );
-      console.log(e);
+      throw e;
     }
   }
 }

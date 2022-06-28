@@ -1,7 +1,7 @@
 import { Resolver, Arg, Mutation, Query, Ctx } from "type-graphql";
-import { Context } from "../../context";
-import { Resource } from "../../entities";
-import { ResourceInput } from "../types";
+import { Context } from "./../../context";
+import { Resource } from "./../../entities";
+import { ResourceInput } from "./../types";
 
 @Resolver((_of) => Resource)
 export class ResourceResolver {

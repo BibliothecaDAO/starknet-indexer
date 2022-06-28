@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "yarn build-ts && npm run serve",
+    "dev": "nodemon app/server.ts",
     "serve": "node dist/server.js",
     "watch-node": "nodemon dist/server.js",
     "build-ts": "prisma generate && tsc",

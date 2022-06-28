@@ -1,8 +1,8 @@
-import { Event } from "../entities/starknet/Event";
-import { Context } from "../context";
+import { Event } from "./../entities/starknet/Event";
+import { Context } from "./../context";
 import { BigNumber } from "ethers";
 import { Contract } from "starknet";
-import TowerDefenceABI from "../abis/01_TowerDefence.json";
+import TowerDefenceABI from "./../abis/01_TowerDefence.json";
 import { toBN } from "starknet/utils/number";
 import BaseContractIndexer from "./BaseContractIndexer";
 
@@ -20,10 +20,9 @@ export default class DesiegeIndexer extends BaseContractIndexer {
   }
 
   async startGame(event: Event): Promise<void> {
+    const params = event.parameters ?? [];
+    const gameId = parseInt(params[0]);
     try {
-      const params = event.parameters ?? [];
-      const gameId = parseInt(params[0]);
-
       const startedOn = event.timestamp;
       const initialHealth = parseInt(params[1]);
       const startBlock = event.blockNumber;
@@ -33,7 +32,8 @@ export default class DesiegeIndexer extends BaseContractIndexer {
         endBlock =
           startBlock + 60 * gameCtx.hoursPerGame * gameCtx.blocksPerMinute;
       } catch (e) {
-        console.error(e);
+        console.error(`Error getting game variables for game${gameId}`);
+        throw e;
       }
       const updates = {
         startedOn,
@@ -55,15 +55,16 @@ export default class DesiegeIndexer extends BaseContractIndexer {
         }
       });
     } catch (e) {
-      console.error(e);
+      console.error(`Error indexing game start: ${gameId}`);
+      throw e;
     }
   }
 
   async updateGame(event: Event): Promise<void> {
+    const params = event.parameters ?? [];
+    const isV2 = params.length === 7;
+    const gameId = parseInt(params[0]);
     try {
-      const params = event.parameters ?? [];
-      const isV2 = params.length === 7;
-      const gameId = parseInt(params[0]);
       const tokenOffset = parseInt(params[2]);
       const tokenAmount = parseInt(params[3]);
       const boostedAmount = isV2 ? parseInt(params[4]) : 0;
@@ -98,14 +99,15 @@ export default class DesiegeIndexer extends BaseContractIndexer {
         }
       });
     } catch (e) {
-      console.error(e);
+      console.error(`Error indexing updating game: ${gameId}`);
+      throw e;
     }
   }
 
   async inflictDamage(event: Event): Promise<void> {
+    const params = event.parameters ?? [];
+    const gameId = parseInt(params[0]);
     try {
-      const params = event.parameters ?? [];
-      const gameId = parseInt(params[0]);
       const damageAmount = parseInt(params[2]);
 
       const updates = {
@@ -122,7 +124,8 @@ export default class DesiegeIndexer extends BaseContractIndexer {
         }
       });
     } catch (e) {
-      console.log(e);
+      console.error(`Error indexing inflict damage on game: ${gameId}`);
+      throw e;
     }
   }
 

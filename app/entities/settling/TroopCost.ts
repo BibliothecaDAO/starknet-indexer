@@ -1,14 +1,18 @@
-import { ObjectType, Field, Int } from "type-graphql";
+import { ObjectType, Field, Int, Float } from "type-graphql";
 import { __Type } from "graphql";
+import { GraphQLJSON } from "graphql-scalars";
 
 @ObjectType({ description: "Troop Cost Model" })
 export class TroopCost {
   @Field(() => Int, { nullable: false })
   troopId: number;
 
-  @Field(() => Int, { nullable: false })
-  resourceId: number;
+  @Field(() => String)
+  troopName: string;
 
-  @Field({ nullable: false })
-  qty: number;
+  @Field(() => Float)
+  amount: number;
+
+  @Field(() => GraphQLJSON)
+  resources: any;
 }

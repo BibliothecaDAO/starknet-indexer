@@ -1,15 +1,17 @@
-import { BuildingResolver } from "./Building";
-import { RealmResolver } from "./Realm";
-import { ResourceResolver } from "./Resource";
-import { BuildingCostResolver } from "./BuildingCost";
-import { RealmTraitResolver } from "./RealmTrait";
-import { ExchangeRateResolver } from "./ExchangeRate";
+import { BuildingResolver } from "./BuildingResolver";
+import { RealmResolver } from "./RealmResolver";
+import { ResourceResolver } from "./ResourceResolver";
+import { RealmHistoryResolver } from "./RealmHistoryResolver";
+import { RealmTraitResolver } from "./RealmTraitResolver";
+import { ExchangeRateResolver } from "./ExchangeRateResolver";
+import { TroopResolver } from "./TroopResolver";
 
 export {
   BuildingResolver,
   ResourceResolver,
   RealmResolver,
-  BuildingCostResolver,
   RealmTraitResolver,
-  ExchangeRateResolver
+  ExchangeRateResolver,
+  TroopResolver,
+  RealmHistoryResolver
 };

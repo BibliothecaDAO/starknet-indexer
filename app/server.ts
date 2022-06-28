@@ -4,50 +4,40 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-co
 import Express from "express";
 import { buildSchema } from "type-graphql";
 import { context } from "./context";
+
 import {
   WalletResolver,
   RealmResolver,
   BuildingResolver,
   ResourceResolver,
-  BuildingCostResolver,
-  // RealmTraitResolver,
+  TroopResolver,
   DesiegeResolver,
-  ExchangeRateResolver
+  ExchangeRateResolver,
+  RealmHistoryResolver
 } from "./resolvers";
 import { StarkNet } from "./indexer/Starknet";
 import { RealmsL1Indexer } from "./indexer/RealmsL1Indexer";
-import {
-  EventCrudResolver
-  // DesiegeCrudResolver,
-  // LoreEntityCrudResolver,
-  // LoreEntityRelationsResolver,
-  // LoreEntityRevisionRelationsResolver
-} from "@generated/type-graphql";
-import { LoreResolver } from "./resolvers/lore/Lore";
-import { LorePOIResolver } from "./resolvers/lore/LorePOI";
-// import { LoreResolver } from "./resolvers/lore/Lore";
+import { LoreResolver } from "./resolvers/lore/LoreResolver";
+import { LorePOIResolver } from "./resolvers/lore/LorePOIResolver";
 
 const main = async () => {
   const schema = await buildSchema({
     resolvers: [
       RealmResolver,
+      TroopResolver,
       WalletResolver,
       BuildingResolver,
       ResourceResolver,
-      BuildingCostResolver,
       ExchangeRateResolver,
-      // Generated
       DesiegeResolver,
-      // DesiegeCrudResolver,
-      EventCrudResolver,
+      RealmHistoryResolver,
+      // RealmHistoryResolver,
       LoreResolver,
       LorePOIResolver
-      // LoreEntityCrudResolver,
-      // LoreEntityRelationsResolver,
-      // LoreEntityRevisionRelationsResolver
     ],
     emitSchemaFile: true,
-    validate: false
+    validate: false,
+    dateScalarMode: "timestamp"
   });
 
   const server = new ApolloServer({

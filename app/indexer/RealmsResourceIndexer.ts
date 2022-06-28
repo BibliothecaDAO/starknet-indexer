@@ -1,6 +1,7 @@
-import { Event } from "../entities/starknet/Event";
-import { Context } from "../context";
+import { Event } from "./../entities/starknet/Event";
+import { Context } from "./../context";
 import BaseContractIndexer from "./BaseContractIndexer";
+import { ResourceNameById } from "./../utils/game_constants";
 
 const CONTRACT =
   "0x04a29535b95b85aca744a0b1bcc2faa1972f0769db1ec10780bb7c01ce3fe8fd";
@@ -13,6 +14,8 @@ export default class RealmsResourceIndexer extends BaseContractIndexer {
 
   async upgradeResource(event: Event): Promise<void> {
     const params = event.parameters ?? [];
+    const eventId = event.eventId;
+    const realmId = parseInt(params[0]);
     let resourceId = 0;
     let where = {};
     let resource;
@@ -20,7 +23,7 @@ export default class RealmsResourceIndexer extends BaseContractIndexer {
       resourceId = parseInt(params[2]);
       where = {
         resourceId_realmId: {
-          realmId: parseInt(params[0]),
+          realmId,
           resourceId
         }
       };
@@ -32,6 +35,7 @@ export default class RealmsResourceIndexer extends BaseContractIndexer {
         `Invalid resource upgrade: Event: ${event.eventId}, Params: `,
         JSON.stringify(params)
       );
+      throw e;
     }
 
     if (resource) {
@@ -40,11 +44,26 @@ export default class RealmsResourceIndexer extends BaseContractIndexer {
       if (upgrades.indexOf(timestamp) === -1) {
         upgrades.push(timestamp);
       }
+      const level = parseInt(params[3]);
       await this.context.prisma.resource.update({
         where,
         data: {
-          level: parseInt(params[3]),
+          level,
           upgrades: [...upgrades]
+        }
+      });
+
+      await this.saveRealmHistory({
+        realmId,
+        eventId,
+        eventType: "realm_resource_upgraded",
+        account: event.toAddress,
+        timestamp: event.timestamp,
+        transactionHash: event.txHash,
+        data: {
+          resourceId,
+          resourceName: ResourceNameById[resourceId + ""],
+          level
         }
       });
     }

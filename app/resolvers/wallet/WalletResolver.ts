@@ -1,7 +1,7 @@
 import { Resolver, Arg, Query, Ctx } from "type-graphql";
-import { Context } from "../../context";
-import { Wallet } from "../../entities";
-import { WalletInput } from "../types";
+import { Context } from "./../../context";
+import { Wallet } from "./../../entities";
+import { WalletInput } from "./../types";
 
 @Resolver((_of) => Wallet)
 export class WalletResolver {

@@ -1,8 +1,8 @@
-import { Event } from "../entities/starknet/Event";
-import { Context } from "../context";
+import { Event } from "./../entities/starknet/Event";
+import { Context } from "./../context";
 import { Indexer, StarkNetEvent } from "./../types";
 import StarknetVoyagerApi from "./StarknetVoyagerApi";
-import { NETWORK } from "../utils/constants";
+import { NETWORK } from "./../utils/constants";
 
 export default class StarknetIndexer implements Indexer<StarkNetEvent> {
   indexers: Indexer<Event>[];
@@ -23,12 +23,14 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
   }
 
   async index(events: StarkNetEvent[]): Promise<void> {
+    const upserts = [];
     for (let event of events) {
       const updates: any = {
         chainId: event.chainId ?? NETWORK,
         contract: event.contract,
         name: event.name,
         parameters: event.parameters,
+        toAddress: event.toAddress,
         keys: event.keys,
         blockNumber: event.blockNumber,
         transactionNumber: event.transactionNumber
@@ -37,18 +39,27 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
       if (event.timestamp) {
         updates.timestamp = event.timestamp;
       }
+      if (event.status) {
+        updates.status = event.status;
+      }
 
-      await this.context.prisma.event.upsert({
-        where: { eventId: event.eventId },
-        update: { ...updates, status: event.status },
-        create: {
-          ...updates,
-          eventId: event.eventId,
-          name: event.name ?? "",
-          timestamp: event.timestamp ?? new Date(0),
-          txHash: event.transactionHash ?? ""
-        }
-      });
+      upserts.push(
+        this.context.prisma.event.upsert({
+          where: { eventId: event.eventId },
+          update: { ...updates },
+          create: {
+            ...updates,
+            eventId: event.eventId,
+            name: event.name ?? "",
+            timestamp: event.timestamp ?? new Date(0),
+            txHash: event.transactionHash ?? "",
+            status: 0
+          }
+        })
+      );
+    }
+    if (upserts.length > 0) {
+      await this.context.prisma.$transaction(upserts);
     }
     return;
   }
@@ -70,8 +81,7 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
               contract,
               blockNumber: item.block_number,
               transactionNumber: item.transaction_number,
-              transactionHash: item.transactionHash,
-              status: 0
+              transactionHash: item.transactionHash
             };
           });
       }
@@ -82,8 +92,10 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
   }
 
   async syncEvents() {
-    const lastSynced = await this.lastIndexId();
+    let lastSynced = await this.lastIndexId();
     for (let contract of this.contracts()) {
+      const indexer = this.findIndexer(contract);
+      lastSynced = (await indexer?.lastIndexId()) ?? lastSynced;
       await this.indexContract(contract, lastSynced);
     }
   }
@@ -100,97 +112,56 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
   async syncEventDetails() {
     const events = await this.context.prisma.event.findMany({
       take: 50,
-      where: {
-        status: 0
-      },
-      orderBy: {
-        eventId: "asc"
-      }
+      where: { status: 0 },
+      orderBy: { eventId: "asc" }
     });
-
-    const batchSize = 3;
     try {
-      for (let i = 0; i < events.length; i += batchSize) {
-        const batch = events.slice(i, i + batchSize).map((event) =>
-          this.voyager
-            .fetchEventDetails({
-              id: event.eventId,
-              transactionHash: event.txHash,
-              block_number: event.blockNumber,
-              transaction_number: event.transactionNumber,
-              contract: event.contract
-            })
-            .catch((e) => {
-              console.error(
-                `Sync contract ${event.contract} event: ${event.eventId} failed`,
-                e
-              );
-              return {
-                name: "",
-                eventId: event.eventId,
-                chainId: NETWORK,
-                contract: event.contract,
-                transactionHash: event.txHash,
-                timestamp: undefined,
-                parameters: [],
-                keys: []
-              };
-            })
-        );
-        const results = await Promise.all(batch);
-        await this.index(
-          results.map((result) => {
-            const indexer = this.findIndexer(result.contract!);
-            let eventName = "";
-            if (indexer && indexer.eventName && result.keys) {
-              eventName = result.keys[0]
-                ? indexer.eventName(result.keys[0])
-                : "";
-            }
-            return {
-              ...result,
-              name: eventName,
-              status: result.parameters && result.parameters.length > 0 ? 1 : -1
-            };
+      let results: StarkNetEvent[] = [];
+      for (let i = 0; i < events.length; i++) {
+        const event = events[i];
+        results.push(
+          await this.voyager.fetchEventDetails({
+            id: event.eventId,
+            transactionHash: event.txHash,
+            block_number: event.blockNumber,
+            transaction_number: event.transactionNumber,
+            contract: event.contract
           })
         );
       }
-    } catch (e) {}
+      await this.index(
+        results.map((result) => {
+          const indexer = this.findIndexer(result.contract!);
+          let eventName = "";
+          if (indexer && indexer.eventName && result.keys) {
+            eventName = result.keys[0] ? indexer.eventName(result.keys[0]) : "";
+          }
+          return {
+            ...result,
+            name: eventName,
+            status: result.parameters && result.parameters.length > 0 ? 1 : -1
+          };
+        })
+      );
+      this.voyager.purgeCache();
+    } catch (e) {
+      // wait for voyager
+      console.error(e);
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+    }
   }
 
   async syncIndexers() {
     for (let indexer of this.indexers) {
-      const lastId = await indexer.lastIndexId();
       const contracts = indexer.contracts();
       const events = await this.context.prisma.event.findMany({
         where: {
-          eventId: {
-            gt: lastId
-          },
-          contract: {
-            in: contracts
-          },
+          contract: { in: contracts },
           status: 1
         },
-        orderBy: {
-          eventId: "asc"
-        }
+        orderBy: { eventId: "asc" }
       });
       await indexer.index(events);
-      await this.context.prisma.event.updateMany({
-        data: {
-          status: 2
-        },
-        where: {
-          eventId: {
-            gt: lastId
-          },
-          contract: {
-            in: contracts
-          },
-          status: 1
-        }
-      });
     }
   }
 

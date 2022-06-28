@@ -9,6 +9,7 @@ export interface StarkNetEvent {
   eventId: string;
   blockNumber?: number;
   transactionNumber?: number;
+  toAddress?: string;
   chainId?: string;
   contract?: string;
   keys?: Array<string>;
@@ -29,4 +30,14 @@ export interface Indexer<T> {
   index(items: T[]): Promise<void>;
   lastIndexId(): Promise<string>;
   eventName?(selector: string): string;
+}
+
+export interface RealmEvent {
+  eventId: string;
+  eventType: string;
+  realmId: number;
+  account?: string;
+  data: any;
+  timestamp: Date;
+  transactionHash: string;
 }

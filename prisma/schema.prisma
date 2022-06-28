@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["extendedIndexes"]
 }
 
 generator docs {
@@ -55,33 +56,36 @@ model Wallet {
 
 // MILSTONE 1
 model Realm {
-  id             Int          @id @default(autoincrement())
-  realmId        Int          @unique
-  name           String?
-  wallet         Wallet?      @relation(fields: [owner], references: [address])
-  owner          String?
-  bridgedOwner   String?
-  ownerL2        String?
-  settledOwner   String?
-  wonder         String?
-  rarityRank     Int          @default(0)
-  rarityScore    Float        @default(0)
-  imageUrl       String       @default("")
-  orderType      OrderType?
-  buildings      Building[]
-  resources      Resource[]
-  traits         RealmTrait[]
-  attackTroopIds String[]
-  defendTroopIds String[]
+  id            Int          @id @default(autoincrement())
+  realmId       Int          @unique
+  name          String?
+  wallet        Wallet?      @relation(fields: [owner], references: [address])
+  owner         String?
+  bridgedOwner  String?
+  ownerL2       String?
+  settledOwner  String?
+  wonder        String?
+  rarityRank    Int          @default(0)
+  rarityScore   Float        @default(0)
+  imageUrl      String       @default("")
+  orderType     OrderType?
+  buildings     Building[]
+  resources     Resource[]
+  traits        RealmTrait[]
+  squad         Troop[]
+  lastAttacked  DateTime?
+  lastClaimTime DateTime?
+  lastVaultTime DateTime?
 }
 
 // MILSTONE 1
 model Building {
-  id         Int    @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   buildingId Int
   realmId    Int?
   eventId    String
-  realm      Realm? @relation(fields: [realmId], references: [realmId])
+  realm      Realm?   @relation(fields: [realmId], references: [realmId])
+  builds     String[]
 
   @@unique([realmId, eventId])
 }
@@ -92,14 +96,6 @@ model BuildingRealmTraitConstraint {
   max        Int            @default(5)
 
   @@unique([buildingId])
-}
-
-model BuildingCost {
-  buildingId Int @id
-  resourceId Int
-  qty        Int @default(0)
-
-  @@unique([buildingId, resourceId])
 }
 
 // MILSTONE 1
@@ -139,12 +135,21 @@ model SRealm {
   owner   String?
 }
 
-model TroopCost {
-  troopId    Int @id
-  resourceId Int
-  qty        Int
+model Troop {
+  realmId   Int
+  troopId   Int
+  index     Int
+  type      Int @default(0)
+  tier      Int @default(0)
+  agility   Int @default(0)
+  attack    Int @default(0)
+  defense   Int @default(0)
+  vitality  Int @default(0)
+  wisdom    Int @default(0)
+  squadSlot Int
 
-  @@unique([troopId, resourceId])
+  Realm Realm @relation(fields: [realmId], references: [realmId])
+  @@unique([realmId, index, squadSlot])
 }
 
 ///////////// MILSTONE 2 ///////////////
@@ -201,6 +206,7 @@ model Event {
   eventId           String   @unique
   blockNumber       Int      @default(0)
   transactionNumber Int      @default(0)
+  toAddress         String   @default("")
   chainId           String
   contract          String
   name              String
@@ -311,4 +317,59 @@ model ExchangeRate {
   sellAmount String @default("")
 
   @@id([date, hour, tokenId])
+}
+
+model RealmHistory {
+  id              Int        @id @default(autoincrement())
+  eventId         String
+  eventType       String
+  realmId         Int
+  realmOwner      String
+  realmName       String     @default("")
+  realmOrder      OrderType?
+  data            Json
+  timestamp       DateTime
+  transactionHash String     @default("")
+
+  @@unique([eventId, eventType])
+  @@index([realmOwner, eventId(sort: Desc)])
+  @@index([realmId, eventId(sort: Desc)])
+  @@index([eventType, eventId(sort: Desc)])
+}
+
+model CombatHistory {
+  id               Int      @id @default(autoincrement())
+  eventId          String
+  eventType        String
+  attackRealmId    Int
+  attackRealmOwner String
+  attackSquad      Json
+  defendRealmId    Int
+  defendRealmOwner String
+  defendSquad      Json
+  timestamp        DateTime
+  transactionHash  String   @default("")
+  outcome          Int      @default(0) // 0 = NON OUTCOME, 1 = COMBAT_OUTCOME_ATTACKER_WINS , 2 = COMBAT_OUTCOME_DEFENDER_WINS
+  attackType       Int      @default(0) // 0 = NON OUTCOME, 1 = COMBAT_TYPE_ATTACK_VS_DEFENSE, 2 = COMBAT_TYPE_WISDOM_VS_AGILITY
+  hitPoints        Int      @default(0)
+
+
+  @@unique([defendRealmId, eventId])
+  @@index([transactionHash, defendRealmId, eventId(sort: Desc)])
+}
+
+model ResourceTransfer {
+  resourceId        Int
+  eventId           String
+  blockNumber       Int      @default(0)
+  transactionNumber Int      @default(0)
+  fromAddress       String
+  toAddress         String
+  amount            String
+  transactionHash   String   @default("")
+  timestamp         DateTime
+
+  @@unique([resourceId, eventId])
+  @@index([fromAddress, toAddress, eventId(sort: Desc)])
+  @@index([blockNumber, transactionNumber, eventId(sort: Desc)])
 }

@@ -1,8 +1,8 @@
-import { LorePoi } from "../../entities/lore/LorePOI";
+import { LorePoi } from "./../../entities/lore/LorePOI";
 import { Resolver, Arg, Query, Ctx } from "type-graphql";
-import { Context } from "../../context";
+import { Context } from "./../../context";
 
-// import { DesiegeQueryOpts } from "../types/DesiegeInput";
+// import { DesiegeQueryOpts } from "./../types/DesiegeInput";
 
 @Resolver()
 export class LorePOIResolver {

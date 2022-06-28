@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { InputType, Field } from "type-graphql";
-import { OrderByDirectionInput } from "../common";
+import { OrderByDirectionInput } from "./../common";
 
 @InputType()
 export class RealmOrderByInput

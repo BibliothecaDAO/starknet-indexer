@@ -1,7 +1,7 @@
 import { Field, InputType, registerEnumType } from "type-graphql";
 import { __Type } from "graphql";
 import { RealmTraitType } from "@prisma/client";
-import { IntFilterInput } from "../common";
+import { IntFilterInput } from "./../common";
 
 registerEnumType(RealmTraitType, {
   name: "RealmTraitType"

@@ -1,9 +1,8 @@
-import { Context } from "../context";
+import { Context } from "./../context";
 import BaseContractIndexer from "./BaseContractIndexer";
 import { Contract } from "starknet";
-import { PROVIDER } from "../utils/constants";
 import { bnToUint256, uint256ToBN } from "starknet/utils/uint256";
-import ExchangeABI from "../abis/Exchange_ERC20_1155.json";
+import ExchangeABI from "./../abis/Exchange_ERC20_1155.json";
 
 const CONTRACT =
   "0x040cfa14714dcd6899f034c4df8396c0b2851598a58d58846da05c5e7743cbfd";
@@ -19,7 +18,7 @@ const TOKEN_IDS = RESOURCE_IDS.map((resourceId) =>
 const TOKEN_AMOUNTS = [...TOKEN_IDS].fill(
   bnToUint256(String(1e18)),
   0,
-  TOKEN_IDS.length - 1
+  TOKEN_IDS.length
 );
 
 export default class ExchangeIndexer extends BaseContractIndexer {
@@ -30,7 +29,11 @@ export default class ExchangeIndexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);
 
-    this.contract = new Contract(ExchangeABI as any, CONTRACT, PROVIDER as any);
+    this.contract = new Contract(
+      ExchangeABI as any,
+      CONTRACT,
+      context.provider
+    );
 
     this.on("LiquidityAdded", this.addLiquidity.bind(this));
     this.on("LiquidityRemoved", this.removeLiquidity.bind(this));

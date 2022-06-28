@@ -4,21 +4,35 @@ import {
   Realm,
   Building,
   Resource,
+  ResourceAmount,
   BuildingCost,
   RealmTrait,
-  ExchangeRate
+  ExchangeRate,
+  RealmHistory,
+  CombatHistory,
+  CombatResult,
+  Troop,
+  TroopCost,
+  TroopStats
 } from "./settling";
 import { Wallet } from "./wallet/Wallet";
 
 export {
   Desiege,
   Realm,
+  RealmHistory,
   Wallet,
   Building,
+  CombatHistory,
+  CombatResult,
   Resource,
+  ResourceAmount,
   ExchangeRate,
   BuildingCost,
   RealmTrait,
-  LoreEntity
+  LoreEntity,
+  Troop,
+  TroopCost,
+  TroopStats
   // LorePOI,
 };
