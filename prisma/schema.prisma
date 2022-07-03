@@ -229,7 +229,8 @@ model LastIndexedEvent {
 
 model LoreEntity {
   id    Int     @id // from blockchain
-  owner String?
+  owner    String?
+  ownerDisplayName   String? // instead of wallet address, it will display
   kind  Int     @default(0) // Text entity is a default
 
   // TODO: wanted to add it but Prisma doesn't allow it... its brain explodes
@@ -255,7 +256,7 @@ model LoreEntityRevision {
   // Text kind fields
   markdown String? // markdown body text
   excerpt  String? // small description
-
+  
   // Media kind fields
   media_url String?
 
@@ -287,25 +288,25 @@ model LoreProp {
 }
 
 model LorePoisOnEntityRevisions {
+  id Int @id @default(autoincrement())
+
   entityRevision   LoreEntityRevision @relation(fields: [entityRevisionId], references: [id])
   entityRevisionId Int
   poi              LorePOI            @relation(fields: [poiId], references: [id])
   poiId            Int
 
   assetId String? // uint256
-
-  @@id([entityRevisionId, poiId])
 }
 
 model LorePropsOnEntityRevisions {
+  id Int @id @default(autoincrement())
+
   entityRevision   LoreEntityRevision @relation(fields: [entityRevisionId], references: [id])
   entityRevisionId Int // relation scalar field (used in the `@relation` attribute above)
   prop             LoreProp           @relation(fields: [propId], references: [id])
   propId           Int // relation scalar field (used in the `@relation` attribute above)
 
   value String?
-
-  @@id([entityRevisionId, propId])
 }
 
 model ExchangeRate {

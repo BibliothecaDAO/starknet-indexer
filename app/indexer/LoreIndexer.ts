@@ -9,6 +9,14 @@ import BaseContractIndexer from "./BaseContractIndexer";
 const CONTRACT =
   "0x06894a6766b4763d8bea8d43f433d25e577ed8bf057942c861df4e9951282c64";
 
+type TArweaveEntity = {
+  title?: string;
+  markdown?: string;
+  excerpt?: string;
+  owner?: string;
+  owner_display_name?: string;
+};
+
 export default class LoreIndexer extends BaseContractIndexer {
   private contract: Contract;
 
@@ -27,6 +35,8 @@ export default class LoreIndexer extends BaseContractIndexer {
   async entityCreated(event: Event): Promise<void> {
     const params = event.parameters ?? [];
     const entityId = parseInt(params[0]);
+
+    console.log(entityId);
 
     let entity;
     try {
@@ -50,7 +60,7 @@ export default class LoreIndexer extends BaseContractIndexer {
 
     const arweaveId = `${part1}${part2}`;
 
-    let arweaveJSON: any;
+    let arweaveJSON: TArweaveEntity;
 
     try {
       const response = await fetch(`https://arweave.net/${arweaveId}`, {
@@ -74,11 +84,13 @@ export default class LoreIndexer extends BaseContractIndexer {
         create: {
           id: entityId,
           owner: entity.owner.toString(),
+          ownerDisplayName: arweaveJSON.owner_display_name || null,
           kind: entity.kind.toNumber(),
           eventIndexed: event.eventId,
         },
         update: {
           owner: entity.owner.toString(),
+          ownerDisplayName: arweaveJSON.owner_display_name || null,
           kind: entity.kind.toNumber(),
           eventIndexed: event.eventId,
         },
@@ -90,6 +102,7 @@ export default class LoreIndexer extends BaseContractIndexer {
         arweaveId,
         title: arweaveJSON.title,
         markdown: arweaveJSON.markdown,
+        excerpt: arweaveJSON.excerpt,
       };
 
       if (entity.pois.length > 0) {

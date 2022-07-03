@@ -8,9 +8,11 @@ export class LoreEntity {
   id: number;
   @Field()
   owner: string;
+  @Field({ nullable: true })
+  ownerDisplayName?: string;
   @Field()
   kind: number;
 
-  @Field(_ => [LoreEntityRevision])
+  @Field((_) => [LoreEntityRevision])
   revisions: LoreEntityRevision[];
 }

@@ -14,9 +14,9 @@ export class LoreResolver {
   ) {
     return await ctx.prisma.loreEntity.findFirst({
       where: {
-        id: entityId
+        id: entityId,
       },
-      include: { revisions: { orderBy: { revisionNumber: "desc" }, take: 1 } }
+      include: { revisions: { orderBy: { revisionNumber: "desc" }, take: 1 } },
     });
   }
 
@@ -30,9 +30,15 @@ export class LoreResolver {
     return await ctx.prisma.loreEntity.findMany({
       where: filter,
       orderBy: { id: "desc" },
-      include: { revisions: { orderBy: { revisionNumber: "desc" }, take: 1 } },
+      include: {
+        revisions: {
+          orderBy: { revisionNumber: "desc" },
+          take: 1,
+          include: { pois: true },
+        },
+      },
       take,
-      skip
+      skip,
     });
   }
 }

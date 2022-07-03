@@ -188,6 +188,7 @@ type LoreEntity {
   id: ID!
   kind: Float!
   owner: String!
+  ownerDisplayName: String
   revisions: [LoreEntityRevision!]!
 }
 
@@ -246,6 +247,7 @@ input LoreEntityWhereInput {
   id: IntFilter
   kind: IntFilter
   owner: StringNullableFilter
+  ownerDisplayName: StringNullableFilter
   revisions: LoreEntityRevisionListRelationFilter
 }
 
@@ -291,6 +293,7 @@ input LorePoisOnEntityRevisionsWhereInput {
   assetId: StringNullableFilter
   entityRevision: LoreEntityRevisionRelationFilter
   entityRevisionId: IntFilter
+  id: IntFilter
   poi: LorePOIRelationFilter
   poiId: IntFilter
 }
@@ -328,6 +331,7 @@ input LorePropsOnEntityRevisionsWhereInput {
   OR: [LorePropsOnEntityRevisionsWhereInput!]
   entityRevision: LoreEntityRevisionRelationFilter
   entityRevisionId: IntFilter
+  id: IntFilter
   prop: LorePropRelationFilter
   propId: IntFilter
   value: StringNullableFilter
