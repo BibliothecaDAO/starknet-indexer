@@ -5,7 +5,7 @@ import { bnToUint256, uint256ToBN } from "starknet/utils/uint256";
 import ExchangeABI from "./../abis/Exchange_ERC20_1155.json";
 
 const CONTRACT =
-  "0x040cfa14714dcd6899f034c4df8396c0b2851598a58d58846da05c5e7743cbfd";
+  "0x015eba242880374267dc54900b7d569a964fcd8d251a2edfb66a4ec9a78eaedc";
 
 const RESOURCE_IDS = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22
