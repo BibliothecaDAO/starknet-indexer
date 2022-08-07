@@ -13,7 +13,7 @@ import {
 } from "../utils/game_constants";
 
 const CONTRACT =
-  "0x0143c2b110961626f46c4b35c55fa565227ffdb803155e917df790bad29240b9";
+  "0x0139bad2b0b220d71ea1fc48fa2858e993b3d471a3b03be609c54ff0c9795d71";
 
 function arrayUInt256ToNumber([low, high]: any[]): BigNumberish {
   return parseInt(uint256ToBN({ low, high }).toString());

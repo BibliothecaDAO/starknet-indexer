@@ -4,9 +4,9 @@ import { BigNumber } from "ethers";
 import BaseContractIndexer from "./BaseContractIndexer";
 
 const SETTLING_CONTRACT_ADDRESS =
-  "0x077b2a96db5fb49200f11155f6c2b1f5c0e697fb62d6b2c290592a1cb0ad0356";
+  "0x02b4b514e756a7f505711383261214873fe44ba19974f0e0352dce3b5c890d76";
 const CONTRACT =
-  "0x0741568eef7e69072fac5ac490ef2dca278fe75898814326fc37b0c6b36e94e0";
+  "0x076bb5a142fa1d9c5d3a46eefaec38cc32b44e093432b1eb46466ea124f848a5";
 
 export default class RealmsL2Indexer extends BaseContractIndexer {
   constructor(context: Context) {

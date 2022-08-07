@@ -4,7 +4,7 @@ import BaseContractIndexer from "./BaseContractIndexer";
 import { ResourceNameById } from "./../utils/game_constants";
 
 const CONTRACT =
-  "0x04a29535b95b85aca744a0b1bcc2faa1972f0769db1ec10780bb7c01ce3fe8fd";
+  "0x06f0e13b23b610534484e8347f78312af6c11cced04e34bd124956a915e5c881";
 export default class RealmsResourceIndexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);
