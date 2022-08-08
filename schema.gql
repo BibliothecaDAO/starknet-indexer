@@ -796,8 +796,8 @@ scalar Timestamp
 """Troop"""
 type Troop {
   agility: Int!
+  armor: Int!
   attack: Int!
-  defense: Int!
   index: Int!
   realmId: Int!
   squadSlot: Int!
@@ -831,8 +831,8 @@ input TroopOrderByRelationAggregateInput {
 """TroopStats"""
 type TroopStats {
   agility: Int!
+  armor: Int!
   attack: Int!
-  defense: Int!
   tier: Int!
   troopCost: TroopCost
   troopId: Int!
@@ -848,8 +848,8 @@ input TroopWhereInput {
   OR: [TroopWhereInput!]
   Realm: RealmRelationFilter
   agility: IntFilter
+  armor: IntFilter
   attack: IntFilter
-  defense: IntFilter
   index: IntFilter
   realmId: IntFilter
   squadSlot: IntFilter

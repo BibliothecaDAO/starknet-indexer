@@ -41,7 +41,7 @@ function convertSquadV1ToSquadV2(squadV1: string[]): string[] {
   }
   return squadV2;
 }
-//Troop(type=TroopType.Melee, tier=1, agility=1, attack=1, defense=3, vitality=4, wisdom=1),
+//Troop(type=TroopType.Melee, tier=1, agility=1, attack=1, armor=3, vitality=4, wisdom=1),
 
 const SQUAD_LENGTH = 25;
 
@@ -471,7 +471,7 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
     const tier = parseInt(troop[2]);
     const agility = parseInt(troop[3]);
     const attack = parseInt(troop[4]);
-    const defense = parseInt(troop[5]);
+    const armor = parseInt(troop[5]);
     const vitality = parseInt(troop[6]);
     const wisdom = parseInt(troop[7]);
     return {
@@ -480,7 +480,7 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
       tier,
       agility,
       attack,
-      defense,
+      armor,
       vitality,
       wisdom
     };

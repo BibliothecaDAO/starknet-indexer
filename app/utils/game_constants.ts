@@ -1,20 +1,16 @@
 export const TroopId = {
-  Watchman: 1,
-  Guard: 2,
-  GuardCaptain: 3,
-  Squire: 4,
+  Skirmisher: 1,
+  Longbow: 2,
+  Crossbow: 3,
+  Pikeman: 4,
   Knight: 5,
-  KnightCommander: 6,
-  Scout: 7,
-  Archer: 8,
-  Sniper: 9,
-  Scorpio: 10,
-  Ballista: 11,
-  Catapult: 12,
-  Apprentice: 13,
-  Mage: 14,
-  Arcanist: 15,
-  GrandMarshal: 16
+  Paladin: 6,
+  Ballista: 7,
+  Mangonel: 8,
+  Trebuchet: 9,
+  Apprentice: 10,
+  Mage: 11,
+  Arcanist: 12,
 };
 
 export type TroopName = keyof typeof TroopId;
@@ -393,159 +389,118 @@ export const BuildingPopulation: { [key in BuildingName]: number } = {
 export const TroopType = {
   Melee: 1,
   Ranged: 2,
-  Siege: 3
+  Siege: 3,
+  Magic: 4
 };
 
-//Troop(type=TroopType.Melee, tier=1, agility=1, attack=1, defense=3, vitality=4, wisdom=1),
+//Troop(type=TroopType.Melee, tier=1, agility=1, attack=1, armor=3, vitality=4, wisdom=1),
 export const TroopStat: { [key in TroopName]: number[] } = {
-  Watchman: [TroopType.Melee, 1, 1, 1, 3, 4, 1],
-  Guard: [TroopType.Melee, 2, 2, 2, 6, 8, 2],
-  GuardCaptain: [TroopType.Melee, 3, 4, 4, 12, 16, 4],
-  Squire: [TroopType.Melee, 1, 1, 4, 1, 1, 3],
-  Knight: [TroopType.Melee, 2, 2, 8, 2, 2, 6],
-  KnightCommander: [TroopType.Melee, 3, 4, 16, 4, 4, 12],
-  Scout: [TroopType.Ranged, 1, 4, 3, 1, 1, 1],
-  Archer: [TroopType.Ranged, 2, 8, 6, 2, 2, 2],
-  Sniper: [TroopType.Ranged, 3, 16, 12, 4, 4, 4],
-  Scorpio: [TroopType.Siege, 1, 1, 4, 1, 3, 1],
-  Ballista: [TroopType.Siege, 2, 2, 8, 2, 6, 2],
-  Catapult: [TroopType.Siege, 3, 4, 16, 4, 12, 4],
-  Apprentice: [TroopType.Ranged, 1, 2, 2, 1, 1, 4],
-  Mage: [TroopType.Ranged, 2, 4, 4, 2, 2, 8],
-  Arcanist: [TroopType.Ranged, 3, 8, 8, 4, 4, 16],
-  GrandMarshal: [TroopType.Melee, 3, 16, 16, 16, 16, 16]
+  Skirmisher: [TroopType.Ranged, 1, 2, 7, 2, 53, 2],
+  Longbow: [TroopType.Ranged, 2, 4, 7, 3, 53, 3],
+  Crossbow: [TroopType.Ranged, 3, 6, 9, 4, 53, 4],
+  Pikeman: [TroopType.Melee, 1, 7, 4, 5, 53, 1],
+  Knight: [TroopType.Melee, 2, 9, 7, 8, 79, 2],
+  Paladin: [TroopType.Melee, 3, 9, 9, 9, 106, 3],
+  Ballista: [TroopType.Siege, 1, 4, 11, 4, 53, 2],
+  Mangonel: [TroopType.Siege, 2, 4, 10, 5, 53, 3],
+  Trebuchet: [TroopType.Siege, 3, 4, 12, 6, 53, 4],
+  Apprentice: [TroopType.Magic, 1, 7, 7, 2, 53, 8],
+  Mage: [TroopType.Magic, 2, 7, 9, 2, 53, 9],
+  Arcanist: [TroopType.Magic, 3, 7, 11, 2, 53, 10],
 };
 
 export const TroopCost: { [key in TroopName]: Cost } = {
-  Watchman: {
+  Skirmisher: {
     amount: 0,
     resources: [
-      createResourceCost(ResourceId.Wood, 2),
-      createResourceCost(ResourceId.Stone, 3),
-      createResourceCost(ResourceId.Copper, 5)
+      createResourceCost(ResourceId.AlchemicalSilver, 1)
     ]
   },
-  Guard: {
+  Longbow: {
     amount: 0,
     resources: [
-      createResourceCost(ResourceId.Wood, 4),
-      createResourceCost(ResourceId.Stone, 6),
-      createResourceCost(ResourceId.Copper, 10)
+      createResourceCost(ResourceId.Adamantine, 0.5),
     ]
   },
-  GuardCaptain: {
+  Crossbow: {
     amount: 0,
     resources: [
-      createResourceCost(ResourceId.Wood, 12),
-      createResourceCost(ResourceId.Stone, 12),
-      createResourceCost(ResourceId.Diamonds, 2)
+      createResourceCost(ResourceId.Stone, 4),
+      createResourceCost(ResourceId.Gold, 2),
+      createResourceCost(ResourceId.Mithral, 0.5),
+      createResourceCost(ResourceId.Dragonhide, 0.3)
     ]
   },
-  Squire: {
+  Pikeman: {
     amount: 0,
     resources: [
-      createResourceCost(ResourceId.Wood, 4),
-      createResourceCost(ResourceId.Stone, 2),
-      createResourceCost(ResourceId.Silver, 3)
+      createResourceCost(ResourceId.Diamonds, 1),
+      createResourceCost(ResourceId.Ignium, 0.5),
     ]
   },
   Knight: {
     amount: 0,
     resources: [
-      createResourceCost(ResourceId.Wood, 10),
-      createResourceCost(ResourceId.Stone, 3),
-      createResourceCost(ResourceId.Silver, 6)
+      createResourceCost(ResourceId.Sapphire, 3),
     ]
   },
-  KnightCommander: {
+  Paladin: {
     amount: 0,
     resources: [
-      createResourceCost(ResourceId.Wood, 13),
-      createResourceCost(ResourceId.Stone, 5),
-      createResourceCost(ResourceId.Ruby, 2)
-    ]
-  },
-  Scout: {
-    amount: 0,
-    resources: [
-      createResourceCost(ResourceId.Wood, 3),
-      createResourceCost(ResourceId.Stone, 1),
-      createResourceCost(ResourceId.Obsidian, 5)
-    ]
-  },
-  Archer: {
-    amount: 0,
-    resources: [
-      createResourceCost(ResourceId.Wood, 7),
-      createResourceCost(ResourceId.Stone, 4),
-      createResourceCost(ResourceId.Obsidian, 8)
-    ]
-  },
-  Sniper: {
-    amount: 0,
-    resources: [
-      createResourceCost(ResourceId.Wood, 20),
-      createResourceCost(ResourceId.Stone, 12),
-      createResourceCost(ResourceId.Hartwood, 3)
-    ]
-  },
-  Scorpio: {
-    amount: 0,
-    resources: [
-      createResourceCost(ResourceId.Wood, 1),
-      createResourceCost(ResourceId.Stone, 4),
-      createResourceCost(ResourceId.Coal, 7)
+      createResourceCost(ResourceId.ColdIron, 2),
+      createResourceCost(ResourceId.Diamonds, 2),
+      createResourceCost(ResourceId.Ruby, 3),
+      createResourceCost(ResourceId.DeepCrystal, 3)
     ]
   },
   Ballista: {
     amount: 0,
     resources: [
-      createResourceCost(ResourceId.Wood, 2),
-      createResourceCost(ResourceId.Stone, 8),
-      createResourceCost(ResourceId.Coal, 14)
+      createResourceCost(ResourceId.Wood, 5),
+      createResourceCost(ResourceId.Stone, 4),
+      createResourceCost(ResourceId.Coal, 2)
     ]
   },
-  Catapult: {
+  Mangonel: {
     amount: 0,
     resources: [
-      createResourceCost(ResourceId.Wood, 4),
-      createResourceCost(ResourceId.Stone, 12),
-      createResourceCost(ResourceId.DeepCrystal, 2)
+      createResourceCost(ResourceId.Wood, 5),
+      createResourceCost(ResourceId.Stone, 4),
+      createResourceCost(ResourceId.Coal, 2),
+      createResourceCost(ResourceId.Silver, 2)
+    ]
+  },
+  Trebuchet: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 5),
+      createResourceCost(ResourceId.Coal, 2),
+      createResourceCost(ResourceId.Obsidian, 2),
+      createResourceCost(ResourceId.Ironwood, 2)
     ]
   },
   Apprentice: {
     amount: 0,
     resources: [
-      createResourceCost(ResourceId.Wood, 3),
-      createResourceCost(ResourceId.Stone, 3),
-      createResourceCost(ResourceId.Ironwood, 2)
+      createResourceCost(ResourceId.Ignium, 1),
     ]
   },
   Mage: {
     amount: 0,
     resources: [
-      createResourceCost(ResourceId.Wood, 4),
-      createResourceCost(ResourceId.Stone, 4),
-      createResourceCost(ResourceId.Ironwood, 5)
+      createResourceCost(ResourceId.Diamonds, 1),
+      createResourceCost(ResourceId.EtherealSilica, 2),
     ]
   },
   Arcanist: {
     amount: 0,
     resources: [
-      createResourceCost(ResourceId.Wood, 10),
-      createResourceCost(ResourceId.Stone, 8),
-      createResourceCost(ResourceId.Sapphire, 2)
+      createResourceCost(ResourceId.Gold, 2),
+      createResourceCost(ResourceId.Hartwood, 2),
+      createResourceCost(ResourceId.TrueIce, 2),
+      createResourceCost(ResourceId.TwilightQuartz, 1)
     ]
   },
-  GrandMarshal: {
-    amount: 0,
-    resources: [
-      createResourceCost(ResourceId.Wood, 2),
-      createResourceCost(ResourceId.Stone, 2),
-      createResourceCost(ResourceId.ColdIron, 1),
-      createResourceCost(ResourceId.Gold, 1)
-    ]
-  }
 };
 
 // # used to signal which side won the battle

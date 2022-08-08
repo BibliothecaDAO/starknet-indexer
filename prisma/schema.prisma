@@ -143,7 +143,7 @@ model Troop {
   tier      Int @default(0)
   agility   Int @default(0)
   attack    Int @default(0)
-  defense   Int @default(0)
+  armor   Int @default(0)
   vitality  Int @default(0)
   wisdom    Int @default(0)
   squadSlot Int
