@@ -84,6 +84,7 @@ model Building {
   buildingId Int
   realmId    Int?
   eventId    String
+  buildingIntegrity Int
   realm      Realm?   @relation(fields: [realmId], references: [realmId])
   builds     String[]
 

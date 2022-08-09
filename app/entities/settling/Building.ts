@@ -14,6 +14,9 @@ export class Building {
   @Field(() => [String])
   builds: string[];
 
+  @Field(() => Int)
+  buildingIntegrity: number;
+
   @Field({ defaultValue: 0 })
   limit: number;
 
@@ -68,6 +71,14 @@ export class Building {
     return CONSTANTS.BuildingFood[this.buildingNameKey] ?? 0;
   }
 
+  @Field(() => Int)
+  get size(): number {
+    if (!this.buildingId) {
+      return 0;
+    }
+
+    return CONSTANTS.BuildingSize[this.buildingNameKey] ?? 0;
+  }
   @Field(() => Int)
   get limitTraitId(): number {
     if (!this.buildingId) {

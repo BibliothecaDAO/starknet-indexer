@@ -43,7 +43,7 @@ function convertSquadV1ToSquadV2(squadV1: string[]): string[] {
 }
 //Troop(type=TroopType.Melee, tier=1, agility=1, attack=1, armor=3, vitality=4, wisdom=1),
 
-const SQUAD_LENGTH = 25;
+const SQUAD_LENGTH = 15;
 
 export default class RealmsCombatIndexer extends BaseContractIndexer {
   constructor(context: Context) {
@@ -55,6 +55,8 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
     this.on("CombatOutcome_1", this.combatOutcome_1.bind(this));
 
     this.on("BuildTroops_2", this.buildTroops_2.bind(this));
+    this.on("BuildTroops_3", this.buildTroops_3.bind(this));
+
     this.on("CombatStart_2", this.combatStart_2.bind(this));
     this.on("CombatStep_2", this.combatStep_2.bind(this));
     this.on("CombatOutcome_2", this.combatOutcome_2.bind(this));
@@ -67,12 +69,14 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
     const realmId = arrayUInt256ToNumber(
       params.slice(params.length - 3, params.length - 1)
     );
+
     await this.updateSquad(realmId, convertSquadV1ToSquadV2(squad), squadSlot);
   }
 
   async buildTroops_2(event: Event) {
+
     const params = event.parameters ?? [];
-    const squad = params.slice(0, 8 * SQUAD_LENGTH);
+    const squad = params.slice(0, 9 * SQUAD_LENGTH);
     const squadSlot = parseInt(params[params.length - 1]);
     const realmId = arrayUInt256ToNumber(
       params.slice(params.length - 3, params.length - 1)
@@ -80,7 +84,17 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
 
     await this.updateSquad(realmId, squad, squadSlot);
   }
+  async buildTroops_3(event: Event) {
 
+    const params = event.parameters ?? [];
+    const squad = params.slice(0, 9 * SQUAD_LENGTH);
+    const squadSlot = parseInt(params[params.length - 1]);
+    const realmId = arrayUInt256ToNumber(
+      params.slice(params.length - 3, params.length - 1)
+    );
+
+    await this.updateSquad(realmId, squad, squadSlot);
+  }
   async combatStart_1(event: Event) {
     const params = event.parameters ?? [];
 
