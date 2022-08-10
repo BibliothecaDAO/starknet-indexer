@@ -45,7 +45,7 @@ export class TroopStats {
   attack: number;
 
   @Field(() => Int, { nullable: false })
-  defense: number;
+  armor: number;
 
   @Field(() => Int, { nullable: false })
   vitality: number;

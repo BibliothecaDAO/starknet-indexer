@@ -15,7 +15,7 @@ export class TroopResolver {
       troopStats.tier = stats[1];
       troopStats.agility = stats[2];
       troopStats.attack = stats[3];
-      troopStats.defense = stats[4];
+      troopStats.armor = stats[4];
       troopStats.vitality = stats[5];
       troopStats.wisdom = stats[6];
       return troopStats;
