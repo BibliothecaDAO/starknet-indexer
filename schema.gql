@@ -853,6 +853,7 @@ input TroopWhereInput {
   agility: IntFilter
   armor: IntFilter
   attack: IntFilter
+  building: IntFilter
   index: IntFilter
   realmId: IntFilter
   squadSlot: IntFilter

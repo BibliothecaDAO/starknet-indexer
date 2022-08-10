@@ -49,12 +49,12 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);
 
-    this.on("BuildTroops_1", this.buildTroops_1.bind(this));
+    //this.on("BuildTroops_1", this.buildTroops_1.bind(this));
     this.on("CombatStart_1", this.combatStart_1.bind(this));
     this.on("CombatStep_1", this.combatStep_1.bind(this));
     this.on("CombatOutcome_1", this.combatOutcome_1.bind(this));
 
-    this.on("BuildTroops_2", this.buildTroops_2.bind(this));
+   //this.on("BuildTroops_2", this.buildTroops_2.bind(this));
     this.on("BuildTroops_3", this.buildTroops_3.bind(this));
 
     this.on("CombatStart_2", this.combatStart_2.bind(this));
@@ -62,7 +62,7 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
     this.on("CombatOutcome_2", this.combatOutcome_2.bind(this));
   }
 
-  async buildTroops_1(event: Event) {
+  /*async buildTroops_1(event: Event) {
     const params = event.parameters ?? [];
     const squad = params.slice(0, 7 * SQUAD_LENGTH);
     const squadSlot = parseInt(params[params.length - 1]);
@@ -76,14 +76,14 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
   async buildTroops_2(event: Event) {
 
     const params = event.parameters ?? [];
-    const squad = params.slice(0, 9 * SQUAD_LENGTH);
+    const squad = params.slice(0, 8 * SQUAD_LENGTH);
     const squadSlot = parseInt(params[params.length - 1]);
     const realmId = arrayUInt256ToNumber(
       params.slice(params.length - 3, params.length - 1)
     );
 
     await this.updateSquad(realmId, squad, squadSlot);
-  }
+  }*/
   async buildTroops_3(event: Event) {
 
     const params = event.parameters ?? [];
@@ -398,11 +398,13 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
   }
 
   async updateSquad(realmId: number, squad: any[], squadSlot: number) {
-    const troopLen = 8;
+    const troopLen = 9;
     const updateSquad = [];
     for (let i = 0; i < SQUAD_LENGTH; i++) {
       const troop = squad.slice(i * troopLen, (i + 1) * troopLen);
       const update = this.parseTroop(troop);
+      console.log(troop)
+      console.log(update)
       updateSquad.push(
         this.context.prisma.troop.upsert({
           where: {
@@ -483,15 +485,17 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
     const troopId = parseInt(troop[0]);
     const type = parseInt(troop[1]);
     const tier = parseInt(troop[2]);
-    const agility = parseInt(troop[3]);
-    const attack = parseInt(troop[4]);
-    const armor = parseInt(troop[5]);
-    const vitality = parseInt(troop[6]);
-    const wisdom = parseInt(troop[7]);
+    const building = parseInt(troop[3]);
+    const agility = parseInt(troop[4]);
+    const attack = parseInt(troop[5]);
+    const armor = parseInt(troop[6]);
+    const vitality = parseInt(troop[7]);
+    const wisdom = parseInt(troop[8]);
     return {
       troopId,
       type,
       tier,
+      building,
       agility,
       attack,
       armor,

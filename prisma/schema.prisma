@@ -142,6 +142,7 @@ model Troop {
   index     Int
   type      Int @default(0)
   tier      Int @default(0)
+  building  Int @default(0)
   agility   Int @default(0)
   attack    Int @default(0)
   armor   Int @default(0)
