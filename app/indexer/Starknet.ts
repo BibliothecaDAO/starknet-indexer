@@ -1,6 +1,6 @@
 import { context } from "./../context";
 import DesiegeIndexer from "./DesiegeIndexer";
-//import LoreIndexer from "./LoreIndexer";
+import LoreIndexer from "./LoreIndexer";
 import RealmsBuildingIndexer from "./RealmsBuildingIndexer";
 import RealmsL2Indexer from "./RealmsL2Indexer";
 import SRealmsIndexer from "./SRealmsIndexer";
@@ -18,7 +18,7 @@ export const StarkNet = () => {
       const indexer = new StarknetIndexer(
         [
           new DesiegeIndexer(context),
-          //new LoreIndexer(context),
+          new LoreIndexer(context),
           new RealmsL2Indexer(context),
           new SRealmsIndexer(context),
           new RealmsResourceIndexer(context),
