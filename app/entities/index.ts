@@ -13,7 +13,8 @@ import {
   CombatResult,
   Troop,
   TroopCost,
-  TroopStats
+  TroopStats,
+  Relic
 } from "./settling";
 import { Wallet } from "./wallet/Wallet";
 
@@ -33,6 +34,7 @@ export {
   LoreEntity,
   Troop,
   TroopCost,
-  TroopStats
+  TroopStats,
+  Relic
   // LorePOI,
 };

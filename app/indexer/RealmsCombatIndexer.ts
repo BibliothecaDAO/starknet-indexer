@@ -4,9 +4,6 @@ import BaseContractIndexer from "./BaseContractIndexer";
 import { uint256ToBN } from "starknet/utils/uint256";
 import { BigNumberish } from "starknet/utils/number";
 import {
-  TroopStat,
-  TroopName,
-  TroopId,
   ATTACKING_SQUAD_SLOT,
   DEFENDING_SQUAD_SLOT,
   ResourceNameById
@@ -19,29 +16,7 @@ function arrayUInt256ToNumber([low, high]: any[]): BigNumberish {
   return parseInt(uint256ToBN({ low, high }).toString());
 }
 
-function findTroopIdFromStats(stats: any[]): string {
-  const statsKey = stats.slice(0, 4).join("");
-  const names = Object.keys(TroopStat) as TroopName[];
-  for (let name of names) {
-    const currentKey = TroopStat[name].slice(0, 4).join("");
-    if (statsKey === currentKey) {
-      return TroopId[name].toString();
-    }
-  }
-  return "0";
-}
-
-function convertSquadV1ToSquadV2(squadV1: string[]): string[] {
-  const troopLen = 7;
-  let squadV2: string[] = [];
-  for (let i = 0; i < SQUAD_LENGTH; i++) {
-    const troop = squadV1.slice(i * troopLen, (i + 1) * troopLen);
-    const troopId = findTroopIdFromStats(troop);
-    squadV2 = [...squadV2, troopId, ...troop];
-  }
-  return squadV2;
-}
-//Troop(type=TroopType.Melee, tier=1, agility=1, attack=1, armor=3, vitality=4, wisdom=1),
+//Troop(id=1, type=TroopType.Melee, tier=1, building=1, agility=1, attack=1, armor=3, vitality=4, wisdom=1),
 
 const SQUAD_LENGTH = 15;
 
@@ -49,45 +24,16 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);
 
-    //this.on("BuildTroops_1", this.buildTroops_1.bind(this));
-    this.on("CombatStart_1", this.combatStart_1.bind(this));
-    this.on("CombatStep_1", this.combatStep_1.bind(this));
-    this.on("CombatOutcome_1", this.combatOutcome_1.bind(this));
-
-   //this.on("BuildTroops_2", this.buildTroops_2.bind(this));
     this.on("BuildTroops_3", this.buildTroops_3.bind(this));
-
-    this.on("CombatStart_2", this.combatStart_2.bind(this));
-    this.on("CombatStep_2", this.combatStep_2.bind(this));
-    this.on("CombatOutcome_2", this.combatOutcome_2.bind(this));
+    this.on("CombatStart_3", this.combatStart_3.bind(this));
+    this.on("CombatStep_3", this.combatStep_3.bind(this));
+    this.on("CombatOutcome_3", this.combatOutcome_3.bind(this));
   }
 
-  /*async buildTroops_1(event: Event) {
-    const params = event.parameters ?? [];
-    const squad = params.slice(0, 7 * SQUAD_LENGTH);
-    const squadSlot = parseInt(params[params.length - 1]);
-    const realmId = arrayUInt256ToNumber(
-      params.slice(params.length - 3, params.length - 1)
-    );
-
-    await this.updateSquad(realmId, convertSquadV1ToSquadV2(squad), squadSlot);
-  }
-
-  async buildTroops_2(event: Event) {
-
-    const params = event.parameters ?? [];
-    const squad = params.slice(0, 8 * SQUAD_LENGTH);
-    const squadSlot = parseInt(params[params.length - 1]);
-    const realmId = arrayUInt256ToNumber(
-      params.slice(params.length - 3, params.length - 1)
-    );
-
-    await this.updateSquad(realmId, squad, squadSlot);
-  }*/
   async buildTroops_3(event: Event) {
-
     const params = event.parameters ?? [];
     const squad = params.slice(0, 9 * SQUAD_LENGTH);
+
     const squadSlot = parseInt(params[params.length - 1]);
     const realmId = arrayUInt256ToNumber(
       params.slice(params.length - 3, params.length - 1)
@@ -95,37 +41,15 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
 
     await this.updateSquad(realmId, squad, squadSlot);
   }
-  async combatStart_1(event: Event) {
-    const params = event.parameters ?? [];
 
-    if (params.length < SQUAD_LENGTH * 7) {
-      // IGNORE OLD EVENT
-      return;
-    }
-
-    const {
-      attackingRealmId,
-      defendingRealmId,
-      attackingSquad,
-      defendingSquad
-    } = this.parseRealmsAndSquads_1(params);
-    await this.combatStart(
-      event,
-      attackingRealmId,
-      defendingRealmId,
-      attackingSquad,
-      defendingSquad
-    );
-  }
-
-  async combatStart_2(event: Event) {
+  async combatStart_3(event: Event) {
     const params = event.parameters ?? [];
     const {
       attackingRealmId,
       defendingRealmId,
       attackingSquad,
       defendingSquad
-    } = this.parseRealmsAndSquads_2(params);
+    } = this.parseRealmsAndSquads_3(params);
     await this.combatStart(
       event,
       attackingRealmId,
@@ -171,33 +95,7 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
     });
   }
 
-  async combatStep_1(event: Event) {
-    const params = event.parameters ?? [];
-
-    if (params.length < SQUAD_LENGTH * 7) {
-      // IGNORE OLD EVENT
-      return;
-    }
-
-    const {
-      attackingRealmId,
-      defendingRealmId,
-      attackingSquad,
-      defendingSquad,
-      params: remainingParams
-    } = this.parseRealmsAndSquads_1(params);
-
-    await this.combatStep(
-      event,
-      attackingRealmId,
-      defendingRealmId,
-      attackingSquad,
-      defendingSquad,
-      remainingParams
-    );
-  }
-
-  async combatStep_2(event: Event) {
+  async combatStep_3(event: Event) {
     const params = event.parameters ?? [];
     const {
       attackingRealmId,
@@ -205,7 +103,7 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
       attackingSquad,
       defendingSquad,
       params: remainingParams
-    } = this.parseRealmsAndSquads_2(params);
+    } = this.parseRealmsAndSquads_3(params);
 
     await this.combatStep(
       event,
@@ -226,8 +124,7 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
     params: string[]
   ) {
     const eventId = event.eventId;
-    const attackType = parseInt(params[0]);
-    const hitPoints = parseInt(params[1]);
+    const hitPoints = parseInt(params[0]);
     const defendingRealmOwner = await this.getRealmOwner(defendingRealmId);
 
     const combatStepUpdate = {
@@ -239,7 +136,6 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
       defendSquad: this.arrayToTroopArray(defendingSquad),
       timestamp: event.timestamp,
       transactionHash: event.txHash,
-      attackType,
       hitPoints
     };
 
@@ -259,33 +155,7 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
     });
   }
 
-  async combatOutcome_1(event: Event) {
-    const params = event.parameters ?? [];
-    if (params.length < SQUAD_LENGTH * 7) {
-      // IGNORE OLD EVENT
-      return;
-    }
-
-    const {
-      attackingRealmId,
-      defendingRealmId,
-      attackingSquad,
-      defendingSquad,
-      params: remainingParams
-    } = this.parseRealmsAndSquads_1(params);
-
-    const outcome = parseInt(remainingParams[0]);
-    await this.combatOutcome(
-      event,
-      attackingRealmId,
-      defendingRealmId,
-      attackingSquad,
-      defendingSquad,
-      outcome
-    );
-  }
-
-  async combatOutcome_2(event: Event) {
+  async combatOutcome_3(event: Event) {
     const params = event.parameters ?? [];
     const {
       attackingRealmId,
@@ -293,7 +163,7 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
       attackingSquad,
       defendingSquad,
       params: remainingParams
-    } = this.parseRealmsAndSquads_2(params);
+    } = this.parseRealmsAndSquads_3(params);
     const outcome = parseInt(remainingParams[0]);
     await this.combatOutcome(
       event,
@@ -403,8 +273,6 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
     for (let i = 0; i < SQUAD_LENGTH; i++) {
       const troop = squad.slice(i * troopLen, (i + 1) * troopLen);
       const update = this.parseTroop(troop);
-      console.log(troop)
-      console.log(update)
       updateSquad.push(
         this.context.prisma.troop.upsert({
           where: {
@@ -432,29 +300,8 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
     return defendingRealmOwner;
   }
 
-  parseRealmsAndSquads_1(params: string[]) {
-    const troopLength = 7;
-
-    const attackingRealmId = arrayUInt256ToNumber(params.slice(0, 2));
-    const defendingRealmId = arrayUInt256ToNumber(params.slice(2, 4));
-    const endAttackSquad = 4 + SQUAD_LENGTH * troopLength;
-    const attackingSquad = params.slice(4, endAttackSquad);
-
-    const defendingSquad = params.slice(
-      endAttackSquad,
-      endAttackSquad + SQUAD_LENGTH * troopLength
-    );
-    return {
-      attackingRealmId,
-      defendingRealmId,
-      attackingSquad: convertSquadV1ToSquadV2(attackingSquad),
-      defendingSquad: convertSquadV1ToSquadV2(defendingSquad),
-      params: params.slice(endAttackSquad + SQUAD_LENGTH * troopLength)
-    };
-  }
-
-  parseRealmsAndSquads_2(params: string[]) {
-    const troopLength = 8;
+  parseRealmsAndSquads_3(params: string[]) {
+    const troopLength = 9;
     const attackingRealmId = arrayUInt256ToNumber(params.slice(0, 2));
     const defendingRealmId = arrayUInt256ToNumber(params.slice(2, 4));
     const endAttackSquad = 4 + SQUAD_LENGTH * troopLength;
@@ -506,8 +353,8 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
 
   arrayToTroopArray(squad: string[]) {
     const troopArray = [];
-    for (let i = 0; i < squad.length; i += 8) {
-      const troop = squad.slice(i, i + 8);
+    for (let i = 0; i < squad.length; i += 9) {
+      const troop = squad.slice(i, i + 9);
       troopArray.push(this.parseTroop(troop));
     }
     return troopArray;

@@ -515,6 +515,8 @@ type Realm {
   rarityRank: Int!
   rarityScore: Float!
   realmId: Int!
+  relic: [Relic!]
+  relicsOwned: [Relic!]
   resources: [Resource!]
   settledOwner: String
   squad: [Troop!]
@@ -586,6 +588,8 @@ input RealmOrderByWithRelationInput {
   rarityRank: SortOrder
   rarityScore: SortOrder
   realmId: SortOrder
+  relic: RelicOrderByWithRelationInput
+  relicsOwned: RelicOrderByRelationAggregateInput
   resources: ResourceOrderByRelationAggregateInput
   settledOwner: SortOrder
   squad: TroopOrderByRelationAggregateInput
@@ -653,12 +657,54 @@ input RealmWhereInput {
   rarityRank: IntFilter
   rarityScore: FloatFilter
   realmId: IntFilter
+  relic: RelicRelationFilter
+  relicsOwned: RelicListRelationFilter
   resources: ResourceListRelationFilter
   settledOwner: StringNullableFilter
   squad: TroopListRelationFilter
   traits: RealmTraitListRelationFilter
   wallet: WalletRelationFilter
   wonder: StringNullableFilter
+}
+
+"""The Relic Model"""
+type Relic {
+  heldByRealm: Float
+  originRealm: Realm!
+  realmHolder: Realm!
+  realmId: Float
+}
+
+input RelicListRelationFilter {
+  every: RelicWhereInput
+  none: RelicWhereInput
+  some: RelicWhereInput
+}
+
+input RelicOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input RelicOrderByWithRelationInput {
+  heldByRealm: SortOrder
+  originRealm: RealmOrderByWithRelationInput
+  realmHolder: RealmOrderByWithRelationInput
+  realmId: SortOrder
+}
+
+input RelicRelationFilter {
+  is: RelicWhereInput
+  isNot: RelicWhereInput
+}
+
+input RelicWhereInput {
+  AND: [RelicWhereInput!]
+  NOT: [RelicWhereInput!]
+  OR: [RelicWhereInput!]
+  heldByRealm: IntFilter
+  originRealm: RealmRelationFilter
+  realmHolder: RealmRelationFilter
+  realmId: IntFilter
 }
 
 """The Resource Model"""

@@ -11,7 +11,7 @@ import { TroopStats } from "./TroopStats";
 import { ExchangeRate } from "./ExchangeRate";
 import { CombatHistory } from "./CombatHistory";
 import { CombatResult } from "./CombatResult";
-
+import { Relic } from "./Relic"
 export {
   Realm,
   RealmHistory,
@@ -25,5 +25,6 @@ export {
   RealmTrait,
   ExchangeRate,
   CombatHistory,
-  CombatResult
+  CombatResult,
+  Relic
 };
