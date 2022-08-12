@@ -8,7 +8,7 @@ const CONTRACT =
   "0x015eba242880374267dc54900b7d569a964fcd8d251a2edfb66a4ec9a78eaedc";
 
 const RESOURCE_IDS = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 10000, 10001
 ];
 
 const TOKEN_IDS = RESOURCE_IDS.map((resourceId) =>

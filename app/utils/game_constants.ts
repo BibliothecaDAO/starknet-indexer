@@ -39,7 +39,9 @@ export const ResourceId = {
   AlchemicalSilver: 19,
   Adamantine: 20,
   Mithral: 21,
-  Dragonhide: 22
+  Dragonhide: 22,
+  Wheat: 10000,
+  Fish: 10001
 };
 
 export type ResourceName = keyof typeof ResourceId;
