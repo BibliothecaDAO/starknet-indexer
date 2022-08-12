@@ -60,6 +60,10 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
     this.on("CombatStart_2", this.combatStart_2.bind(this));
     this.on("CombatStep_2", this.combatStep_2.bind(this));
     this.on("CombatOutcome_2", this.combatOutcome_2.bind(this));
+
+    this.on("CombatStart_3", this.combatStart_3.bind(this));
+    this.on("CombatStep_3", this.combatStep_3.bind(this));
+    this.on("CombatOutcome_3", this.combatOutcome_3.bind(this));
   }
 
   /*async buildTroops_1(event: Event) {
@@ -85,9 +89,9 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
     await this.updateSquad(realmId, squad, squadSlot);
   }*/
   async buildTroops_3(event: Event) {
-
     const params = event.parameters ?? [];
     const squad = params.slice(0, 9 * SQUAD_LENGTH);
+
     const squadSlot = parseInt(params[params.length - 1]);
     const realmId = arrayUInt256ToNumber(
       params.slice(params.length - 3, params.length - 1)
@@ -126,6 +130,23 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
       attackingSquad,
       defendingSquad
     } = this.parseRealmsAndSquads_2(params);
+    await this.combatStart(
+      event,
+      attackingRealmId,
+      defendingRealmId,
+      attackingSquad,
+      defendingSquad
+    );
+  }
+
+  async combatStart_3(event: Event) {
+    const params = event.parameters ?? [];
+    const {
+      attackingRealmId,
+      defendingRealmId,
+      attackingSquad,
+      defendingSquad
+    } = this.parseRealmsAndSquads_3(params);
     await this.combatStart(
       event,
       attackingRealmId,
@@ -217,6 +238,25 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
     );
   }
 
+  async combatStep_3(event: Event) {
+    const params = event.parameters ?? [];
+    const {
+      attackingRealmId,
+      defendingRealmId,
+      attackingSquad,
+      defendingSquad,
+      params: remainingParams
+    } = this.parseRealmsAndSquads_3(params);
+
+    await this.combatStep(
+      event,
+      attackingRealmId,
+      defendingRealmId,
+      attackingSquad,
+      defendingSquad,
+      remainingParams
+    );
+  }
   async combatStep(
     event: Event,
     attackingRealmId: number,
@@ -226,8 +266,7 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
     params: string[]
   ) {
     const eventId = event.eventId;
-    const attackType = parseInt(params[0]);
-    const hitPoints = parseInt(params[1]);
+    const hitPoints = parseInt(params[0]);
     const defendingRealmOwner = await this.getRealmOwner(defendingRealmId);
 
     const combatStepUpdate = {
@@ -239,7 +278,6 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
       defendSquad: this.arrayToTroopArray(defendingSquad),
       timestamp: event.timestamp,
       transactionHash: event.txHash,
-      attackType,
       hitPoints
     };
 
@@ -304,7 +342,25 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
       outcome
     );
   }
-
+  async combatOutcome_3(event: Event) {
+    const params = event.parameters ?? [];
+    const {
+      attackingRealmId,
+      defendingRealmId,
+      attackingSquad,
+      defendingSquad,
+      params: remainingParams
+    } = this.parseRealmsAndSquads_3(params);
+    const outcome = parseInt(remainingParams[0]);
+    await this.combatOutcome(
+      event,
+      attackingRealmId,
+      defendingRealmId,
+      attackingSquad,
+      defendingSquad,
+      outcome
+    );
+  }
   async combatOutcome(
     event: Event,
     attackingRealmId: number,
@@ -403,8 +459,6 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
     for (let i = 0; i < SQUAD_LENGTH; i++) {
       const troop = squad.slice(i * troopLen, (i + 1) * troopLen);
       const update = this.parseTroop(troop);
-      console.log(troop)
-      console.log(update)
       updateSquad.push(
         this.context.prisma.troop.upsert({
           where: {
@@ -472,6 +526,25 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
     };
   }
 
+  parseRealmsAndSquads_3(params: string[]) {
+    const troopLength = 9;
+    const attackingRealmId = arrayUInt256ToNumber(params.slice(0, 2));
+    const defendingRealmId = arrayUInt256ToNumber(params.slice(2, 4));
+    const endAttackSquad = 4 + SQUAD_LENGTH * troopLength;
+    const attackingSquad = params.slice(4, endAttackSquad);
+    const defendingSquad = params.slice(
+      endAttackSquad,
+      endAttackSquad + SQUAD_LENGTH * troopLength
+    );
+    return {
+      attackingRealmId,
+      defendingRealmId,
+      attackingSquad,
+      defendingSquad,
+      params: params.slice(endAttackSquad + SQUAD_LENGTH * troopLength)
+    };
+  }
+
   async getPillagedResources(blockNumber: number, transactionNumber: number) {
     return await this.context.prisma.resourceTransfer.findMany({
       where: {
@@ -506,8 +579,8 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
 
   arrayToTroopArray(squad: string[]) {
     const troopArray = [];
-    for (let i = 0; i < squad.length; i += 8) {
-      const troop = squad.slice(i, i + 8);
+    for (let i = 0; i < squad.length; i += 9) {
+      const troop = squad.slice(i, i + 9);
       troopArray.push(this.parseTroop(troop));
     }
     return troopArray;

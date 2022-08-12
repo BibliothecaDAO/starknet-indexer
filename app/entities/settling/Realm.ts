@@ -4,6 +4,7 @@ import { Wallet } from "./../wallet/Wallet";
 import { Building } from "./Building";
 import { Resource } from "./Resource";
 import { RealmTrait } from "./RealmTrait";
+import { Relic } from "./Relic"
 import { OrderType } from "@prisma/client";
 import { Troop } from "./Troop";
 
@@ -47,6 +48,12 @@ export class Realm {
 
   @Field(() => [Building], { nullable: true })
   buildings: [Building];
+
+  @Field(() => [Relic], { nullable: true })
+  relic: Relic;
+
+  @Field(() => [Relic], { nullable: true })
+  relicsOwned: [Relic];
 
   @Field(() => [Resource], { nullable: true })
   resources: [Resource];

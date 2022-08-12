@@ -16,7 +16,8 @@ import {
   Building,
   Resource,
   RealmTrait,
-  Troop
+  Troop,
+  Relic
 } from "../../entities";
 import { RealmInput } from "../types";
 import { RealmOrderByInput } from "../types/settling";
@@ -47,7 +48,7 @@ export class RealmResolver {
 
   @Query(() => Realm, { nullable: false })
   async realm(@Ctx() ctx: Context, @Arg("id") realmId: number) {
-    return await ctx.prisma.realm.findUnique({
+    return await ctx.prisma.realm.findFirst({
       where: { realmId }
     });
   }
@@ -58,6 +59,7 @@ export class RealmResolver {
       where: { realmId: realm.realmId }
     });
   }
+  
   @FieldResolver(() => [Resource])
   async resources(@Ctx() ctx: Context, @Root() realm: Realm) {
     return await ctx.prisma.resource.findMany({
@@ -78,7 +80,18 @@ export class RealmResolver {
       where: { realmId: realm.realmId }
     });
   }
-
+  @FieldResolver(() => Relic)
+  async relic(@Ctx() ctx: Context, @Root() realm: Realm) {
+    return await ctx.prisma.relic.findMany({
+      where: { realmId: realm.realmId }
+    });
+  }
+  @FieldResolver(() => [Relic])
+  async relicsOwned(@Ctx() ctx: Context, @Root() realm: Realm) {
+    return await ctx.prisma.relic.findMany({
+      where: { heldByRealm: realm.realmId }
+    });
+  }
   @Query(() => Int)
   async realmsCount(
     @Ctx() ctx: Context,

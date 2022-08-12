@@ -68,9 +68,11 @@ model Realm {
   rarityRank    Int          @default(0)
   rarityScore   Float        @default(0)
   imageUrl      String       @default("")
+  relic         Relic?        @relation(name: "originRealm")
   orderType     OrderType?
   buildings     Building[]
   resources     Resource[]
+  relicsOwned   Relic[]      @relation(name: "heldByRealm")
   traits        RealmTrait[]
   squad         Troop[]
   lastAttacked  DateTime?
@@ -89,6 +91,13 @@ model Building {
   builds     String[]
 
   @@unique([realmId, eventId])
+}
+model Relic {
+  realmId      Int
+  originRealm  Realm?   @relation(name: "originRealm", fields: [realmId], references: [realmId])
+  heldByRealm  Int
+  realmHolder  Realm?   @relation(name: "heldByRealm", fields: [heldByRealm], references: [realmId])
+  @@unique([realmId])
 }
 
 model BuildingRealmTraitConstraint {
