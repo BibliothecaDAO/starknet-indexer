@@ -28,7 +28,8 @@ export interface StarkNetEventParameter {
 export interface Indexer<T> {
   contracts(): string[];
   index(items: T[]): Promise<void>;
-  lastIndexId(): Promise<string>;
+  lastEventId(): Promise<string>;
+  lastBlockNumber(): Promise<number>;
   eventName?(selector: string): string;
 }
 

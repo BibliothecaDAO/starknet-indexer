@@ -10,7 +10,7 @@ import RealmsCombatIndexer from "./RealmsCombatIndexer";
 import ExchangeIndexer from "./ExchangeIndexer";
 import ResourceERC1155Indexer from "./ResourceERC1155Indexer";
 import SettlingIndexer from "./SettlingIndexer";
-import RelicIndexer from "./RelicIndexer"
+import RelicIndexer from "./RelicIndexer";
 
 export const StarkNet = () => {
   return {
@@ -24,10 +24,11 @@ export const StarkNet = () => {
           new RealmsResourceIndexer(context),
           new RealmsBuildingIndexer(context),
           new RelicIndexer(context),
-          new RealmsCombatIndexer(context),
           new ExchangeIndexer(context),
           new ResourceERC1155Indexer(context),
-          new SettlingIndexer(context)
+          new SettlingIndexer(context),
+          // Resource Events must be processed before combat events
+          new RealmsCombatIndexer(context)
         ],
         context
       );

@@ -1,7 +1,8 @@
 import { Event } from "./../entities/starknet/Event";
 import { Context } from "./../context";
 import { Indexer, StarkNetEvent } from "./../types";
-import StarknetVoyagerApi from "./StarknetVoyagerApi";
+// import StarknetVoyagerApi from "./StarknetVoyagerApi";
+import StarknetRpcProvider from "./StarknetRpcProvider";
 import { NETWORK } from "./../utils/constants";
 
 export default class StarknetIndexer implements Indexer<StarkNetEvent> {
@@ -9,13 +10,14 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
   context: Context;
   isSyncing: boolean;
 
-  voyager: StarknetVoyagerApi;
+  provider: StarknetRpcProvider;
   interval: NodeJS.Timer;
+  currentBlockNumber: number = 0;
 
   constructor(indexers: Indexer<Event>[], context: Context) {
     this.indexers = indexers;
     this.context = context;
-    this.voyager = new StarknetVoyagerApi();
+    this.provider = new StarknetRpcProvider();
   }
 
   contracts(): string[] {
@@ -52,8 +54,7 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
             eventId: event.eventId,
             name: event.name ?? "",
             timestamp: event.timestamp ?? new Date(0),
-            txHash: event.transactionHash ?? "",
-            status: 0
+            txHash: event.transactionHash ?? ""
           }
         })
       );
@@ -64,39 +65,105 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
     return;
   }
 
-  async indexContract(contract: string, lastEventIndexed: string) {
+  async indexContract(contract: string) {
+    const indexer = this.findIndexer(contract);
+    if (!indexer) {
+      return;
+    }
+    let lastEventIndexed = (await indexer?.lastEventId()) ?? "";
+    let lastBlockNumber = (await indexer?.lastBlockNumber()) ?? 0;
+
     let fetchMore = true;
-    let page = 1;
+    let page = 0;
+    const eventCounts: any = {};
 
     do {
-      const data = await this.voyager.fetch({ contract, page });
-      const pageSize = 50;
-      let results: StarkNetEvent[] = [];
-      if (data.items) {
-        results = data.items
-          .filter((item) => item.id > lastEventIndexed)
-          .map((item) => {
-            return {
-              eventId: item.id,
-              contract,
-              blockNumber: item.block_number,
-              transactionNumber: item.transaction_number,
-              transactionHash: item.transactionHash
-            };
-          });
+      const resp = await this.provider.getEvents({
+        address: contract,
+        page_number: page,
+        page_size: 100,
+        fromBlock: lastBlockNumber
+      });
+      if (!resp) {
+        return;
       }
-      fetchMore = data.hasMore && results.length === pageSize;
+
+      let results: StarkNetEvent[] = [];
+      for (let i = 0; i < resp.events.length; i++) {
+        const event = resp.events[i];
+
+        const blockNumber = event.block_number;
+        const transactionHash = event.transaction_hash;
+        const block = await this.provider.getBlockByNumber(blockNumber);
+        if (!block) {
+          // TODO: handle error
+          console.error("block not found", event.block_number);
+          return;
+        }
+
+        const transaction = await this.provider.getTransactionByHash(
+          transactionHash
+        );
+
+        if (!transaction) {
+          // TODO: handle error
+          console.error("transaction not found", transactionHash);
+          return;
+        }
+
+        let transactionNumber = block.transactions.indexOf(transactionHash);
+        if (transactionNumber < 0) {
+          // TODO: handle error
+          console.error("transaction number found", transactionHash);
+          return;
+        }
+        const toAddress = transaction.contract_address;
+        const eventKey = `${event.block_number}_${String(
+          transactionNumber
+        ).padStart(4, "0")}`;
+
+        if (!eventCounts[eventKey]) {
+          eventCounts[eventKey] = 0;
+        }
+
+        // blockNumber_transactionNumber_eventCount_contractAddress
+        const eventId = `${eventKey}_${String(eventCounts[eventKey]).padStart(
+          4,
+          "0"
+        )}_${contract}`;
+        eventCounts[eventKey]++;
+        const timestamp = new Date(block.accepted_time * 1000);
+        const name = event.keys
+          ? (indexer as any).eventName(event.keys[0])
+          : "";
+
+        if (eventId > lastEventIndexed) {
+          results.push({
+            chainId: NETWORK,
+            eventId,
+            name,
+            contract,
+            blockNumber,
+            transactionNumber,
+            transactionHash,
+            toAddress,
+            timestamp,
+            keys: event.keys ?? [],
+            parameters: event.data ?? [],
+            status: 1
+          });
+        }
+      }
+
+      fetchMore = resp.is_last_page === false;
       await this.index(results);
       page++;
     } while (fetchMore);
   }
 
   async syncEvents() {
-    let lastSynced = await this.lastIndexId();
     for (let contract of this.contracts()) {
-      const indexer = this.findIndexer(contract);
-      lastSynced = (await indexer?.lastIndexId()) ?? lastSynced;
-      await this.indexContract(contract, lastSynced);
+      await this.indexContract(contract);
     }
   }
 
@@ -107,48 +174,6 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
     return this.indexers.find((indexer) => {
       return indexer.contracts().indexOf(contract) > -1;
     });
-  }
-
-  async syncEventDetails() {
-    const events = await this.context.prisma.event.findMany({
-      take: 50,
-      where: { status: 0 },
-      orderBy: { eventId: "asc" }
-    });
-    try {
-      let results: StarkNetEvent[] = [];
-      for (let i = 0; i < events.length; i++) {
-        const event = events[i];
-        results.push(
-          await this.voyager.fetchEventDetails({
-            id: event.eventId,
-            transactionHash: event.txHash,
-            block_number: event.blockNumber,
-            transaction_number: event.transactionNumber,
-            contract: event.contract
-          })
-        );
-      }
-      await this.index(
-        results.map((result) => {
-          const indexer = this.findIndexer(result.contract!);
-          let eventName = "";
-          if (indexer && indexer.eventName && result.keys) {
-            eventName = result.keys[0] ? indexer.eventName(result.keys[0]) : "";
-          }
-          return {
-            ...result,
-            name: eventName,
-            status: result.parameters && result.parameters.length > 0 ? 1 : -1
-          };
-        })
-      );
-      this.voyager.purgeCache();
-    } catch (e) {
-      // wait for voyager
-      console.error(e);
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-    }
   }
 
   async syncIndexers() {
@@ -169,22 +194,29 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
     if (this.isSyncing) {
       return;
     }
+
+    const blockNumber = await this.provider.blockNumber();
+    if (this.currentBlockNumber === blockNumber) {
+      console.info("no new blocks");
+      return;
+    }
+
     this.isSyncing = true;
     await this.syncEvents();
-    await this.syncEventDetails();
     await this.syncIndexers();
+    this.currentBlockNumber = await this.provider.blockNumber();
     this.isSyncing = false;
   }
 
   async start() {
-    this.interval = setInterval(this.sync.bind(this), 5000);
+    this.interval = setInterval(this.sync.bind(this), 10 * 1000);
   }
 
   async stop() {
     clearInterval(this.interval);
   }
 
-  async lastIndexId(): Promise<string> {
+  async lastEventId(): Promise<string> {
     const event = await this.context.prisma.event.findFirst({
       orderBy: { eventId: "desc" }
     });
@@ -192,5 +224,15 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
       return event.eventId;
     }
     return "";
+  }
+
+  async lastBlockNumber(): Promise<number> {
+    const event = await this.context.prisma.event.findFirst({
+      orderBy: { eventId: "desc" }
+    });
+    if (event) {
+      return event.blockNumber;
+    }
+    return 0;
   }
 }

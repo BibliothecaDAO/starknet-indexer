@@ -36,7 +36,7 @@ export default class LoreIndexer extends BaseContractIndexer {
     const params = event.parameters ?? [];
     const entityId = parseInt(params[0]);
 
-    console.log(entityId);
+    // console.log(entityId);
 
     let entity;
     try {
@@ -64,7 +64,7 @@ export default class LoreIndexer extends BaseContractIndexer {
 
     try {
       const response = await fetch(`https://arweave.net/${arweaveId}`, {
-        timeout: 20000,
+        timeout: 20000
       });
       arweaveJSON = await response.json();
     } catch (error) {
@@ -79,21 +79,21 @@ export default class LoreIndexer extends BaseContractIndexer {
     try {
       await this.context.prisma.loreEntity.upsert({
         where: {
-          id: entityId,
+          id: entityId
         },
         create: {
           id: entityId,
           owner: entity.owner.toString(),
           ownerDisplayName: arweaveJSON.owner_display_name || null,
           kind: entity.kind.toNumber(),
-          eventIndexed: event.eventId,
+          eventIndexed: event.eventId
         },
         update: {
           owner: entity.owner.toString(),
           ownerDisplayName: arweaveJSON.owner_display_name || null,
           kind: entity.kind.toNumber(),
-          eventIndexed: event.eventId,
-        },
+          eventIndexed: event.eventId
+        }
       });
 
       const data: any = {
@@ -102,15 +102,15 @@ export default class LoreIndexer extends BaseContractIndexer {
         arweaveId,
         title: arweaveJSON.title,
         markdown: arweaveJSON.markdown,
-        excerpt: arweaveJSON.excerpt,
+        excerpt: arweaveJSON.excerpt
       };
 
       if (entity.pois.length > 0) {
         data.pois = {
           create: entity.pois.map((poi: any) => ({
             poiId: poi.id.toNumber(),
-            assetId: poi.asset_id ? uint256ToBN(poi.asset_id).toString() : null,
-          })),
+            assetId: poi.asset_id ? uint256ToBN(poi.asset_id).toString() : null
+          }))
         };
       }
 
@@ -118,8 +118,8 @@ export default class LoreIndexer extends BaseContractIndexer {
         data.props = {
           create: entity.props.map((prop: any) => ({
             propId: prop.id.toNumber(),
-            value: prop.value.toString(),
-          })),
+            value: prop.value.toString()
+          }))
         };
       }
 
@@ -128,8 +128,8 @@ export default class LoreIndexer extends BaseContractIndexer {
         await this.context.prisma.loreEntityRevision.findFirst({
           where: {
             entityId,
-            revisionNumber: 1,
-          },
+            revisionNumber: 1
+          }
         });
 
       // Omit pois and props
@@ -137,10 +137,10 @@ export default class LoreIndexer extends BaseContractIndexer {
 
       await this.context.prisma.loreEntityRevision.upsert({
         where: {
-          id: firstRevision ? firstRevision.id : -1,
+          id: firstRevision ? firstRevision.id : -1
         },
         create: data,
-        update: data,
+        update: data
       });
     } catch (error) {
       console.error(`Error fetching lore entity: ${entityId}`);

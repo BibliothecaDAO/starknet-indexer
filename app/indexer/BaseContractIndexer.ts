@@ -61,7 +61,7 @@ export default class BaseContractIndexer implements Indexer<Event> {
     return;
   }
 
-  async lastIndexId(): Promise<string> {
+  async lastEventId(): Promise<string> {
     const event = await this.context.prisma.event.findFirst({
       where: {
         contract: { in: this.contracts() },
@@ -72,6 +72,19 @@ export default class BaseContractIndexer implements Indexer<Event> {
       }
     });
     return event?.eventId ?? "";
+  }
+
+  async lastBlockNumber(): Promise<number> {
+    const event = await this.context.prisma.event.findFirst({
+      where: {
+        contract: { in: this.contracts() },
+        status: 2
+      },
+      orderBy: {
+        eventId: "desc"
+      }
+    });
+    return event?.blockNumber ?? 0;
   }
 
   async saveRealmHistory({
