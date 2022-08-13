@@ -68,7 +68,7 @@ model Realm {
   rarityRank    Int          @default(0)
   rarityScore   Float        @default(0)
   imageUrl      String       @default("")
-  relic         Relic?        @relation(name: "originRealm")
+  relic         Relic?       @relation(name: "originRealm")
   orderType     OrderType?
   buildings     Building[]
   resources     Resource[]
@@ -82,21 +82,23 @@ model Realm {
 
 // MILSTONE 1
 model Building {
-  id         Int      @id @default(autoincrement())
-  buildingId Int
-  realmId    Int?
-  eventId    String
+  id                Int      @id @default(autoincrement())
+  buildingId        Int
+  realmId           Int?
+  eventId           String
   buildingIntegrity Int
-  realm      Realm?   @relation(fields: [realmId], references: [realmId])
-  builds     String[]
+  realm             Realm?   @relation(fields: [realmId], references: [realmId])
+  builds            String[]
 
-  @@unique([realmId, eventId])
+  @@unique([realmId, buildingId])
 }
+
 model Relic {
-  realmId      Int
-  originRealm  Realm?   @relation(name: "originRealm", fields: [realmId], references: [realmId])
-  heldByRealm  Int
-  realmHolder  Realm?   @relation(name: "heldByRealm", fields: [heldByRealm], references: [realmId])
+  realmId     Int
+  originRealm Realm? @relation(name: "originRealm", fields: [realmId], references: [realmId])
+  heldByRealm Int
+  realmHolder Realm? @relation(name: "heldByRealm", fields: [heldByRealm], references: [realmId])
+
   @@unique([realmId])
 }
 
@@ -154,12 +156,13 @@ model Troop {
   building  Int @default(0)
   agility   Int @default(0)
   attack    Int @default(0)
-  armor   Int @default(0)
+  armor     Int @default(0)
   vitality  Int @default(0)
   wisdom    Int @default(0)
   squadSlot Int
 
   Realm Realm @relation(fields: [realmId], references: [realmId])
+
   @@unique([realmId, index, squadSlot])
 }
 
@@ -239,10 +242,10 @@ model LastIndexedEvent {
 }
 
 model LoreEntity {
-  id    Int     @id // from blockchain
-  owner    String?
-  ownerDisplayName   String? // instead of wallet address, it will display
-  kind  Int     @default(0) // Text entity is a default
+  id               Int     @id // from blockchain
+  owner            String?
+  ownerDisplayName String? // instead of wallet address, it will display
+  kind             Int     @default(0) // Text entity is a default
 
   // TODO: wanted to add it but Prisma doesn't allow it... its brain explodes
   // lastRevision    LoreEntityRevision @relation(fields: [lastRevisionId], references: [id])
@@ -267,7 +270,7 @@ model LoreEntityRevision {
   // Text kind fields
   markdown String? // markdown body text
   excerpt  String? // small description
-  
+
   // Media kind fields
   media_url String?
 
@@ -364,7 +367,6 @@ model CombatHistory {
   outcome          Int      @default(0) // 0 = NON OUTCOME, 1 = COMBAT_OUTCOME_ATTACKER_WINS , 2 = COMBAT_OUTCOME_DEFENDER_WINS
   attackType       Int      @default(0) // 0 = NON OUTCOME, 1 = COMBAT_TYPE_ATTACK_VS_DEFENSE, 2 = COMBAT_TYPE_WISDOM_VS_AGILITY
   hitPoints        Int      @default(0)
-
 
   @@unique([defendRealmId, eventId])
   @@index([transactionHash, defendRealmId, eventId(sort: Desc)])
