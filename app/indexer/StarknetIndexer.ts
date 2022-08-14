@@ -4,6 +4,7 @@ import { Indexer, StarkNetEvent } from "./../types";
 // import StarknetVoyagerApi from "./StarknetVoyagerApi";
 import StarknetRpcProvider from "./StarknetRpcProvider";
 import { NETWORK } from "./../utils/constants";
+import { BigNumber } from "ethers";
 
 export default class StarknetIndexer implements Indexer<StarkNetEvent> {
   indexers: Indexer<Event>[];
@@ -75,7 +76,6 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
 
     let fetchMore = true;
     let page = 0;
-    const eventCounts: any = {};
 
     do {
       const resp = await this.provider.getEvents({
@@ -87,71 +87,87 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
       if (!resp) {
         return;
       }
+      const blockNumbers = {} as any;
+      const txHashes = resp.events
+        .map((event: any) => {
+          blockNumbers[event.transaction_hash] = event.block_number;
+          return event.transaction_hash;
+        })
+        .filter((value: any, index: number, self: any) => {
+          return self.indexOf(value) === index;
+        });
 
       let results: StarkNetEvent[] = [];
-      for (let i = 0; i < resp.events.length; i++) {
-        const event = resp.events[i];
 
-        const blockNumber = event.block_number;
-        const transactionHash = event.transaction_hash;
-        const block = await this.provider.getBlockByNumber(blockNumber);
-        if (!block) {
-          // TODO: handle error
-          console.error("block not found", event.block_number);
-          return;
-        }
-
-        const transaction = await this.provider.getTransactionByHash(
+      for (let transactionHash of txHashes) {
+        const receipt = await this.provider.getTransactionReceipt(
           transactionHash
         );
-
-        if (!transaction) {
-          // TODO: handle error
-          console.error("transaction not found", transactionHash);
+        if (!receipt) {
           return;
         }
 
-        let transactionNumber = block.transactions.indexOf(transactionHash);
-        if (transactionNumber < 0) {
-          // TODO: handle error
-          console.error("transaction number found", transactionHash);
-          return;
-        }
-        const toAddress = transaction.contract_address;
-        const eventKey = `${event.block_number}_${String(
-          transactionNumber
-        ).padStart(4, "0")}`;
+        for (let i = 0; i < receipt.events.length; i++) {
+          const event = receipt.events[i];
+          if (
+            BigNumber.from(event.from_address).toHexString() !==
+            BigNumber.from(contract).toHexString()
+          ) {
+            continue;
+          }
 
-        if (!eventCounts[eventKey]) {
-          eventCounts[eventKey] = 0;
-        }
+          const blockNumber = blockNumbers[transactionHash];
+          const block = await this.provider.getBlockByNumber(blockNumber);
+          if (!block) {
+            // TODO: handle error
+            console.error("block not found", blockNumber);
+            return;
+          }
 
-        // blockNumber_transactionNumber_eventCount_contractAddress
-        const eventId = `${eventKey}_${String(eventCounts[eventKey]).padStart(
-          4,
-          "0"
-        )}_${contract}`;
-        eventCounts[eventKey]++;
-        const timestamp = new Date(block.accepted_time * 1000);
-        const name = event.keys
-          ? (indexer as any).eventName(event.keys[0])
-          : "";
+          const transaction = await this.provider.getTransactionByHash(
+            transactionHash
+          );
 
-        if (eventId > lastEventIndexed) {
-          results.push({
-            chainId: NETWORK,
-            eventId,
-            name,
-            contract,
-            blockNumber,
-            transactionNumber,
-            transactionHash,
-            toAddress,
-            timestamp,
-            keys: event.keys ?? [],
-            parameters: event.data ?? [],
-            status: 1
-          });
+          if (!transaction) {
+            // TODO: handle error
+            console.error("transaction not found", transactionHash);
+            return;
+          }
+
+          let transactionNumber = block.transactions.indexOf(transactionHash);
+          if (transactionNumber < 0) {
+            // TODO: handle error
+            console.error("transaction number found", transactionHash);
+            return;
+          }
+          const toAddress = transaction.contract_address;
+
+          const eventId = `${blockNumber}_${String(transactionNumber).padStart(
+            4,
+            "0"
+          )}_${String(i).padStart(4, "0")}`;
+
+          const timestamp = new Date(block.accepted_time * 1000);
+          const name = event.keys
+            ? (indexer as any).eventName(event.keys[0])
+            : "";
+
+          if (eventId > lastEventIndexed) {
+            results.push({
+              chainId: NETWORK,
+              eventId,
+              name,
+              contract,
+              blockNumber,
+              transactionNumber,
+              transactionHash,
+              toAddress,
+              timestamp,
+              keys: event.keys ?? [],
+              parameters: event.data ?? [],
+              status: 1
+            });
+          }
         }
       }
 
@@ -177,16 +193,15 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
   }
 
   async syncIndexers() {
-    for (let indexer of this.indexers) {
-      const contracts = indexer.contracts();
-      const events = await this.context.prisma.event.findMany({
-        where: {
-          contract: { in: contracts },
-          status: 1
-        },
-        orderBy: { eventId: "asc" }
-      });
-      await indexer.index(events);
+    const events = await this.context.prisma.event.findMany({
+      where: { status: 1 },
+      orderBy: { eventId: "asc" }
+    });
+    for (let event of events) {
+      const indexer = this.findIndexer(event.contract);
+      if (indexer) {
+        await indexer.index([event]);
+      }
     }
   }
 
