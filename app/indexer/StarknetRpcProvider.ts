@@ -49,9 +49,9 @@ export default class StarknetRpcProvider {
   private txReceiptCache: Cache;
 
   constructor() {
-    this.blockCache = new Cache(10000);
-    this.txCache = new Cache(10000);
-    this.txReceiptCache = new Cache(10000);
+    this.blockCache = new Cache(1000);
+    this.txCache = new Cache(1000);
+    this.txReceiptCache = new Cache(1000);
   }
 
   createRequestBody(method: RpcMethod, params: any[]): any {
