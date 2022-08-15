@@ -193,10 +193,12 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
   }
 
   async syncIndexers() {
+    console.info("query events to index");
     const events = await this.context.prisma.event.findMany({
       where: { status: 1 },
       orderBy: { eventId: "asc" }
     });
+    console.info("indexing", events.length, "events");
     for (let event of events) {
       const indexer = this.findIndexer(event.contract);
       if (indexer) {
@@ -214,7 +216,10 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
 
     const blockNumber = await this.provider.blockNumber();
     if (this.currentBlockNumber < blockNumber) {
+      console.info("syncing events from starknet started", blockNumber);
       await this.syncEvents();
+      console.info("syncing events from starknet complete", blockNumber);
+
       this.currentBlockNumber = await this.provider.blockNumber();
     } else {
       console.info("no new blocks");
