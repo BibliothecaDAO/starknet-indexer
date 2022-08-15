@@ -76,6 +76,7 @@ type CombatResult {
   defendRealmId: Int!
   history: [CombatHistory!]
   outcome: Int
+  relicLost: Int
   resourcesPillaged: [ResourceAmount!]
   timestamp: Timestamp
   transactionHash: String!

@@ -59,7 +59,7 @@ export class RealmResolver {
       where: { realmId: realm.realmId }
     });
   }
-  
+
   @FieldResolver(() => [Resource])
   async resources(@Ctx() ctx: Context, @Root() realm: Realm) {
     return await ctx.prisma.resource.findMany({
@@ -182,6 +182,31 @@ export class RealmResolver {
       }
     });
 
+    // Check for relic
+    let relicRealmId = 0;
+    const outcomeEvent = combatHistory.find(
+      (history) => history.eventType === "combat_outcome"
+    );
+    if (outcomeEvent) {
+      const [blockNumber, transactionNumber, eventNumber] =
+        outcomeEvent.eventId.split("_");
+      // Relic wll be the event prior to the combat outcome event
+      const previousEventNumber = parseInt(eventNumber) - 1;
+      if (previousEventNumber > 0) {
+        const relicEventId = [
+          blockNumber,
+          transactionNumber,
+          String(previousEventNumber).padStart(4, "0")
+        ].join("_");
+        const relicEvent = await ctx.prisma.realmHistory.findFirst({
+          where: { eventId: relicEventId, eventType: "relic_update" }
+        });
+        if (relicEvent) {
+          relicRealmId = relicEvent.realmId;
+        }
+      }
+    }
+
     const result = new CombatResult();
     result.defendRealmId = defendRealmId;
     result.attackRealmId = combatHistory[0].attackRealmId;
@@ -193,6 +218,7 @@ export class RealmResolver {
       amount.amount = resource.amount;
       return amount;
     });
+    result.relicLost = relicRealmId;
     result.outcome =
       combatHistory.find((event) => event.eventType === "combat_outcome")
         ?.outcome ?? 0;

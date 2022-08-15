@@ -21,6 +21,9 @@ export class CombatResult {
   resourcesPillaged: ResourceAmount[];
 
   @Field(() => Int, { defaultValue: 0 })
+  relicLost: number;
+
+  @Field(() => Int, { defaultValue: 0 })
   outcome: number;
 
   @Field({ nullable: true })
