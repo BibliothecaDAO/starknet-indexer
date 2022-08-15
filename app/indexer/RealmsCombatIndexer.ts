@@ -216,6 +216,28 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
       transactionHash: event.txHash,
       outcome
     };
+
+    // Check for relic
+    const relicAttackData = {} as any;
+    const relicDefendData = {} as any;
+    let [blockNum, transactionNum, eventNumber] = eventId.split("_");
+    // Relic wll be the event prior to the combat outcome event
+    const previousEventNumber = parseInt(eventNumber) - 1;
+    if (previousEventNumber > 0) {
+      const relicEventId = [
+        blockNum,
+        transactionNum,
+        String(previousEventNumber).padStart(4, "0")
+      ].join("_");
+      const relicEvent = await this.context.prisma.realmHistory.findFirst({
+        where: { eventId: relicEventId, eventType: "relic_update" }
+      });
+      if (relicEvent) {
+        relicAttackData.relicClaimed = relicEvent.realmId;
+        relicDefendData.relicLost = relicEvent.realmId;
+      }
+    }
+
     await Promise.all([
       this.context.prisma.combatHistory.upsert({
         where: {
@@ -246,7 +268,8 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
           success: outcome === 1,
           defendRealmOwner: defendingRealmOwner,
           defendRealmId: defendingRealmId,
-          pillagedResources
+          pillagedResources,
+          ...relicAttackData
         }
       }),
       this.saveRealmHistory({
@@ -260,7 +283,8 @@ export default class RealmsCombatIndexer extends BaseContractIndexer {
           success: outcome === 2,
           attackRealmOwner: event.toAddress,
           attackRealmId: attackingRealmId,
-          pillagedResources
+          pillagedResources,
+          ...relicDefendData
         }
       })
     ]);

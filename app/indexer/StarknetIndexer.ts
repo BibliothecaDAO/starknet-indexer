@@ -210,21 +210,22 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
       return;
     }
 
+    this.isSyncing = true;
+
     const blockNumber = await this.provider.blockNumber();
-    if (this.currentBlockNumber === blockNumber) {
+    if (this.currentBlockNumber < blockNumber) {
+      await this.syncEvents();
+      this.currentBlockNumber = await this.provider.blockNumber();
+    } else {
       console.info("no new blocks");
-      return;
     }
 
-    this.isSyncing = true;
-    await this.syncEvents();
     await this.syncIndexers();
-    this.currentBlockNumber = await this.provider.blockNumber();
     this.isSyncing = false;
   }
 
   async start() {
-    this.interval = setInterval(this.sync.bind(this), 10 * 1000);
+    this.interval = setInterval(this.sync.bind(this), 5 * 1000);
   }
 
   async stop() {
