@@ -8,7 +8,8 @@ const CONTRACT =
   "0x015eba242880374267dc54900b7d569a964fcd8d251a2edfb66a4ec9a78eaedc";
 
 const RESOURCE_IDS = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 10000, 10001
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+  10000, 10001
 ];
 
 const TOKEN_IDS = RESOURCE_IDS.map((resourceId) =>
@@ -60,10 +61,11 @@ export default class ExchangeIndexer extends BaseContractIndexer {
       const calls = [
         this.contract.get_all_rates(TOKEN_IDS, TOKEN_AMOUNTS),
         this.contract.get_all_buy_price(TOKEN_IDS, TOKEN_AMOUNTS),
-        this.contract.get_all_sell_price(TOKEN_IDS, TOKEN_AMOUNTS)
+        this.contract.get_all_sell_price(TOKEN_IDS, TOKEN_AMOUNTS),
+        this.contract.get_all_currency_reserves(TOKEN_IDS, TOKEN_AMOUNTS)
       ];
 
-      const [rates, buys, sells] = await Promise.all(calls);
+      const [rates, buys, sells, lps] = await Promise.all(calls);
       const today = new Date();
       const date = today.toISOString().split("T")[0];
       const hour = today.getUTCHours();
@@ -72,6 +74,7 @@ export default class ExchangeIndexer extends BaseContractIndexer {
         const amount = uint256ToBN(rates[0][idx]).toString();
         const buyAmount = uint256ToBN(buys[0][idx]).toString();
         const sellAmount = uint256ToBN(sells[0][idx]).toString();
+        const lpAmount = uint256ToBN(lps[0][idx]).toString();
         return this.context.prisma.exchangeRate.upsert({
           where: {
             date_hour_tokenId: {
@@ -80,14 +83,15 @@ export default class ExchangeIndexer extends BaseContractIndexer {
               tokenId
             }
           },
-          update: { amount, buyAmount, sellAmount },
+          update: { amount, buyAmount, sellAmount, lpAmount },
           create: {
             date,
             hour,
             tokenId,
             amount,
             buyAmount,
-            sellAmount
+            sellAmount,
+            lpAmount
           }
         });
       });

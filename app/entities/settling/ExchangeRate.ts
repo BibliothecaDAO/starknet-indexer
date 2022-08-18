@@ -22,6 +22,9 @@ export class ExchangeRate {
   @Field(() => String)
   sellAmount: string;
 
+  @Field(() => String)
+  lpAmount: string;
+
   @Field(() => Float, { defaultValue: 0 })
   percentChange24Hr: number;
 
