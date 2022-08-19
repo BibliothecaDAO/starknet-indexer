@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Troop" ADD COLUMN     "type" INTEGER NOT NULL DEFAULT 0;

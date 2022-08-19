@@ -9,8 +9,5 @@ node_modules
 build
 dist
 
-# prisma
-prisma/migrations
-
 # other
 .DS_Store
