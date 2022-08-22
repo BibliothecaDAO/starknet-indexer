@@ -1,7 +1,7 @@
-import { Event } from "../entities/starknet/Event";
-import { Context } from "../context";
+import { Event } from "./../../entities/starknet/Event";
+import { Context } from "./../../context";
 import { BigNumber } from "ethers";
-import BaseContractIndexer from "./BaseContractIndexer";
+import BaseContractIndexer from "./../BaseContractIndexer";
 
 const CONTRACT =
   "0x06f798682fc548e98a9556b624eb110f1bc37eeadd16bc2f49056f8ede7993c5";

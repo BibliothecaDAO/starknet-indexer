@@ -1,6 +1,6 @@
-import { Event } from "./../entities/starknet/Event";
-import { Context } from "./../context";
-import BaseContractIndexer from "./BaseContractIndexer";
+import { Event } from "./../../entities/starknet/Event";
+import { Context } from "./../../context";
+import BaseContractIndexer from "./../BaseContractIndexer";
 import { uint256ToBN } from "starknet/utils/uint256";
 import { BigNumberish } from "starknet/utils/number";
 import { BigNumber } from "ethers";

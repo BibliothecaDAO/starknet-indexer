@@ -156,6 +156,16 @@ input FloatFilter {
   notIn: [Float!]
 }
 
+"""The Food Model"""
+type Food {
+  buildingId: Int!
+  buildingName: String!
+  createdAt: Timestamp!
+  harvests: Float
+  qty: Float
+  realmId: Float!
+}
+
 input IntFilter {
   equals: Int
   gt: Int
@@ -477,6 +487,7 @@ type Query {
   getDesiegeCurrent: Desiege!
   getDesiegeGames: [Desiege!]!
   getExchangeRates: [ExchangeRate!]!
+  getFoodByRealmId(id: Float!): [Food!]!
   getLoreEntities(filter: LoreEntityWhereInput, skip: Float = 0, take: Float = 100): [LoreEntity!]!
   getLoreEntity(entityId: Float!): LoreEntity!
   getLorePois(skip: Float = 0, take: Float = 100): [LorePoi!]!

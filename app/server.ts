@@ -13,7 +13,8 @@ import {
   TroopResolver,
   DesiegeResolver,
   ExchangeRateResolver,
-  RealmHistoryResolver
+  RealmHistoryResolver,
+  FoodResolver
 } from "./resolvers";
 import { StarkNet } from "./indexer/Starknet";
 import { RealmsL1Indexer } from "./indexer/RealmsL1Indexer";
@@ -33,7 +34,8 @@ const main = async () => {
       RealmHistoryResolver,
       // RealmHistoryResolver,
       LoreResolver,
-      LorePOIResolver
+      LorePOIResolver,
+      FoodResolver
     ],
     emitSchemaFile: true,
     validate: false,

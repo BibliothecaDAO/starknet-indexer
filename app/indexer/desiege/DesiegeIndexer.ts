@@ -1,10 +1,10 @@
-import { Event } from "./../entities/starknet/Event";
-import { Context } from "./../context";
+import { Event } from "./../../entities/starknet/Event";
+import { Context } from "./../../context";
 import { BigNumber } from "ethers";
 import { Contract } from "starknet";
-import TowerDefenceABI from "./../abis/01_TowerDefence.json";
+import TowerDefenceABI from "./../../abis/01_TowerDefence.json";
 import { toBN } from "starknet/utils/number";
-import BaseContractIndexer from "./BaseContractIndexer";
+import BaseContractIndexer from "./../BaseContractIndexer";
 
 const CONTRACT =
   "0xcb953e715b337d58bc9d3fd3e67bfbf3ca0a1271e6e7dd36bb31140bfc3903";

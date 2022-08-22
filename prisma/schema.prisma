@@ -80,7 +80,6 @@ model Realm {
   lastVaultTime DateTime?
 }
 
-// MILSTONE 1
 model Building {
   id                Int      @id @default(autoincrement())
   buildingId        Int
@@ -89,6 +88,18 @@ model Building {
   buildingIntegrity Int
   realm             Realm?   @relation(fields: [realmId], references: [realmId])
   builds            String[]
+
+  @@unique([realmId, buildingId])
+}
+
+model Food {
+  id         Int      @id @default(autoincrement())
+  realmId    Int
+  buildingId Int
+  eventId    String
+  qty        Int      @default(0)
+  harvests   Int      @default(0)
+  createdAt  DateTime
 
   @@unique([realmId, buildingId])
 }

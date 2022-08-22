@@ -1,12 +1,12 @@
-import { Event } from "./../entities/starknet/Event";
-import { Context } from "./../context";
-import BaseContractIndexer from "./BaseContractIndexer";
-import { BuildingNameById } from "./../utils/game_constants";
+import { Event } from "./../../entities/starknet/Event";
+import { Context } from "./../../context";
+import BaseContractIndexer from "./../BaseContractIndexer";
+import { BuildingNameById } from "./../../utils/game_constants";
 
 const CONTRACT =
   "0x07e6ef6eae7a6d03baaace2fe8b5747ed52fa6c7ae615f3e3bd3311ac98d139a";
 
-export default class RealmsBuildingIndexer extends BaseContractIndexer {
+export default class BuildingIndexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);
 

@@ -1,13 +1,13 @@
-import { Event } from "../entities/starknet/Event";
-import { Context } from "../context";
-import BaseContractIndexer from "./BaseContractIndexer";
+import { Event } from "./../../entities/starknet/Event";
+import { Context } from "./../../context";
+import BaseContractIndexer from "./../BaseContractIndexer";
 import { uint256ToBN } from "starknet/utils/uint256";
 import { BigNumberish } from "starknet/utils/number";
 import {
   ATTACKING_SQUAD_SLOT,
   DEFENDING_SQUAD_SLOT,
   ResourceNameById
-} from "../utils/game_constants";
+} from "../../utils/game_constants";
 
 const CONTRACT =
   "0x0139bad2b0b220d71ea1fc48fa2858e993b3d471a3b03be609c54ff0c9795d71";
@@ -20,7 +20,7 @@ function arrayUInt256ToNumber([low, high]: any[]): BigNumberish {
 
 const SQUAD_LENGTH = 15;
 
-export default class RealmsCombatIndexer extends BaseContractIndexer {
+export default class CombatIndexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);
 
