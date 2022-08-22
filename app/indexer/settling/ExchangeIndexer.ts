@@ -74,7 +74,8 @@ export default class ExchangeIndexer extends BaseContractIndexer {
         const amount = uint256ToBN(rates[0][idx]).toString();
         const buyAmount = uint256ToBN(buys[0][idx]).toString();
         const sellAmount = uint256ToBN(sells[0][idx]).toString();
-        const lpAmount = uint256ToBN(lps[0][idx]).toString();
+        const currencyReserve = uint256ToBN(lps[0][idx]).toString();
+        const tokenReserve = uint256ToBN(lps[1][idx]).toString();
         return this.context.prisma.exchangeRate.upsert({
           where: {
             date_hour_tokenId: {
@@ -83,7 +84,13 @@ export default class ExchangeIndexer extends BaseContractIndexer {
               tokenId
             }
           },
-          update: { amount, buyAmount, sellAmount, lpAmount },
+          update: {
+            amount,
+            buyAmount,
+            sellAmount,
+            currencyReserve,
+            tokenReserve
+          },
           create: {
             date,
             hour,
@@ -91,7 +98,8 @@ export default class ExchangeIndexer extends BaseContractIndexer {
             amount,
             buyAmount,
             sellAmount,
-            lpAmount
+            currencyReserve,
+            tokenReserve
           }
         });
       });

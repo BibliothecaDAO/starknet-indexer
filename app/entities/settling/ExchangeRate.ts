@@ -23,6 +23,13 @@ export class ExchangeRate {
   sellAmount: string;
 
   @Field(() => String)
+  currencyReserve: string;
+
+  @Field(() => String)
+  tokenReserve: string;
+
+  //deprecated
+  @Field(() => String)
   lpAmount: string;
 
   @Field(() => Float, { defaultValue: 0 })

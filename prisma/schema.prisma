@@ -341,7 +341,12 @@ model ExchangeRate {
   amount     String @default("")
   buyAmount  String @default("")
   sellAmount String @default("")
-  lpAmount   String @default("")
+
+  currencyReserve String @default("")
+  tokenReserve    String @default("")
+
+  // deprecated
+  lpAmount String @default("")
 
   @@id([date, hour, tokenId])
 }
