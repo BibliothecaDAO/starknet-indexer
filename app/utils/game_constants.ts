@@ -10,7 +10,7 @@ export const TroopId = {
   Trebuchet: 9,
   Apprentice: 10,
   Mage: 11,
-  Arcanist: 12,
+  Arcanist: 12
 };
 
 export type TroopName = keyof typeof TroopId;
@@ -57,7 +57,7 @@ export const BuildingId = {
   Barracks: 6,
   MageTower: 7,
   ArcherTower: 8,
-  Castle: 9,
+  Castle: 9
 };
 
 export type BuildingName = keyof typeof BuildingId;
@@ -94,8 +94,7 @@ const createResourceCost = (resourceId: number, amount: number) => ({
 export const BuildingCost: { [key in BuildingName]: Cost } = {
   House: {
     amount: 50,
-    resources: [
-    ]
+    resources: []
   },
   StoreHouse: {
     amount: 50,
@@ -103,8 +102,7 @@ export const BuildingCost: { [key in BuildingName]: Cost } = {
   },
   Granary: {
     amount: 50,
-    resources: [
-    ]
+    resources: []
   },
   Farm: {
     amount: 50,
@@ -142,13 +140,12 @@ export const BuildingCost: { [key in BuildingName]: Cost } = {
       createResourceCost(ResourceId.DeepCrystal, 10),
       createResourceCost(ResourceId.TrueIce, 12),
       createResourceCost(ResourceId.Dragonhide, 2)
-
     ]
   },
   MageTower: {
     amount: 10,
     resources: [
-      createResourceCost(ResourceId.Gold,5),
+      createResourceCost(ResourceId.Gold, 5),
       createResourceCost(ResourceId.Hartwood, 12),
       createResourceCost(ResourceId.Diamonds, 25),
       createResourceCost(ResourceId.Ignium, 6),
@@ -157,7 +154,6 @@ export const BuildingCost: { [key in BuildingName]: Cost } = {
       createResourceCost(ResourceId.TwilightQuartz, 2),
       createResourceCost(ResourceId.AlchemicalSilver, 3),
       createResourceCost(ResourceId.Mithral, 2)
-
     ]
   },
   ArcherTower: {
@@ -185,7 +181,7 @@ export const BuildingCost: { [key in BuildingName]: Cost } = {
       createResourceCost(ResourceId.TwilightQuartz, 10),
       createResourceCost(ResourceId.Mithral, 1)
     ]
-  },
+  }
 };
 
 export const BuildingLimitTrait: { [key in BuildingName]: number } = {
@@ -197,7 +193,7 @@ export const BuildingLimitTrait: { [key in BuildingName]: number } = {
   Barracks: TraitId.Region,
   MageTower: TraitId.Region,
   ArcherTower: TraitId.Region,
-  Castle: TraitId.Region,
+  Castle: TraitId.Region
 };
 
 export const BuildingSize: { [key in BuildingName]: number } = {
@@ -209,7 +205,7 @@ export const BuildingSize: { [key in BuildingName]: number } = {
   Barracks: 6,
   MageTower: 6,
   ArcherTower: 6,
-  Castle: 12,
+  Castle: 12
 };
 
 export const BuildingFood: { [key in BuildingName]: number } = {
@@ -221,7 +217,7 @@ export const BuildingFood: { [key in BuildingName]: number } = {
   Barracks: 6,
   MageTower: 6,
   ArcherTower: 6,
-  Castle: 12,
+  Castle: 12
 };
 
 export const BuildingCulture: { [key in BuildingName]: number } = {
@@ -233,7 +229,7 @@ export const BuildingCulture: { [key in BuildingName]: number } = {
   Barracks: 6,
   MageTower: 6,
   ArcherTower: 6,
-  Castle: 12,
+  Castle: 12
 };
 
 export const BuildingPopulation: { [key in BuildingName]: number } = {
@@ -245,7 +241,7 @@ export const BuildingPopulation: { [key in BuildingName]: number } = {
   Barracks: 6,
   MageTower: 6,
   ArcherTower: 6,
-  Castle: 12,
+  Castle: 12
 };
 
 export const TroopType = {
@@ -255,34 +251,30 @@ export const TroopType = {
   Magic: 4
 };
 
-//Troop(type=TroopType.Melee, tier=1, agility=1, attack=1, armor=3, vitality=4, wisdom=1),
+//Troop(type=TroopType.Melee, tier=1, building=BuildingId.ArcherTower agility=1, attack=1, armor=3, vitality=4, wisdom=1),
 export const TroopStat: { [key in TroopName]: number[] } = {
-  Skirmisher: [TroopType.Ranged, 1, 2, 7, 2, 53, 2],
-  Longbow: [TroopType.Ranged, 2, 4, 7, 3, 53, 3],
-  Crossbow: [TroopType.Ranged, 3, 6, 9, 4, 53, 4],
-  Pikeman: [TroopType.Melee, 1, 7, 4, 5, 53, 1],
-  Knight: [TroopType.Melee, 2, 9, 7, 8, 79, 2],
-  Paladin: [TroopType.Melee, 3, 9, 9, 9, 106, 3],
-  Ballista: [TroopType.Siege, 1, 4, 11, 4, 53, 2],
-  Mangonel: [TroopType.Siege, 2, 4, 10, 5, 53, 3],
-  Trebuchet: [TroopType.Siege, 3, 4, 12, 6, 53, 4],
-  Apprentice: [TroopType.Magic, 1, 7, 7, 2, 53, 8],
-  Mage: [TroopType.Magic, 2, 7, 9, 2, 53, 9],
-  Arcanist: [TroopType.Magic, 3, 7, 11, 2, 53, 10],
+  Skirmisher: [TroopType.Ranged, 1, BuildingId.ArcherTower, 8, 6, 2, 30, 3],
+  Longbow: [TroopType.Ranged, 2, BuildingId.ArcherTower, 10, 8, 3, 40, 4], //10,8,3,4,40
+  Crossbow: [TroopType.Ranged, 3, BuildingId.ArcherTower, 12, 10, 4, 60, 4],
+  Pikeman: [TroopType.Melee, 1, BuildingId.Barracks, 2, 6, 4, 30, 4],
+  Knight: [TroopType.Melee, 2, BuildingId.Barracks, 3, 8, 6, 60, 6],
+  Paladin: [TroopType.Melee, 3, BuildingId.Barracks, 4, 10, 8, 80, 8],
+  Ballista: [TroopType.Siege, 1, BuildingId.Castle, 2, 8, 2, 30, 2],
+  Mangonel: [TroopType.Siege, 2, BuildingId.Castle, 3, 10, 3, 50, 3],
+  Trebuchet: [TroopType.Siege, 3, BuildingId.Castle, 4, 12, 4, 70, 4],
+  Apprentice: [TroopType.Magic, 1, BuildingId.MageTower, 6, 6, 2, 40, 6],
+  Mage: [TroopType.Magic, 2, BuildingId.MageTower, 8, 8, 3, 50, 8],
+  Arcanist: [TroopType.Magic, 3, BuildingId.MageTower, 10, 10, 4, 80, 10]
 };
 
 export const TroopCost: { [key in TroopName]: Cost } = {
   Skirmisher: {
     amount: 0,
-    resources: [
-      createResourceCost(ResourceId.AlchemicalSilver, 1)
-    ]
+    resources: [createResourceCost(ResourceId.AlchemicalSilver, 1)]
   },
   Longbow: {
     amount: 0,
-    resources: [
-      createResourceCost(ResourceId.Adamantine, 0.5),
-    ]
+    resources: [createResourceCost(ResourceId.Adamantine, 0.5)]
   },
   Crossbow: {
     amount: 0,
@@ -297,14 +289,12 @@ export const TroopCost: { [key in TroopName]: Cost } = {
     amount: 0,
     resources: [
       createResourceCost(ResourceId.Diamonds, 1),
-      createResourceCost(ResourceId.Ignium, 0.5),
+      createResourceCost(ResourceId.Ignium, 0.5)
     ]
   },
   Knight: {
     amount: 0,
-    resources: [
-      createResourceCost(ResourceId.Sapphire, 3),
-    ]
+    resources: [createResourceCost(ResourceId.Sapphire, 3)]
   },
   Paladin: {
     amount: 0,
@@ -343,15 +333,13 @@ export const TroopCost: { [key in TroopName]: Cost } = {
   },
   Apprentice: {
     amount: 0,
-    resources: [
-      createResourceCost(ResourceId.Ignium, 1),
-    ]
+    resources: [createResourceCost(ResourceId.Ignium, 1)]
   },
   Mage: {
     amount: 0,
     resources: [
       createResourceCost(ResourceId.Diamonds, 1),
-      createResourceCost(ResourceId.EtherealSilica, 2),
+      createResourceCost(ResourceId.EtherealSilica, 2)
     ]
   },
   Arcanist: {
@@ -362,7 +350,7 @@ export const TroopCost: { [key in TroopName]: Cost } = {
       createResourceCost(ResourceId.TrueIce, 2),
       createResourceCost(ResourceId.TwilightQuartz, 1)
     ]
-  },
+  }
 };
 
 // # used to signal which side won the battle

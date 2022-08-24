@@ -862,6 +862,7 @@ type Troop {
   agility: Int!
   armor: Int!
   attack: Int!
+  building: Int!
   index: Int!
   realmId: Int!
   squadSlot: Int!
@@ -897,6 +898,7 @@ type TroopStats {
   agility: Int!
   armor: Int!
   attack: Int!
+  building: Int!
   tier: Int!
   troopCost: TroopCost
   troopId: Int!

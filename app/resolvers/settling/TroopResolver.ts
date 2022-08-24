@@ -13,11 +13,12 @@ export class TroopResolver {
       const stats = CONSTANTS.TroopStat[troopKey as CONSTANTS.TroopName];
       troopStats.type = stats[0];
       troopStats.tier = stats[1];
-      troopStats.agility = stats[2];
-      troopStats.attack = stats[3];
-      troopStats.armor = stats[4];
-      troopStats.vitality = stats[5];
-      troopStats.wisdom = stats[6];
+      troopStats.building = stats[2];
+      troopStats.agility = stats[3];
+      troopStats.attack = stats[4];
+      troopStats.armor = stats[5];
+      troopStats.vitality = stats[6];
+      troopStats.wisdom = stats[7];
       return troopStats;
     });
   }

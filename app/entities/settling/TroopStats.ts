@@ -39,6 +39,9 @@ export class TroopStats {
   tier: number;
 
   @Field(() => Int, { nullable: false })
+  building: number;
+
+  @Field(() => Int, { nullable: false })
   agility: number;
 
   @Field(() => Int, { nullable: false })
