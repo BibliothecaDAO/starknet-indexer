@@ -254,7 +254,7 @@ export const TroopType = {
 //Troop(type=TroopType.Melee, tier=1, building=BuildingId.ArcherTower agility=1, attack=1, armor=3, vitality=4, wisdom=1),
 export const TroopStat: { [key in TroopName]: number[] } = {
   Skirmisher: [TroopType.Ranged, 1, BuildingId.ArcherTower, 8, 6, 2, 30, 3],
-  Longbow: [TroopType.Ranged, 2, BuildingId.ArcherTower, 10, 8, 3, 40, 4], //10,8,3,4,40
+  Longbow: [TroopType.Ranged, 2, BuildingId.ArcherTower, 10, 8, 3, 40, 4],
   Crossbow: [TroopType.Ranged, 3, BuildingId.ArcherTower, 12, 10, 4, 60, 4],
   Pikeman: [TroopType.Melee, 1, BuildingId.Barracks, 2, 6, 4, 30, 4],
   Knight: [TroopType.Melee, 2, BuildingId.Barracks, 3, 8, 6, 60, 6],
