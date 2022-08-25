@@ -1,7 +1,10 @@
 import fetch from "node-fetch";
 
-const INFURA_URL =
-  "https://starknet-goerli.infura.io/v3/" + process.env.INFURA_API_KEY;
+// TODO: INFURA: getEvents fromBlock param is broken as of 8/24/2022
+// const INFURA_URL =
+//   "https://starknet-goerli.infura.io/v3/" + process.env.INFURA_API_KEY;
+
+const RPC_URL = "https://starknet-goerli.cartridge.gg/";
 
 type RpcMethod =
   | "getEvents"
@@ -65,7 +68,7 @@ export default class StarknetRpcProvider {
 
   async fetch(requestBody: any) {
     try {
-      const resp = await fetch(INFURA_URL, {
+      const resp = await fetch(/*INFURA_URL*/ RPC_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody)
