@@ -58,7 +58,9 @@ export default class FoodIndexer extends BaseContractIndexer {
     const realmId = parseInt(params[0]);
     const buildingId = parseInt(params[2]);
     const harvests = parseInt(params[3]) || 0;
-    const updatedAt = new Date(parseInt(params[4] ?? event.timestamp) * 1000);
+    const updatedAt = params[4]
+      ? new Date(parseInt(params[4]) * 1000)
+      : event.timestamp;
     try {
       const where = {
         realmId_buildingId: { realmId, buildingId }
@@ -81,7 +83,8 @@ export default class FoodIndexer extends BaseContractIndexer {
         }
       });
     } catch (e) {
-      console.log("error", event.eventId);
+      console.log("Food harvest error", event.eventId);
+      console.log(e);
     }
   }
 }
