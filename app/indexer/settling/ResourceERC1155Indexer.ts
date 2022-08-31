@@ -41,6 +41,7 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
       blockNumber,
       transactionNumber,
       amount,
+      amountValue: amount,
       transactionHash,
       timestamp: event.timestamp
     };
@@ -81,6 +82,7 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
         blockNumber,
         transactionNumber,
         amount,
+        amountValue: amount,
         transactionHash,
         timestamp
       };

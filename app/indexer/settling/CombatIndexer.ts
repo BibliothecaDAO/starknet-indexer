@@ -4,6 +4,7 @@ import BaseContractIndexer from "./../BaseContractIndexer";
 import { uint256ToBN } from "starknet/utils/uint256";
 import { BigNumberish } from "starknet/utils/number";
 import {
+  GOBLIN_SQUAD_SLOT,
   ATTACKING_SQUAD_SLOT,
   DEFENDING_SQUAD_SLOT,
   ResourceNameById
@@ -18,7 +19,8 @@ function arrayUInt256ToNumber([low, high]: any[]): BigNumberish {
 
 //Troop(id=1, type=TroopType.Melee, tier=1, building=1, agility=1, attack=1, armor=3, vitality=4, wisdom=1),
 
-const SQUAD_LENGTH = 15;
+export const SQUAD_LENGTH = 15;
+export const SQUAD_ATTRIBUTES_LENGTH = 9;
 
 export default class CombatIndexer extends BaseContractIndexer {
   constructor(context: Context) {
@@ -32,14 +34,14 @@ export default class CombatIndexer extends BaseContractIndexer {
 
   async buildTroops_3(event: Event) {
     const params = event.parameters ?? [];
-    const squad = params.slice(0, 9 * SQUAD_LENGTH);
+    const squad = params.slice(0, SQUAD_ATTRIBUTES_LENGTH * SQUAD_LENGTH);
 
     const squadSlot = parseInt(params[params.length - 1]);
     const realmId = arrayUInt256ToNumber(
       params.slice(params.length - 3, params.length - 1)
     );
 
-    await this.updateSquad(realmId, squad, squadSlot);
+    await this.updateSquad(realmId, squad, squadSlot, event.timestamp);
   }
 
   async combatStart_3(event: Event) {
@@ -72,9 +74,9 @@ export default class CombatIndexer extends BaseContractIndexer {
       eventType: "combat_start",
       attackRealmId: attackingRealmId,
       attackRealmOwner: event.toAddress,
-      attackSquad: this.arrayToTroopArray(attackingSquad),
+      attackSquad: CombatIndexer.arrayToTroopArray(attackingSquad),
       defendRealmOwner: defendingRealmOwner,
-      defendSquad: this.arrayToTroopArray(defendingSquad),
+      defendSquad: CombatIndexer.arrayToTroopArray(defendingSquad),
       timestamp: event.timestamp,
       transactionHash: event.txHash
     };
@@ -131,9 +133,9 @@ export default class CombatIndexer extends BaseContractIndexer {
       eventType: "combat_step",
       attackRealmId: attackingRealmId,
       attackRealmOwner: event.toAddress,
-      attackSquad: this.arrayToTroopArray(attackingSquad),
+      attackSquad: CombatIndexer.arrayToTroopArray(attackingSquad),
       defendRealmOwner: defendingRealmOwner,
-      defendSquad: this.arrayToTroopArray(defendingSquad),
+      defendSquad: CombatIndexer.arrayToTroopArray(defendingSquad),
       timestamp: event.timestamp,
       transactionHash: event.txHash,
       hitPoints
@@ -184,13 +186,24 @@ export default class CombatIndexer extends BaseContractIndexer {
     outcome: number
   ) {
     const eventId = event.eventId;
+    const isGoblinAttack = defendingRealmId === 0;
+
     await Promise.all([
-      this.updateSquad(attackingRealmId, attackingSquad, ATTACKING_SQUAD_SLOT),
-      this.updateSquad(defendingRealmId, defendingSquad, DEFENDING_SQUAD_SLOT)
+      this.updateSquad(
+        attackingRealmId,
+        attackingSquad,
+        ATTACKING_SQUAD_SLOT,
+        event.timestamp
+      ),
+      this.updateSquad(
+        isGoblinAttack ? attackingRealmId : defendingRealmId,
+        defendingSquad,
+        isGoblinAttack ? GOBLIN_SQUAD_SLOT : DEFENDING_SQUAD_SLOT,
+        event.timestamp
+      )
     ]);
 
     const defendingRealmOwner = await this.getRealmOwner(defendingRealmId);
-
     const [blockNumber, transactionNumber] = eventId.split("_");
     const pillagedResources = (
       (await this.getPillagedResources(
@@ -209,9 +222,9 @@ export default class CombatIndexer extends BaseContractIndexer {
       eventType: "combat_outcome",
       attackRealmId: attackingRealmId,
       attackRealmOwner: event.toAddress,
-      attackSquad: this.arrayToTroopArray(attackingSquad),
+      attackSquad: CombatIndexer.arrayToTroopArray(attackingSquad),
       defendRealmOwner: defendingRealmOwner,
-      defendSquad: this.arrayToTroopArray(defendingSquad),
+      defendSquad: CombatIndexer.arrayToTroopArray(defendingSquad),
       timestamp: event.timestamp,
       transactionHash: event.txHash,
       outcome
@@ -238,25 +251,10 @@ export default class CombatIndexer extends BaseContractIndexer {
       }
     }
 
-    await Promise.all([
-      this.context.prisma.combatHistory.upsert({
-        where: {
-          defendRealmId_eventId: {
-            defendRealmId: defendingRealmId,
-            eventId: eventId
-          }
-        },
-        update: { ...combatHistoryUpdate },
-        create: {
-          ...combatHistoryUpdate,
-          defendRealmId: defendingRealmId,
-          eventId
-        }
-      }),
-      this.context.prisma.realm.update({
-        where: { realmId: defendingRealmId },
-        data: { lastAttacked: event.timestamp }
-      }),
+    const updates = [];
+
+    // Update Realm Attack History
+    updates.push(
       this.saveRealmHistory({
         realmId: attackingRealmId,
         eventId,
@@ -271,32 +269,69 @@ export default class CombatIndexer extends BaseContractIndexer {
           pillagedResources,
           ...relicAttackData
         }
-      }),
-      this.saveRealmHistory({
-        realmId: defendingRealmId,
-        eventId,
-        account: defendingRealmOwner,
-        eventType: "realm_combat_defend",
-        timestamp: event.timestamp,
-        transactionHash: event.txHash,
-        data: {
-          success: outcome === 2,
-          attackRealmOwner: event.toAddress,
-          attackRealmId: attackingRealmId,
-          pillagedResources,
-          ...relicDefendData
-        }
       })
-    ]);
-    // handle hit points
+    );
+
+    if (!isGoblinAttack) {
+      // update combat history
+      updates.push(
+        this.context.prisma.combatHistory.upsert({
+          where: {
+            defendRealmId_eventId: {
+              defendRealmId: defendingRealmId,
+              eventId: eventId
+            }
+          },
+          update: { ...combatHistoryUpdate },
+          create: {
+            ...combatHistoryUpdate,
+            defendRealmId: defendingRealmId,
+            eventId
+          }
+        })
+      );
+
+      // Update Realm
+      updates.push(
+        this.context.prisma.realm.update({
+          where: { realmId: defendingRealmId },
+          data: { lastAttacked: event.timestamp }
+        })
+      );
+
+      // Update Realm Defense History
+      updates.push(
+        this.saveRealmHistory({
+          realmId: defendingRealmId,
+          eventId,
+          account: defendingRealmOwner,
+          eventType: "realm_combat_defend",
+          timestamp: event.timestamp,
+          transactionHash: event.txHash,
+          data: {
+            success: outcome === 2,
+            attackRealmOwner: event.toAddress,
+            attackRealmId: attackingRealmId,
+            pillagedResources,
+            ...relicDefendData
+          }
+        })
+      );
+    }
+    await Promise.all(updates);
   }
 
-  async updateSquad(realmId: number, squad: any[], squadSlot: number) {
-    const troopLen = 9;
+  async updateSquad(
+    realmId: number,
+    squad: any[],
+    squadSlot: number,
+    timestamp: Date
+  ) {
+    const troopLen = SQUAD_ATTRIBUTES_LENGTH;
     const updateSquad = [];
     for (let i = 0; i < SQUAD_LENGTH; i++) {
       const troop = squad.slice(i * troopLen, (i + 1) * troopLen);
-      const update = this.parseTroop(troop);
+      const update = CombatIndexer.parseTroop(troop);
       updateSquad.push(
         this.context.prisma.troop.upsert({
           where: {
@@ -307,7 +342,7 @@ export default class CombatIndexer extends BaseContractIndexer {
             }
           },
           update,
-          create: { ...update, realmId, squadSlot, index: i }
+          create: { ...update, realmId, squadSlot, index: i, timestamp }
         })
       );
     }
@@ -325,7 +360,7 @@ export default class CombatIndexer extends BaseContractIndexer {
   }
 
   parseRealmsAndSquads_3(params: string[]) {
-    const troopLength = 9;
+    const troopLength = SQUAD_ATTRIBUTES_LENGTH;
     const attackingRealmId = arrayUInt256ToNumber(params.slice(0, 2));
     const defendingRealmId = arrayUInt256ToNumber(params.slice(2, 4));
     const endAttackSquad = 4 + SQUAD_LENGTH * troopLength;
@@ -352,7 +387,7 @@ export default class CombatIndexer extends BaseContractIndexer {
     });
   }
 
-  parseTroop(troop: string[]) {
+  static parseTroop(troop: string[]) {
     const troopId = parseInt(troop[0]);
     const type = parseInt(troop[1]);
     const tier = parseInt(troop[2]);
@@ -375,11 +410,11 @@ export default class CombatIndexer extends BaseContractIndexer {
     };
   }
 
-  arrayToTroopArray(squad: string[]) {
+  static arrayToTroopArray(squad: string[]) {
     const troopArray = [];
-    for (let i = 0; i < squad.length; i += 9) {
-      const troop = squad.slice(i, i + 9);
-      troopArray.push(this.parseTroop(troop));
+    for (let i = 0; i < squad.length; i += SQUAD_ATTRIBUTES_LENGTH) {
+      const troop = squad.slice(i, i + SQUAD_ATTRIBUTES_LENGTH);
+      troopArray.push(CombatIndexer.parseTroop(troop));
     }
     return troopArray;
   }

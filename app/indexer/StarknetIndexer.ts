@@ -71,8 +71,12 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
     if (!indexer) {
       return;
     }
-    let lastEventIndexed = (await indexer?.lastEventId()) ?? "";
-    let lastBlockNumber = (await indexer?.lastBlockNumber()) ?? 0;
+    const lastEvent = await this.context.prisma.event.findFirst({
+      where: { contract, status: { gt: 0 } },
+      orderBy: { eventId: "desc" }
+    });
+    let lastEventIndexed = lastEvent?.eventId ?? "";
+    let lastBlockNumber = lastEvent?.blockNumber ?? 0;
 
     let fetchMore = true;
     let page = 0;

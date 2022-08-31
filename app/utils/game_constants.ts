@@ -10,7 +10,8 @@ export const TroopId = {
   Trebuchet: 9,
   Apprentice: 10,
   Mage: 11,
-  Arcanist: 12
+  Arcanist: 12,
+  Goblin: 13
 };
 
 export type TroopName = keyof typeof TroopId;
@@ -264,7 +265,8 @@ export const TroopStat: { [key in TroopName]: number[] } = {
   Trebuchet: [TroopType.Siege, 3, BuildingId.Castle, 4, 12, 4, 70, 4],
   Apprentice: [TroopType.Magic, 1, BuildingId.MageTower, 6, 6, 2, 40, 6],
   Mage: [TroopType.Magic, 2, BuildingId.MageTower, 8, 8, 3, 50, 8],
-  Arcanist: [TroopType.Magic, 3, BuildingId.MageTower, 10, 10, 4, 80, 10]
+  Arcanist: [TroopType.Magic, 3, BuildingId.MageTower, 10, 10, 4, 80, 10],
+  Goblin: [TroopType.Melee, 1, 0, 3, 8, 2, 20, 1]
 };
 
 export const TroopCost: { [key in TroopName]: Cost } = {
@@ -350,6 +352,10 @@ export const TroopCost: { [key in TroopName]: Cost } = {
       createResourceCost(ResourceId.TrueIce, 2),
       createResourceCost(ResourceId.TwilightQuartz, 1)
     ]
+  },
+  Goblin: {
+    amount: 0,
+    resources: []
   }
 };
 
@@ -357,6 +363,7 @@ export const TroopCost: { [key in TroopName]: Cost } = {
 // const COMBAT_OUTCOME_ATTACKER_WINS = 1
 // const COMBAT_OUTCOME_DEFENDER_WINS = 2
 
+export const GOBLIN_SQUAD_SLOT = 0;
 export const ATTACKING_SQUAD_SLOT = 1;
 export const DEFENDING_SQUAD_SLOT = 2;
 

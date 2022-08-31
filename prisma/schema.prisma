@@ -163,15 +163,16 @@ model Troop {
   realmId   Int
   troopId   Int
   index     Int
-  type      Int @default(0)
-  tier      Int @default(0)
-  building  Int @default(0)
-  agility   Int @default(0)
-  attack    Int @default(0)
-  armor     Int @default(0)
-  vitality  Int @default(0)
-  wisdom    Int @default(0)
+  type      Int       @default(0)
+  tier      Int       @default(0)
+  building  Int       @default(0)
+  agility   Int       @default(0)
+  attack    Int       @default(0)
+  armor     Int       @default(0)
+  vitality  Int       @default(0)
+  wisdom    Int       @default(0)
   squadSlot Int
+  timestamp DateTime?
 
   Realm Realm @relation(fields: [realmId], references: [realmId])
 
@@ -398,6 +399,7 @@ model ResourceTransfer {
   fromAddress       String
   toAddress         String
   amount            String
+  amountValue       Decimal  @default(0) @db.Decimal(80, 20)
   transactionHash   String   @default("")
   timestamp         DateTime
 

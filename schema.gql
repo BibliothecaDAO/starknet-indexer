@@ -921,6 +921,7 @@ input TroopWhereInput {
   realmId: IntFilter
   squadSlot: IntFilter
   tier: IntFilter
+  timestamp: DateTimeNullableFilter
   troopId: IntFilter
   type: IntFilter
   vitality: IntFilter
