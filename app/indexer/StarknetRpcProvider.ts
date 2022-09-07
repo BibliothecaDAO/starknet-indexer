@@ -1,21 +1,20 @@
 import fetch from "node-fetch";
 
-// TODO: INFURA: getEvents fromBlock param is broken as of 8/24/2022
-// const INFURA_URL =
-//   "https://starknet-goerli.infura.io/v3/" + process.env.INFURA_API_KEY;
-
-const RPC_URL = "https://starknet-goerli.cartridge.gg/";
+const RPC_URL =
+  "https://starknet-goerli.infura.io/v3/" + process.env.INFURA_API_KEY; //"https://starknet-goerli.cartridge.gg/";
 
 type RpcMethod =
   | "getEvents"
   | "getTransactionReceipt"
   | "getTransactionByHash"
-  | "getBlockByNumber"
+  | "getBlockWithTxHashes"
   | "blockNumber";
 
 interface EventFilter {
   address: string;
-  fromBlock?: number;
+  fromBlock?: {
+    block_number: number;
+  };
   page_number?: number;
   page_size?: number;
 }
@@ -68,7 +67,7 @@ export default class StarknetRpcProvider {
 
   async fetch(requestBody: any) {
     try {
-      const resp = await fetch(/*INFURA_URL*/ RPC_URL, {
+      const resp = await fetch(RPC_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody)
@@ -86,10 +85,6 @@ export default class StarknetRpcProvider {
   }
 
   async getEvents(filter: EventFilter) {
-    if (!filter.fromBlock) {
-      filter.fromBlock = 0;
-    }
-
     const requestBody = this.createRequestBody("getEvents", [filter]);
     const data = await this.fetch(requestBody);
     return data;
@@ -135,12 +130,12 @@ export default class StarknetRpcProvider {
     return data;
   }
 
-  async getBlockByNumber(blockNumber: number) {
-    let data = this.blockCache.get(String(blockNumber));
+  async getBlockWithTxHashes(blockNumber: { block_number: number }) {
+    let data = this.blockCache.get(String(blockNumber.block_number));
     if (data) {
       return data;
     }
-    const requestBody = this.createRequestBody("getBlockByNumber", [
+    const requestBody = this.createRequestBody("getBlockWithTxHashes", [
       blockNumber
     ]);
     data = await this.fetch(requestBody);

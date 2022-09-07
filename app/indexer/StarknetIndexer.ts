@@ -86,7 +86,9 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
         address: contract,
         page_number: page,
         page_size: 100,
-        fromBlock: lastBlockNumber
+        fromBlock: {
+          block_number: lastBlockNumber
+        }
       });
       if (!resp) {
         return;
@@ -121,7 +123,9 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
           }
 
           const blockNumber = blockNumbers[transactionHash];
-          const block = await this.provider.getBlockByNumber(blockNumber);
+          const block = await this.provider.getBlockWithTxHashes({
+            block_number: blockNumber
+          });
           if (!block) {
             // TODO: handle error
             console.error("block not found", blockNumber);
@@ -141,7 +145,7 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
           let transactionNumber = block.transactions.indexOf(transactionHash);
           if (transactionNumber < 0) {
             // TODO: handle error
-            console.error("transaction number found", transactionHash);
+            console.error("transaction number not found", transactionHash);
             return;
           }
           const toAddress = transaction.contract_address;
@@ -151,7 +155,7 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
             "0"
           )}_${String(i).padStart(4, "0")}`;
 
-          const timestamp = new Date(block.accepted_time * 1000);
+          const timestamp = new Date(block.timestamp * 1000);
           const name = event.keys
             ? (indexer as any).eventName(event.keys[0])
             : "";
