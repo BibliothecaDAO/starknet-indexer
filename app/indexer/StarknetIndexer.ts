@@ -113,6 +113,10 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
           return;
         }
 
+        if (!receipt.events || receipt.events.length === 0) {
+          continue;
+        }
+
         for (let i = 0; i < receipt.events.length; i++) {
           const event = receipt.events[i];
           if (
