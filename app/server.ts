@@ -14,13 +14,16 @@ import {
   DesiegeResolver,
   ExchangeRateResolver,
   RealmHistoryResolver,
-  FoodResolver
+  FoodResolver,
 } from "./resolvers";
 import { StarkNet } from "./indexer/Starknet";
 import { RealmsL1Indexer } from "./indexer/RealmsL1Indexer";
 import { LoreResolver } from "./resolvers/lore/LoreResolver";
 import { LorePOIResolver } from "./resolvers/lore/LorePOIResolver";
-
+import {
+  AggregateRealmHistoryResolver,
+  GroupByRealmHistoryResolver,
+} from "@generated/type-graphql";
 const main = async () => {
   const schema = await buildSchema({
     resolvers: [
@@ -35,17 +38,19 @@ const main = async () => {
       // RealmHistoryResolver,
       LoreResolver,
       LorePOIResolver,
-      FoodResolver
+      FoodResolver,
+      AggregateRealmHistoryResolver,
+      GroupByRealmHistoryResolver,
     ],
     emitSchemaFile: true,
     validate: false,
-    dateScalarMode: "timestamp"
+    dateScalarMode: "timestamp",
   });
 
   const server = new ApolloServer({
     schema,
     context: context,
-    plugins: [ApolloServerPluginLandingPageGraphQLPlayground]
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground],
   });
 
   const app = Express();

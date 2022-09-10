@@ -3,6 +3,14 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type AggregateRealmHistory {
+  _avg: RealmHistoryAvgAggregate
+  _count: RealmHistoryCountAggregate
+  _max: RealmHistoryMaxAggregate
+  _min: RealmHistoryMinAggregate
+  _sum: RealmHistorySumAggregate
+}
+
 """The Buildings Model"""
 type Building {
   buildingCost: BuildingCost!
@@ -104,6 +112,20 @@ input DateTimeNullableFilter {
   notIn: [Timestamp!]
 }
 
+input DateTimeWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedDateTimeFilter
+  _min: NestedDateTimeFilter
+  equals: Timestamp
+  gt: Timestamp
+  gte: Timestamp
+  in: [Timestamp!]
+  lt: Timestamp
+  lte: Timestamp
+  not: NestedDateTimeWithAggregatesFilter
+  notIn: [Timestamp!]
+}
+
 """The Desiege Model"""
 type Desiege {
   attackedTokens: Int!
@@ -122,6 +144,16 @@ input EnumOrderTypeNullableFilter {
   equals: OrderType
   in: [OrderType!]
   not: NestedEnumOrderTypeNullableFilter
+  notIn: [OrderType!]
+}
+
+input EnumOrderTypeNullableWithAggregatesFilter {
+  _count: NestedIntNullableFilter
+  _max: NestedEnumOrderTypeNullableFilter
+  _min: NestedEnumOrderTypeNullableFilter
+  equals: OrderType
+  in: [OrderType!]
+  not: NestedEnumOrderTypeNullableWithAggregatesFilter
   notIn: [OrderType!]
 }
 
@@ -190,14 +222,60 @@ input IntNullableFilter {
   notIn: [Int!]
 }
 
+input IntWithAggregatesFilter {
+  _avg: NestedFloatFilter
+  _count: NestedIntFilter
+  _max: NestedIntFilter
+  _min: NestedIntFilter
+  _sum: NestedIntFilter
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntWithAggregatesFilter
+  notIn: [Int!]
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 input JsonFilter {
+  array_contains: JSON
+  array_ends_with: JSON
+  array_starts_with: JSON
   equals: JSON
+  gt: JSON
+  gte: JSON
+  lt: JSON
+  lte: JSON
   not: JSON
+  path: [String!]
+  string_contains: String
+  string_ends_with: String
+  string_starts_with: String
+}
+
+input JsonWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedJsonFilter
+  _min: NestedJsonFilter
+  array_contains: JSON
+  array_ends_with: JSON
+  array_starts_with: JSON
+  equals: JSON
+  gt: JSON
+  gte: JSON
+  lt: JSON
+  lte: JSON
+  not: JSON
+  path: [String!]
+  string_contains: String
+  string_ends_with: String
+  string_starts_with: String
 }
 
 """Lore Entity"""
@@ -381,10 +459,34 @@ input NestedDateTimeNullableFilter {
   notIn: [Timestamp!]
 }
 
+input NestedDateTimeWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedDateTimeFilter
+  _min: NestedDateTimeFilter
+  equals: Timestamp
+  gt: Timestamp
+  gte: Timestamp
+  in: [Timestamp!]
+  lt: Timestamp
+  lte: Timestamp
+  not: NestedDateTimeWithAggregatesFilter
+  notIn: [Timestamp!]
+}
+
 input NestedEnumOrderTypeNullableFilter {
   equals: OrderType
   in: [OrderType!]
   not: NestedEnumOrderTypeNullableFilter
+  notIn: [OrderType!]
+}
+
+input NestedEnumOrderTypeNullableWithAggregatesFilter {
+  _count: NestedIntNullableFilter
+  _max: NestedEnumOrderTypeNullableFilter
+  _min: NestedEnumOrderTypeNullableFilter
+  equals: OrderType
+  in: [OrderType!]
+  not: NestedEnumOrderTypeNullableWithAggregatesFilter
   notIn: [OrderType!]
 }
 
@@ -428,6 +530,38 @@ input NestedIntNullableFilter {
   notIn: [Int!]
 }
 
+input NestedIntWithAggregatesFilter {
+  _avg: NestedFloatFilter
+  _count: NestedIntFilter
+  _max: NestedIntFilter
+  _min: NestedIntFilter
+  _sum: NestedIntFilter
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntWithAggregatesFilter
+  notIn: [Int!]
+}
+
+input NestedJsonFilter {
+  array_contains: JSON
+  array_ends_with: JSON
+  array_starts_with: JSON
+  equals: JSON
+  gt: JSON
+  gte: JSON
+  lt: JSON
+  lte: JSON
+  not: JSON
+  path: [String!]
+  string_contains: String
+  string_ends_with: String
+  string_starts_with: String
+}
+
 input NestedStringFilter {
   contains: String
   endsWith: String
@@ -452,6 +586,23 @@ input NestedStringNullableFilter {
   lt: String
   lte: String
   not: NestedStringNullableFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+input NestedStringWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedStringFilter
+  _min: NestedStringFilter
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringWithAggregatesFilter
   notIn: [String!]
   startsWith: String
 }
@@ -482,6 +633,7 @@ enum OrderType {
 }
 
 type Query {
+  aggregateRealmHistory(cursor: RealmHistoryWhereUniqueInput, orderBy: [RealmHistoryOrderByWithRelationInput!], skip: Int, take: Int, where: RealmHistoryWhereInput): AggregateRealmHistory!
   getBuildingCostById: BuildingCost!
   getBuildingCosts: [BuildingCost!]!
   getBuildingsByRealmId(id: Float!): [Building!]!
@@ -502,6 +654,7 @@ type Query {
   getResourcesByAddress(address: String!): [Resource!]!
   getTroopStats: [TroopStats!]!
   getWallet(address: String!): Wallet!
+  groupByRealmHistory(by: [RealmHistoryScalarFieldEnum!]!, having: RealmHistoryScalarWhereWithAggregatesInput, orderBy: [RealmHistoryOrderByWithAggregationInput!], skip: Int, take: Int, where: RealmHistoryWhereInput): [RealmHistoryGroupBy!]!
   realm(id: Float!): Realm!
   realmHistory(filter: RealmHistoryWhereInput, skip: Float = 0, take: Float = 20): [RealmHistory!]!
   realms(filter: RealmWhereInput, orderBy: RealmOrderByWithRelationInput, skip: Float = 0, take: Float = 100): [Realm!]!
@@ -556,6 +709,184 @@ type RealmHistory {
   transactionHash: String
 }
 
+type RealmHistoryAvgAggregate {
+  id: Float
+  realmId: Float
+}
+
+input RealmHistoryAvgOrderByAggregateInput {
+  id: SortOrder
+  realmId: SortOrder
+}
+
+type RealmHistoryCountAggregate {
+  _all: Int!
+  data: Int!
+  eventId: Int!
+  eventType: Int!
+  id: Int!
+  realmId: Int!
+  realmName: Int!
+  realmOrder: Int!
+  realmOwner: Int!
+  timestamp: Int!
+  transactionHash: Int!
+}
+
+input RealmHistoryCountOrderByAggregateInput {
+  data: SortOrder
+  eventId: SortOrder
+  eventType: SortOrder
+  id: SortOrder
+  realmId: SortOrder
+  realmName: SortOrder
+  realmOrder: SortOrder
+  realmOwner: SortOrder
+  timestamp: SortOrder
+  transactionHash: SortOrder
+}
+
+input RealmHistoryEventIdEventTypeCompoundUniqueInput {
+  eventId: String!
+  eventType: String!
+}
+
+type RealmHistoryGroupBy {
+  _avg: RealmHistoryAvgAggregate
+  _count: RealmHistoryCountAggregate
+  _max: RealmHistoryMaxAggregate
+  _min: RealmHistoryMinAggregate
+  _sum: RealmHistorySumAggregate
+  data: JSON!
+  eventId: String!
+  eventType: String!
+  id: Int!
+  realmId: Int!
+  realmName: String!
+  realmOrder: OrderType
+  realmOwner: String!
+  timestamp: Timestamp!
+  transactionHash: String!
+}
+
+type RealmHistoryMaxAggregate {
+  eventId: String
+  eventType: String
+  id: Int
+  realmId: Int
+  realmName: String
+  realmOrder: OrderType
+  realmOwner: String
+  timestamp: Timestamp
+  transactionHash: String
+}
+
+input RealmHistoryMaxOrderByAggregateInput {
+  eventId: SortOrder
+  eventType: SortOrder
+  id: SortOrder
+  realmId: SortOrder
+  realmName: SortOrder
+  realmOrder: SortOrder
+  realmOwner: SortOrder
+  timestamp: SortOrder
+  transactionHash: SortOrder
+}
+
+type RealmHistoryMinAggregate {
+  eventId: String
+  eventType: String
+  id: Int
+  realmId: Int
+  realmName: String
+  realmOrder: OrderType
+  realmOwner: String
+  timestamp: Timestamp
+  transactionHash: String
+}
+
+input RealmHistoryMinOrderByAggregateInput {
+  eventId: SortOrder
+  eventType: SortOrder
+  id: SortOrder
+  realmId: SortOrder
+  realmName: SortOrder
+  realmOrder: SortOrder
+  realmOwner: SortOrder
+  timestamp: SortOrder
+  transactionHash: SortOrder
+}
+
+input RealmHistoryOrderByWithAggregationInput {
+  _avg: RealmHistoryAvgOrderByAggregateInput
+  _count: RealmHistoryCountOrderByAggregateInput
+  _max: RealmHistoryMaxOrderByAggregateInput
+  _min: RealmHistoryMinOrderByAggregateInput
+  _sum: RealmHistorySumOrderByAggregateInput
+  data: SortOrder
+  eventId: SortOrder
+  eventType: SortOrder
+  id: SortOrder
+  realmId: SortOrder
+  realmName: SortOrder
+  realmOrder: SortOrder
+  realmOwner: SortOrder
+  timestamp: SortOrder
+  transactionHash: SortOrder
+}
+
+input RealmHistoryOrderByWithRelationInput {
+  data: SortOrder
+  eventId: SortOrder
+  eventType: SortOrder
+  id: SortOrder
+  realmId: SortOrder
+  realmName: SortOrder
+  realmOrder: SortOrder
+  realmOwner: SortOrder
+  timestamp: SortOrder
+  transactionHash: SortOrder
+}
+
+enum RealmHistoryScalarFieldEnum {
+  data
+  eventId
+  eventType
+  id
+  realmId
+  realmName
+  realmOrder
+  realmOwner
+  timestamp
+  transactionHash
+}
+
+input RealmHistoryScalarWhereWithAggregatesInput {
+  AND: [RealmHistoryScalarWhereWithAggregatesInput!]
+  NOT: [RealmHistoryScalarWhereWithAggregatesInput!]
+  OR: [RealmHistoryScalarWhereWithAggregatesInput!]
+  data: JsonWithAggregatesFilter
+  eventId: StringWithAggregatesFilter
+  eventType: StringWithAggregatesFilter
+  id: IntWithAggregatesFilter
+  realmId: IntWithAggregatesFilter
+  realmName: StringWithAggregatesFilter
+  realmOrder: EnumOrderTypeNullableWithAggregatesFilter
+  realmOwner: StringWithAggregatesFilter
+  timestamp: DateTimeWithAggregatesFilter
+  transactionHash: StringWithAggregatesFilter
+}
+
+type RealmHistorySumAggregate {
+  id: Int
+  realmId: Int
+}
+
+input RealmHistorySumOrderByAggregateInput {
+  id: SortOrder
+  realmId: SortOrder
+}
+
 input RealmHistoryWhereInput {
   AND: [RealmHistoryWhereInput!]
   NOT: [RealmHistoryWhereInput!]
@@ -570,6 +901,11 @@ input RealmHistoryWhereInput {
   realmOwner: StringFilter
   timestamp: DateTimeFilter
   transactionHash: StringFilter
+}
+
+input RealmHistoryWhereUniqueInput {
+  eventId_eventType: RealmHistoryEventIdEventTypeCompoundUniqueInput
+  id: Int
 }
 
 input RealmListRelationFilter {
@@ -850,6 +1186,24 @@ input StringNullableListFilter {
   hasEvery: [String!]
   hasSome: [String!]
   isEmpty: Boolean
+}
+
+input StringWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedStringFilter
+  _min: NestedStringFilter
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringWithAggregatesFilter
+  notIn: [String!]
+  startsWith: String
 }
 
 """
