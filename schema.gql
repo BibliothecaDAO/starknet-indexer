@@ -3,14 +3,14 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-<<<<<<< HEAD
 type AggregateRealmHistory {
   _avg: RealmHistoryAvgAggregate
   _count: RealmHistoryCountAggregate
   _max: RealmHistoryMaxAggregate
   _min: RealmHistoryMinAggregate
   _sum: RealmHistorySumAggregate
-=======
+}
+
 """Army"""
 type Army {
   arcanistHealth: Int!
@@ -86,7 +86,6 @@ type BattalionCost {
   battalionId: Int!
   battalionName: String!
   resources: JSON!
->>>>>>> a5304e1 (feat: add combat-v3 indexer and resolvers)
 }
 
 """The Buildings Model"""
@@ -322,38 +321,16 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 input JsonFilter {
-  array_contains: JSON
-  array_ends_with: JSON
-  array_starts_with: JSON
   equals: JSON
-  gt: JSON
-  gte: JSON
-  lt: JSON
-  lte: JSON
   not: JSON
-  path: [String!]
-  string_contains: String
-  string_ends_with: String
-  string_starts_with: String
 }
 
 input JsonWithAggregatesFilter {
   _count: NestedIntFilter
   _max: NestedJsonFilter
   _min: NestedJsonFilter
-  array_contains: JSON
-  array_ends_with: JSON
-  array_starts_with: JSON
   equals: JSON
-  gt: JSON
-  gte: JSON
-  lt: JSON
-  lte: JSON
   not: JSON
-  path: [String!]
-  string_contains: String
-  string_ends_with: String
-  string_starts_with: String
 }
 
 """Lore Entity"""
@@ -625,19 +602,8 @@ input NestedIntWithAggregatesFilter {
 }
 
 input NestedJsonFilter {
-  array_contains: JSON
-  array_ends_with: JSON
-  array_starts_with: JSON
   equals: JSON
-  gt: JSON
-  gte: JSON
-  lt: JSON
-  lte: JSON
   not: JSON
-  path: [String!]
-  string_contains: String
-  string_ends_with: String
-  string_starts_with: String
 }
 
 input NestedStringFilter {
@@ -711,11 +677,8 @@ enum OrderType {
 }
 
 type Query {
-<<<<<<< HEAD
   aggregateRealmHistory(cursor: RealmHistoryWhereUniqueInput, orderBy: [RealmHistoryOrderByWithRelationInput!], skip: Int, take: Int, where: RealmHistoryWhereInput): AggregateRealmHistory!
-=======
   battalionCosts: [BattalionCost!]!
->>>>>>> a5304e1 (feat: add combat-v3 indexer and resolvers)
   getBuildingCostById: BuildingCost!
   getBuildingCosts: [BuildingCost!]!
   getBuildingsByRealmId(id: Float!): [Building!]!
