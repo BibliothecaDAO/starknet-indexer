@@ -18,6 +18,21 @@ export type TroopName = keyof typeof TroopId;
 
 export const TroopNameById = createIdToNameMap(TroopId);
 
+export const BattalionId = {
+  LightCavalry: 1,
+  HeavyCavalry: 2,
+  Archer: 3,
+  Longbow: 4,
+  Mage: 5,
+  Arcanist: 6,
+  LightInfantry: 7,
+  HeavyInfantry: 8
+};
+
+export type BattalionName = keyof typeof BattalionId;
+
+export const BattalionNameById = createIdToNameMap(BattalionId);
+
 export const ResourceId = {
   Wood: 1,
   Stone: 2,
@@ -359,9 +374,83 @@ export const TroopCost: { [key in TroopName]: Cost } = {
   }
 };
 
+export const BattalionCost: { [key in BattalionName]: Cost } = {
+  LightCavalry: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 10),
+      createResourceCost(ResourceId.Obsidian, 5),
+      createResourceCost(ResourceId.ColdIron, 2),
+      createResourceCost(ResourceId.Sapphire, 2)
+    ]
+  },
+  HeavyCavalry: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Stone, 6),
+      createResourceCost(ResourceId.Silver, 10),
+      createResourceCost(ResourceId.Diamonds, 5),
+      createResourceCost(ResourceId.EtherealSilica, 1)
+    ]
+  },
+  Archer: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 10),
+      createResourceCost(ResourceId.Coal, 10),
+      createResourceCost(ResourceId.Silver, 2),
+      createResourceCost(ResourceId.Sapphire, 2)
+    ]
+  },
+  Longbow: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 5),
+      createResourceCost(ResourceId.Stone, 9),
+      createResourceCost(ResourceId.Obsidian, 10),
+      createResourceCost(ResourceId.Ironwood, 7),
+      createResourceCost(ResourceId.Ruby, 4)
+    ]
+  },
+  Mage: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Coal, 12),
+      createResourceCost(ResourceId.ColdIron, 2),
+      createResourceCost(ResourceId.Ignium, 2)
+    ]
+  },
+  Arcanist: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Stone, 10),
+      createResourceCost(ResourceId.Copper, 7),
+      createResourceCost(ResourceId.Hartwood, 5),
+      createResourceCost(ResourceId.DeepCrystal, 4)
+    ]
+  },
+  LightInfantry: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Copper, 10),
+      createResourceCost(ResourceId.ColdIron, 2),
+      createResourceCost(ResourceId.Ignium, 2)
+    ]
+  },
+  HeavyInfantry: {
+    amount: 0,
+    resources: [
+      createResourceCost(ResourceId.Wood, 5),
+      createResourceCost(ResourceId.Gold, 5),
+      createResourceCost(ResourceId.EtherealSilica, 2),
+      createResourceCost(ResourceId.TrueIce, 2)
+    ]
+  }
+};
+
 // # used to signal which side won the battle
-// const COMBAT_OUTCOME_ATTACKER_WINS = 1
-// const COMBAT_OUTCOME_DEFENDER_WINS = 2
+export const COMBAT_OUTCOME_ATTACKER_WINS = 1;
+export const COMBAT_OUTCOME_DEFENDER_WINS = 2;
 
 export const GOBLIN_SQUAD_SLOT = 0;
 export const ATTACKING_SQUAD_SLOT = 1;

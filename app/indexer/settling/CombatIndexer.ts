@@ -4,233 +4,193 @@ import BaseContractIndexer from "./../BaseContractIndexer";
 import { uint256ToBN } from "starknet/utils/uint256";
 import { BigNumberish } from "starknet/utils/number";
 import {
-  GOBLIN_SQUAD_SLOT,
-  ATTACKING_SQUAD_SLOT,
-  DEFENDING_SQUAD_SLOT,
+  // GOBLIN_SQUAD_SLOT,
+  // ATTACKING_SQUAD_SLOT,
+  // DEFENDING_SQUAD_SLOT,
+  COMBAT_OUTCOME_ATTACKER_WINS,
+  COMBAT_OUTCOME_DEFENDER_WINS,
   ResourceNameById
 } from "../../utils/game_constants";
 
 const CONTRACT =
-  "0x0139bad2b0b220d71ea1fc48fa2858e993b3d471a3b03be609c54ff0c9795d71";
+  "0x04d4e010850d0df3c6fd9672a72328514acc5e1285935104a29d215184903582";
+
+const START_BLOCK = 331146;
 
 function arrayUInt256ToNumber([low, high]: any[]): BigNumberish {
   return parseInt(uint256ToBN({ low, high }).toString());
 }
 
-//Troop(id=1, type=TroopType.Melee, tier=1, building=1, agility=1, attack=1, armor=3, vitality=4, wisdom=1),
-
-export const SQUAD_LENGTH = 15;
-export const SQUAD_ATTRIBUTES_LENGTH = 9;
+export const BATTALION_LENGTH = 8;
+export const BATTALION_ATTR_LENGTH = 2;
 
 export default class CombatIndexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);
 
-    this.on("BuildTroops_3", this.buildTroops_3.bind(this));
-    this.on("CombatStart_3", this.combatStart_3.bind(this));
-    this.on("CombatStep_3", this.combatStep_3.bind(this));
-    this.on("CombatOutcome_3", this.combatOutcome_3.bind(this));
+    this.on("BuildArmy", this.buildArmy.bind(this));
+    this.on("ArmyMetadata", this.updateArmyMetadata.bind(this));
+    this.on("CombatStart_4", this.combatStart.bind(this));
+    this.on("CombatEnd_4", this.combatEnd.bind(this));
   }
 
-  async buildTroops_3(event: Event) {
+  async buildArmy(event: Event) {
     const params = event.parameters ?? [];
-    const squad = params.slice(0, SQUAD_ATTRIBUTES_LENGTH * SQUAD_LENGTH);
-
-    const squadSlot = parseInt(params[params.length - 1]);
-    const realmId = arrayUInt256ToNumber(
-      params.slice(params.length - 3, params.length - 1)
-    );
-
-    await this.updateSquad(realmId, squad, squadSlot, event.timestamp);
+    await this.updateArmy(params);
   }
 
-  async combatStart_3(event: Event) {
+  async updateArmyMetadata(event: Event) {
     const params = event.parameters ?? [];
-    const {
-      attackingRealmId,
-      defendingRealmId,
-      attackingSquad,
-      defendingSquad
-    } = this.parseRealmsAndSquads_3(params);
-    await this.combatStart(
-      event,
-      attackingRealmId,
-      defendingRealmId,
-      attackingSquad,
-      defendingSquad
-    );
-  }
+    const armyId = +params[0];
+    const realmId = arrayUInt256ToNumber(params.slice(1, 3));
 
-  async combatStart(
-    event: Event,
-    attackingRealmId: number,
-    defendingRealmId: number,
-    attackingSquad: string[],
-    defendingSquad: string[]
-  ) {
-    const eventId = event.eventId;
-    const defendingRealmOwner = await this.getRealmOwner(defendingRealmId);
-    const combatStartUpdate = {
-      eventType: "combat_start",
-      attackRealmId: attackingRealmId,
-      attackRealmOwner: event.toAddress,
-      attackSquad: CombatIndexer.arrayToTroopArray(attackingSquad),
-      defendRealmOwner: defendingRealmOwner,
-      defendSquad: CombatIndexer.arrayToTroopArray(defendingSquad),
-      timestamp: event.timestamp,
-      transactionHash: event.txHash
+    const armyPacked = +params[3];
+    const lastAttacked = +params[4];
+    const level = +params[5];
+    const callSign = +params[6];
+
+    const updates = {
+      armyPacked,
+      lastAttacked,
+      level,
+      callSign
     };
 
-    await this.context.prisma.combatHistory.upsert({
-      where: {
-        defendRealmId_eventId: {
-          defendRealmId: defendingRealmId,
-          eventId: eventId
-        }
-      },
-      update: { ...combatStartUpdate },
-      create: {
-        ...combatStartUpdate,
-        defendRealmId: defendingRealmId,
-        eventId
-      }
+    await this.context.prisma.army.upsert({
+      where: { realmId_armyId: { realmId, armyId } },
+      create: { realmId, armyId, ...updates },
+      update: { ...updates }
     });
   }
 
-  async combatStep_3(event: Event) {
+  async combatStart(_event: Event) {}
+  async combatEnd(event: Event) {
+    if (event.blockNumber < START_BLOCK) {
+      return;
+    }
+
     const params = event.parameters ?? [];
-    const {
-      attackingRealmId,
-      defendingRealmId,
-      attackingSquad,
-      defendingSquad,
-      params: remainingParams
-    } = this.parseRealmsAndSquads_3(params);
+    const armyLength = BATTALION_ATTR_LENGTH * BATTALION_LENGTH + 3;
 
-    await this.combatStep(
-      event,
-      attackingRealmId,
-      defendingRealmId,
-      attackingSquad,
-      defendingSquad,
-      remainingParams
-    );
-  }
-
-  async combatStep(
-    event: Event,
-    attackingRealmId: number,
-    defendingRealmId: number,
-    attackingSquad: string[],
-    defendingSquad: string[],
-    params: string[]
-  ) {
     const eventId = event.eventId;
-    const hitPoints = parseInt(params[0]);
-    const defendingRealmOwner = await this.getRealmOwner(defendingRealmId);
-
-    const combatStepUpdate = {
-      eventType: "combat_step",
-      attackRealmId: attackingRealmId,
-      attackRealmOwner: event.toAddress,
-      attackSquad: CombatIndexer.arrayToTroopArray(attackingSquad),
-      defendRealmOwner: defendingRealmOwner,
-      defendSquad: CombatIndexer.arrayToTroopArray(defendingSquad),
-      timestamp: event.timestamp,
-      transactionHash: event.txHash,
-      hitPoints
-    };
-
-    await this.context.prisma.combatHistory.upsert({
-      where: {
-        defendRealmId_eventId: {
-          defendRealmId: defendingRealmId,
-          eventId: eventId
-        }
-      },
-      update: { ...combatStepUpdate },
-      create: {
-        ...combatStepUpdate,
-        defendRealmId: defendingRealmId,
-        eventId
-      }
-    });
-  }
-
-  async combatOutcome_3(event: Event) {
-    const params = event.parameters ?? [];
-    const {
-      attackingRealmId,
-      defendingRealmId,
-      attackingSquad,
-      defendingSquad,
-      params: remainingParams
-    } = this.parseRealmsAndSquads_3(params);
-    const outcome = parseInt(remainingParams[0]);
-    await this.combatOutcome(
-      event,
-      attackingRealmId,
-      defendingRealmId,
-      attackingSquad,
-      defendingSquad,
-      outcome
+    const combatOutcome = +params[0];
+    // Update attacking Army
+    const attackingRealm = await this.updateArmy(
+      params.slice(1, armyLength + 1)
     );
-  }
-
-  async combatOutcome(
-    event: Event,
-    attackingRealmId: number,
-    defendingRealmId: number,
-    attackingSquad: string[],
-    defendingSquad: string[],
-    outcome: number
-  ) {
-    const eventId = event.eventId;
-    const isGoblinAttack = defendingRealmId === 0;
-
-    await Promise.all([
-      this.updateSquad(
-        attackingRealmId,
-        attackingSquad,
-        ATTACKING_SQUAD_SLOT,
-        event.timestamp
-      ),
-      this.updateSquad(
-        isGoblinAttack ? attackingRealmId : defendingRealmId,
-        defendingSquad,
-        isGoblinAttack ? GOBLIN_SQUAD_SLOT : DEFENDING_SQUAD_SLOT,
-        event.timestamp
-      )
-    ]);
-
-    const defendingRealmOwner = await this.getRealmOwner(defendingRealmId);
-    const [blockNumber, transactionNumber] = eventId.split("_");
-    const pillagedResources = (
-      (await this.getPillagedResources(
-        parseInt(blockNumber),
-        parseInt(transactionNumber)
-      )) ?? []
-    ).map((resource) => {
-      return {
-        resourceId: resource.resourceId,
-        resourceName: ResourceNameById[String(resource.resourceId)] ?? "",
-        amount: resource.amount
-      };
-    });
-
-    const combatHistoryUpdate = {
-      eventType: "combat_outcome",
-      attackRealmId: attackingRealmId,
-      attackRealmOwner: event.toAddress,
-      attackSquad: CombatIndexer.arrayToTroopArray(attackingSquad),
-      defendRealmOwner: defendingRealmOwner,
-      defendSquad: CombatIndexer.arrayToTroopArray(defendingSquad),
-      timestamp: event.timestamp,
-      transactionHash: event.txHash,
-      outcome
-    };
-
+    // Update defending Army
+    const defendingRealm = await this.updateArmy(params.slice(armyLength + 1));
+    const defendingRealmOwner = await this.getRealm(defendingRealm.realmId);
+    const attackRealmOwner = await this.getRealm(attackingRealm.realmId);
+    const pillagedResources = (await this.getPillagedResources(eventId)) ?? [];
     // Check for relic
+    const { relicAttackData, relicDefendData } = await this.getRelicData(
+      eventId
+    );
+
+    const updates = [];
+
+    // Update Realm Attack History
+    updates.push(
+      this.saveRealmHistory({
+        realmId: attackingRealm.realmId,
+        eventId,
+        eventType: "realm_combat_attack",
+        account: event.toAddress,
+        timestamp: event.timestamp,
+        transactionHash: event.txHash,
+        data: {
+          success: combatOutcome === COMBAT_OUTCOME_ATTACKER_WINS,
+          defendRealmOwner: defendingRealmOwner.account,
+          defendRealmName: defendingRealmOwner.name,
+          defendRealmId: defendingRealm.realmId,
+          pillagedResources,
+          ...relicAttackData
+        }
+      })
+    );
+
+    // Update Realm Defence History
+    // TODO: conditional when goblins are enabled on combat v3
+    updates.push(
+      this.saveRealmHistory({
+        realmId: defendingRealm.realmId,
+        eventId,
+        account: defendingRealmOwner.account,
+        eventType: "realm_combat_defend",
+        timestamp: event.timestamp,
+        transactionHash: event.txHash,
+        data: {
+          success: combatOutcome === COMBAT_OUTCOME_DEFENDER_WINS,
+          attackRealmOwner: event.toAddress,
+          attackRealmId: attackingRealm.realmId,
+          attackRealmName: attackRealmOwner.name,
+          pillagedResources,
+          ...relicDefendData
+        }
+      })
+    );
+
+    // Update Last attack time
+    updates.push(
+      this.context.prisma.realm.update({
+        where: { realmId: defendingRealm.realmId },
+        data: { lastAttacked: event.timestamp }
+      })
+    );
+
+    await Promise.all(updates);
+  }
+
+  async updateArmy(params: string[]) {
+    const armyId = +params[0];
+    const realmId = arrayUInt256ToNumber(params.slice(1, 3));
+    const battalionStats = params
+      .slice(3, 3 + BATTALION_LENGTH * BATTALION_ATTR_LENGTH)
+      .map((val) => +val);
+    const battalions = this.parseBattalionStats(battalionStats);
+    await this.context.prisma.army.upsert({
+      where: { realmId_armyId: { realmId, armyId } },
+      create: {
+        realmId,
+        armyId,
+        ...battalions
+      },
+      update: {
+        ...battalions
+      }
+    });
+    return {
+      armyId,
+      realmId
+    };
+  }
+
+  parseBattalionStats(battalions: number[]) {
+    if (battalions.length < BATTALION_LENGTH * BATTALION_ATTR_LENGTH) {
+      console.error("Battalions format error");
+    }
+    return {
+      lightCavalryQty: battalions[0],
+      lightCavalryHealth: battalions[1],
+      heavyCavalryQty: battalions[2],
+      heavyCavalryHealth: battalions[3],
+      archerQty: battalions[4],
+      archerHealth: battalions[5],
+      longbowQty: battalions[6],
+      longbowHealth: battalions[7],
+      mageQty: battalions[8],
+      mageHealth: battalions[9],
+      arcanistQty: battalions[10],
+      arcanistHealth: battalions[11],
+      lightInfantryQty: battalions[12],
+      lightInfantryHealth: battalions[13],
+      heavyInfantryQty: battalions[14],
+      heavyInfantryHealth: battalions[15]
+    };
+  }
+
+  async getRelicData(eventId: string) {
     const relicAttackData = {} as any;
     const relicDefendData = {} as any;
     let [blockNum, transactionNum, eventNumber] = eventId.split("_");
@@ -250,172 +210,36 @@ export default class CombatIndexer extends BaseContractIndexer {
         relicDefendData.relicLost = relicEvent.realmId;
       }
     }
-
-    const updates = [];
-
-    // Update Realm Attack History
-    updates.push(
-      this.saveRealmHistory({
-        realmId: attackingRealmId,
-        eventId,
-        eventType: "realm_combat_attack",
-        account: event.toAddress,
-        timestamp: event.timestamp,
-        transactionHash: event.txHash,
-        data: {
-          success: outcome === 1,
-          defendRealmOwner: defendingRealmOwner,
-          defendRealmId: defendingRealmId,
-          pillagedResources,
-          ...relicAttackData
-        }
-      })
-    );
-
-    if (!isGoblinAttack) {
-      // update combat history
-      updates.push(
-        this.context.prisma.combatHistory.upsert({
-          where: {
-            defendRealmId_eventId: {
-              defendRealmId: defendingRealmId,
-              eventId: eventId
-            }
-          },
-          update: { ...combatHistoryUpdate },
-          create: {
-            ...combatHistoryUpdate,
-            defendRealmId: defendingRealmId,
-            eventId
-          }
-        })
-      );
-
-      // Update Realm
-      updates.push(
-        this.context.prisma.realm.update({
-          where: { realmId: defendingRealmId },
-          data: { lastAttacked: event.timestamp }
-        })
-      );
-
-      // Update Realm Defense History
-      updates.push(
-        this.saveRealmHistory({
-          realmId: defendingRealmId,
-          eventId,
-          account: defendingRealmOwner,
-          eventType: "realm_combat_defend",
-          timestamp: event.timestamp,
-          transactionHash: event.txHash,
-          data: {
-            success: outcome === 2,
-            attackRealmOwner: event.toAddress,
-            attackRealmId: attackingRealmId,
-            pillagedResources,
-            ...relicDefendData
-          }
-        })
-      );
-    }
-    await Promise.all(updates);
+    return {
+      relicAttackData,
+      relicDefendData
+    };
   }
 
-  async updateSquad(
-    realmId: number,
-    squad: any[],
-    squadSlot: number,
-    timestamp: Date
-  ) {
-    const troopLen = SQUAD_ATTRIBUTES_LENGTH;
-    const updateSquad = [];
-    for (let i = 0; i < SQUAD_LENGTH; i++) {
-      const troop = squad.slice(i * troopLen, (i + 1) * troopLen);
-      const update = CombatIndexer.parseTroop(troop);
-      updateSquad.push(
-        this.context.prisma.troop.upsert({
-          where: {
-            realmId_index_squadSlot: {
-              realmId,
-              squadSlot,
-              index: i
-            }
-          },
-          update,
-          create: { ...update, realmId, squadSlot, index: i, timestamp }
-        })
-      );
-    }
-    await this.context.prisma.$transaction(updateSquad);
-  }
-
-  async getRealmOwner(realmId: number) {
-    const defendingRealm = await this.context.prisma.realm.findFirst({
+  async getRealm(realmId: number) {
+    const realm = await this.context.prisma.realm.findFirst({
       where: { realmId }
     });
-    const defendingRealmOwner =
-      defendingRealm?.settledOwner || defendingRealm?.ownerL2 || "";
-
-    return defendingRealmOwner;
+    const account = realm?.settledOwner || realm?.ownerL2 || "";
+    const name = realm?.name;
+    return { account, name };
   }
 
-  parseRealmsAndSquads_3(params: string[]) {
-    const troopLength = SQUAD_ATTRIBUTES_LENGTH;
-    const attackingRealmId = arrayUInt256ToNumber(params.slice(0, 2));
-    const defendingRealmId = arrayUInt256ToNumber(params.slice(2, 4));
-    const endAttackSquad = 4 + SQUAD_LENGTH * troopLength;
-    const attackingSquad = params.slice(4, endAttackSquad);
-    const defendingSquad = params.slice(
-      endAttackSquad,
-      endAttackSquad + SQUAD_LENGTH * troopLength
-    );
-    return {
-      attackingRealmId,
-      defendingRealmId,
-      attackingSquad,
-      defendingSquad,
-      params: params.slice(endAttackSquad + SQUAD_LENGTH * troopLength)
-    };
-  }
+  async getPillagedResources(eventId: string) {
+    const [blockNumber, transactionNumber] = eventId.split("_");
 
-  async getPillagedResources(blockNumber: number, transactionNumber: number) {
-    return await this.context.prisma.resourceTransfer.findMany({
+    const resources = await this.context.prisma.resourceTransfer.findMany({
       where: {
-        blockNumber,
-        transactionNumber
+        blockNumber: parseInt(blockNumber),
+        transactionNumber: parseInt(transactionNumber)
       }
     });
-  }
-
-  static parseTroop(troop: string[]) {
-    const troopId = parseInt(troop[0]);
-    const type = parseInt(troop[1]);
-    const tier = parseInt(troop[2]);
-    const building = parseInt(troop[3]);
-    const agility = parseInt(troop[4]);
-    const attack = parseInt(troop[5]);
-    const armor = parseInt(troop[6]);
-    const vitality = parseInt(troop[7]);
-    const wisdom = parseInt(troop[8]);
-    return {
-      troopId,
-      type,
-      tier,
-      building,
-      agility,
-      attack,
-      armor,
-      vitality,
-      wisdom
-    };
-  }
-
-  static arrayToTroopArray(squad: string[]) {
-    const troopArray = [];
-    for (let i = 0; i < squad.length; i += SQUAD_ATTRIBUTES_LENGTH) {
-      const troop = squad.slice(i, i + SQUAD_ATTRIBUTES_LENGTH);
-      troopArray.push(CombatIndexer.parseTroop(troop));
-    }
-    return troopArray;
+    return resources.map((resource) => {
+      return {
+        resourceId: resource.resourceId,
+        resourceName: ResourceNameById[String(resource.resourceId)] ?? "",
+        amount: resource.amount
+      };
+    });
   }
 }

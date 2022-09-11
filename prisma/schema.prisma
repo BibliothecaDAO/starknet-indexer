@@ -54,7 +54,6 @@ model Wallet {
   tokens  ResourceToken[] @relation()
 }
 
-// MILSTONE 1
 model Realm {
   id            Int          @id @default(autoincrement())
   realmId       Int          @unique
@@ -78,6 +77,7 @@ model Realm {
   lastAttacked  DateTime?
   lastClaimTime DateTime?
   lastVaultTime DateTime?
+  ownArmies     Army[]       @relation(name: "ownRealm")
 }
 
 model Building {
@@ -179,32 +179,6 @@ model Troop {
   @@unique([realmId, index, squadSlot])
 }
 
-///////////// MILSTONE 2 ///////////////
-// model Character {
-//   id        Int        @id @default(autoincrement())
-//   name      String
-//   sex       String
-//   race      String
-//   orderId   Int?
-//   wallet    Wallet     @relation(fields: [id], references: [id])
-//   lootItems LootItem[]
-// }
-
-// model LootItem {
-//   id              Int        @id @default(autoincrement())
-//   characterId     Int        @unique
-//   name            String
-//   equipmentId     Int? // 1 = head, 2 = body etc TODO
-//   orderId         Int?
-//   prefixId        Int?
-//   suffixId        Int?
-//   greatnessLevel  Int?
-//   locationFoundId Int? // Do we set locations like 011111 = 01 = realms  | 1111 = realm id
-//   wallet          Wallet?    @relation(fields: [id], references: [id])
-//   character       Character? @relation(fields: [characterId], references: [id])
-// }
-
-// MILSTONE 2
 model Desiege {
   id              Int       @id @default(autoincrement())
   gameId          Int       @unique
@@ -406,4 +380,40 @@ model ResourceTransfer {
   @@unique([resourceId, eventId])
   @@index([fromAddress, toAddress, eventId(sort: Desc)])
   @@index([blockNumber, transactionNumber, eventId(sort: Desc)])
+}
+
+// Combat
+model Army {
+  realmId         Int
+  armyId          Int
+  visitingRealmId Int @default(0)
+
+  // ArmyData
+  armyPacked   Int @default(0)
+  lastAttacked Int @default(0)
+  xp           Int @default(0)
+  level        Int @default(0)
+  callSign     Int @default(0)
+
+  // Battalions
+  lightCavalryQty     Int @default(0)
+  lightCavalryHealth  Int @default(0)
+  heavyCavalryQty     Int @default(0)
+  heavyCavalryHealth  Int @default(0)
+  archerQty           Int @default(0)
+  archerHealth        Int @default(0)
+  longbowQty          Int @default(0)
+  longbowHealth       Int @default(0)
+  mageQty             Int @default(0)
+  mageHealth          Int @default(0)
+  arcanistQty         Int @default(0)
+  arcanistHealth      Int @default(0)
+  lightInfantryQty    Int @default(0)
+  lightInfantryHealth Int @default(0)
+  heavyInfantryQty    Int @default(0)
+  heavyInfantryHealth Int @default(0)
+
+  ownRealm Realm @relation("ownRealm", fields: [realmId], references: [realmId])
+
+  @@unique([realmId, armyId])
 }

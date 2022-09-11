@@ -9,6 +9,7 @@ import {
 } from "type-graphql";
 import { Context } from "../../context";
 import {
+  Army,
   Realm,
   RealmHistory,
   CombatResult,
@@ -26,6 +27,7 @@ import {
   RealmHistoryWhereInput,
   RealmOrderByWithRelationInput
 } from "@generated/type-graphql";
+import { Prisma } from "@prisma/client";
 
 @Resolver((_of) => Realm)
 export class RealmResolver {
@@ -80,6 +82,15 @@ export class RealmResolver {
       where: { realmId: realm.realmId }
     });
   }
+
+  @FieldResolver(() => [Army])
+  async ownArmies(@Ctx() ctx: Context, @Root() realm: Realm) {
+    return await ctx.prisma.army.findMany({
+      where: { realmId: realm.realmId },
+      orderBy: { armyId: "asc" }
+    });
+  }
+
   @FieldResolver(() => Relic)
   async relic(@Ctx() ctx: Context, @Root() realm: Realm) {
     return await ctx.prisma.relic.findMany({
@@ -100,7 +111,52 @@ export class RealmResolver {
     return await ctx.prisma.realm.count({ where });
   }
 
-  // below deprecated
+  @Query(() => [RealmHistory])
+  async realmHistory(
+    @Ctx() ctx: Context,
+    @Arg("filter", { nullable: true }) filter: RealmHistoryWhereInput,
+    @Arg("take", { nullable: true, defaultValue: 20 }) take: number,
+    @Arg("skip", { nullable: true, defaultValue: 0 }) skip: number
+  ) {
+    return await ctx.prisma.realmHistory.findMany({
+      where: filter,
+      take,
+      skip,
+      orderBy: { eventId: "desc" }
+    });
+  }
+
+  @Query(() => CombatResult)
+  async realmCombatHistory(
+    @Ctx() ctx: Context,
+    @Arg("defendRealmId") defendRealmId: number,
+    @Arg("transactionHash") transactionHash: string
+  ) {
+    const realmHistory = await ctx.prisma.realmHistory.findFirst({
+      where: {
+        realmId: defendRealmId,
+        eventType: "realm_combat_defend",
+        transactionHash
+      },
+      orderBy: { eventId: "asc" }
+    });
+
+    const realmHistoryData = realmHistory?.data as Prisma.JsonObject;
+    const result = new CombatResult();
+    result.defendRealmId = defendRealmId;
+    result.attackRealmId = realmHistoryData?.attackRealmId as number;
+    result.transactionHash = transactionHash;
+    result.history = [];
+    result.resourcesPillaged =
+      realmHistoryData?.pillagedResources as unknown as ResourceAmount[];
+    result.relicLost = (realmHistoryData?.relicLost as number) ?? 0;
+    result.outcome = (realmHistoryData?.success as boolean) ? 2 : 1;
+    result.timestamp = realmHistory?.timestamp as Date;
+    return result;
+  }
+
+  // BELOW DEPRECATED
+
   @Query((_returns) => Realm, { nullable: false })
   async getRealm(@Arg("realmId") realmId: number, @Ctx() ctx: Context) {
     const data = await ctx.prisma.realm.findUnique({
@@ -110,7 +166,8 @@ export class RealmResolver {
         traits: true,
         resources: true,
         wallet: true,
-        squad: true
+        squad: true,
+        ownArmies: true
       }
     });
     return data;
@@ -131,7 +188,8 @@ export class RealmResolver {
         traits: true,
         resources: true,
         wallet: true,
-        squad: true
+        squad: true,
+        ownArmies: true
       },
       orderBy: orderBy
         ? Object.keys(orderBy).map((key: any) => ({

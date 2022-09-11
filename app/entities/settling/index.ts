@@ -13,7 +13,8 @@ import { CombatHistory } from "./CombatHistory";
 import { CombatResult } from "./CombatResult";
 import { Relic } from "./Relic";
 import { Food } from "./Food";
-
+import { Army } from "./Army";
+import { BattalionCost } from "./BattalionCost";
 export {
   Realm,
   RealmHistory,
@@ -29,5 +30,7 @@ export {
   CombatHistory,
   CombatResult,
   Relic,
-  Food
+  Food,
+  Army,
+  BattalionCost
 };

@@ -12,7 +12,7 @@ import ResourceERC1155Indexer from "./settling/ResourceERC1155Indexer";
 import SettlingIndexer from "./settling/SettlingIndexer";
 import RelicIndexer from "./settling/RelicIndexer";
 import FoodIndexer from "./settling/FoodIndexer";
-import GoblinIndexer from "./settling/GoblinIndexer";
+// import GoblinIndexer from "./settling/GoblinIndexer";
 
 export const StarkNet = () => {
   return {
@@ -31,8 +31,9 @@ export const StarkNet = () => {
           new SettlingIndexer(context),
           new FoodIndexer(context),
           // Resource Events must be processed before combat events
-          new CombatIndexer(context),
-          new GoblinIndexer(context)
+          new CombatIndexer(context)
+          //TODO: Renable when Goblins are added to combat v3
+          // new GoblinIndexer(context)
         ],
         context
       );

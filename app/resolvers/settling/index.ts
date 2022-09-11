@@ -6,6 +6,7 @@ import { RealmTraitResolver } from "./RealmTraitResolver";
 import { ExchangeRateResolver } from "./ExchangeRateResolver";
 import { TroopResolver } from "./TroopResolver";
 import { FoodResolver } from "./FoodResolver";
+import { ArmyResolver } from "./ArmyResolver";
 
 export {
   BuildingResolver,
@@ -15,5 +16,6 @@ export {
   ExchangeRateResolver,
   TroopResolver,
   RealmHistoryResolver,
-  FoodResolver
+  FoodResolver,
+  ArmyResolver
 };

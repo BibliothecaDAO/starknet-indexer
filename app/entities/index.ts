@@ -15,7 +15,9 @@ import {
   TroopCost,
   TroopStats,
   Relic,
-  Food
+  Food,
+  Army,
+  BattalionCost
 } from "./settling";
 import { Wallet } from "./wallet/Wallet";
 
@@ -37,6 +39,8 @@ export {
   TroopCost,
   TroopStats,
   Relic,
-  Food
+  Food,
+  Army,
+  BattalionCost
   // LorePOI,
 };

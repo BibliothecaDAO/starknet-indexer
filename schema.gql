@@ -3,12 +3,90 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+<<<<<<< HEAD
 type AggregateRealmHistory {
   _avg: RealmHistoryAvgAggregate
   _count: RealmHistoryCountAggregate
   _max: RealmHistoryMaxAggregate
   _min: RealmHistoryMinAggregate
   _sum: RealmHistorySumAggregate
+=======
+"""Army"""
+type Army {
+  arcanistHealth: Int!
+  arcanistQty: Int!
+  archerHealth: Int!
+  archerQty: Int!
+  armyId: Int!
+  armyPacked: Int!
+  callSign: Int!
+  heavyCavalryHealth: Int!
+  heavyCavalryQty: Int!
+  heavyInfantryHealth: Int!
+  heavyInfantryQty: Int!
+  lastAttacked: Int!
+  level: Int!
+  lightCavalryHealth: Int!
+  lightCavalryQty: Int!
+  lightInfantryHealth: Int!
+  lightInfantryQty: Int!
+  longbowHealth: Int!
+  longbowQty: Int!
+  mageHealth: Int!
+  mageQty: Int!
+  realmId: Int!
+  visitingRealmId: Int!
+  xp: Int!
+}
+
+input ArmyListRelationFilter {
+  every: ArmyWhereInput
+  none: ArmyWhereInput
+  some: ArmyWhereInput
+}
+
+input ArmyOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input ArmyWhereInput {
+  AND: [ArmyWhereInput!]
+  NOT: [ArmyWhereInput!]
+  OR: [ArmyWhereInput!]
+  arcanistHealth: IntFilter
+  arcanistQty: IntFilter
+  archerHealth: IntFilter
+  archerQty: IntFilter
+  armyId: IntFilter
+  armyPacked: IntFilter
+  callSign: IntFilter
+  heavyCavalryHealth: IntFilter
+  heavyCavalryQty: IntFilter
+  heavyInfantryHealth: IntFilter
+  heavyInfantryQty: IntFilter
+  lastAttacked: IntFilter
+  level: IntFilter
+  lightCavalryHealth: IntFilter
+  lightCavalryQty: IntFilter
+  lightInfantryHealth: IntFilter
+  lightInfantryQty: IntFilter
+  longbowHealth: IntFilter
+  longbowQty: IntFilter
+  mageHealth: IntFilter
+  mageQty: IntFilter
+  ownRealm: RealmRelationFilter
+  realmId: IntFilter
+  visitingRealmId: IntFilter
+  xp: IntFilter
+}
+
+"""Battalion Cost Model"""
+type BattalionCost {
+  amount: Float!
+  battalionId: Int!
+  battalionName: String!
+  resources: JSON!
+>>>>>>> a5304e1 (feat: add combat-v3 indexer and resolvers)
 }
 
 """The Buildings Model"""
@@ -633,7 +711,11 @@ enum OrderType {
 }
 
 type Query {
+<<<<<<< HEAD
   aggregateRealmHistory(cursor: RealmHistoryWhereUniqueInput, orderBy: [RealmHistoryOrderByWithRelationInput!], skip: Int, take: Int, where: RealmHistoryWhereInput): AggregateRealmHistory!
+=======
+  battalionCosts: [BattalionCost!]!
+>>>>>>> a5304e1 (feat: add combat-v3 indexer and resolvers)
   getBuildingCostById: BuildingCost!
   getBuildingCosts: [BuildingCost!]!
   getBuildingsByRealmId(id: Float!): [Building!]!
@@ -656,6 +738,7 @@ type Query {
   getWallet(address: String!): Wallet!
   groupByRealmHistory(by: [RealmHistoryScalarFieldEnum!]!, having: RealmHistoryScalarWhereWithAggregatesInput, orderBy: [RealmHistoryOrderByWithAggregationInput!], skip: Int, take: Int, where: RealmHistoryWhereInput): [RealmHistoryGroupBy!]!
   realm(id: Float!): Realm!
+  realmCombatHistory(defendRealmId: Float!, transactionHash: String!): CombatResult!
   realmHistory(filter: RealmHistoryWhereInput, skip: Float = 0, take: Float = 20): [RealmHistory!]!
   realms(filter: RealmWhereInput, orderBy: RealmOrderByWithRelationInput, skip: Float = 0, take: Float = 100): [Realm!]!
   realmsCount(filter: RealmWhereInput): Int!
@@ -678,6 +761,7 @@ type Realm {
   lastVaultTime: Timestamp
   name: String
   orderType: String!
+  ownArmies: [Army!]!
   owner: String
   ownerL2: String
   rarityRank: Int!
@@ -934,6 +1018,7 @@ input RealmOrderByWithRelationInput {
   lastVaultTime: SortOrder
   name: SortOrder
   orderType: SortOrder
+  ownArmies: ArmyOrderByRelationAggregateInput
   owner: SortOrder
   ownerL2: SortOrder
   rarityRank: SortOrder
@@ -1003,6 +1088,7 @@ input RealmWhereInput {
   lastVaultTime: DateTimeNullableFilter
   name: StringNullableFilter
   orderType: EnumOrderTypeNullableFilter
+  ownArmies: ArmyListRelationFilter
   owner: StringNullableFilter
   ownerL2: StringNullableFilter
   rarityRank: IntFilter
