@@ -4,7 +4,7 @@ import { Wallet } from "./../wallet/Wallet";
 import { Building } from "./Building";
 import { Resource } from "./Resource";
 import { RealmTrait } from "./RealmTrait";
-import { Relic } from "./Relic"
+import { Relic } from "./Relic";
 import { OrderType } from "@prisma/client";
 import { Troop } from "./Troop";
 
@@ -78,4 +78,10 @@ export class Realm {
 
   @Field({ nullable: true })
   lastVaultTime: Date;
+
+  @Field(() => Float, { nullable: false })
+  longitude: number;
+
+  @Field(() => Float, { nullable: false })
+  latitude: number;
 }

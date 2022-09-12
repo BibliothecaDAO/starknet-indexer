@@ -1,4 +1,4 @@
-import { Resolver, Arg, Mutation, Query, Ctx } from "type-graphql";
+import { Resolver, Arg, Query, Ctx } from "type-graphql";
 import { Context } from "./../../context";
 import { Resource } from "./../../entities";
 import { ResourceInput } from "./../types";
@@ -29,7 +29,7 @@ export class ResourceResolver {
     });
   }
 
-  @Mutation(() => Resource)
+  // @Mutation(() => Resource)
   async createOrUpdateResources(
     @Arg("data")
     data: ResourceInput,

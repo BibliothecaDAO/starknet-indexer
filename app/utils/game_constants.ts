@@ -90,6 +90,21 @@ export type TraitName = keyof typeof TraitId;
 
 export const TraitNameById = createIdToNameMap(TraitId);
 
+export const ExternalContractId = {
+  Lords: 1,
+  Realms: 2,
+  S_Realms: 3,
+  Resources: 4,
+  Treasury: 5,
+  Storage: 6,
+  Crypts: 7,
+  S_Crypts: 8
+};
+
+export type ExternalContractName = keyof typeof ExternalContractId;
+
+export const ExternalContractNameById = createIdToNameMap(ExternalContractId);
+
 interface ResourceCost {
   resourceId: number;
   resourceName: string;

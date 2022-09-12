@@ -7,6 +7,7 @@ import { ExchangeRateResolver } from "./ExchangeRateResolver";
 import { TroopResolver } from "./TroopResolver";
 import { FoodResolver } from "./FoodResolver";
 import { ArmyResolver } from "./ArmyResolver";
+import { TravelResolver } from "./TravelResolver";
 
 export {
   BuildingResolver,
@@ -17,5 +18,6 @@ export {
   TroopResolver,
   RealmHistoryResolver,
   FoodResolver,
-  ArmyResolver
+  ArmyResolver,
+  TravelResolver
 };

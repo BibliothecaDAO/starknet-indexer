@@ -15,12 +15,14 @@ import {
   ExchangeRateResolver,
   RealmHistoryResolver,
   FoodResolver,
-  ArmyResolver
+  ArmyResolver,
+  TravelResolver
 } from "./resolvers";
 import { StarkNet } from "./indexer/Starknet";
 import { RealmsL1Indexer } from "./indexer/RealmsL1Indexer";
 import { LoreResolver } from "./resolvers/lore/LoreResolver";
 import { LorePOIResolver } from "./resolvers/lore/LorePOIResolver";
+
 import {
   AggregateRealmHistoryResolver,
   GroupByRealmHistoryResolver
@@ -41,7 +43,8 @@ const main = async () => {
       FoodResolver,
       AggregateRealmHistoryResolver,
       GroupByRealmHistoryResolver,
-      ArmyResolver
+      ArmyResolver,
+      TravelResolver
     ],
     emitSchemaFile: true,
     validate: false,

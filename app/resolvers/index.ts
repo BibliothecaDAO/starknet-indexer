@@ -8,7 +8,8 @@ import {
   ExchangeRateResolver,
   TroopResolver,
   FoodResolver,
-  ArmyResolver
+  ArmyResolver,
+  TravelResolver
 } from "./settling";
 import { DesiegeResolver } from "./desiege/DesiegeResolver";
 import { EventResolver } from "./starknet/EventResolver";
@@ -25,5 +26,6 @@ export {
   ExchangeRateResolver,
   TroopResolver,
   FoodResolver,
-  ArmyResolver
+  ArmyResolver,
+  TravelResolver
 };

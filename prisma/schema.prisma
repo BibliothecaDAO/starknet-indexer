@@ -77,6 +77,8 @@ model Realm {
   lastAttacked  DateTime?
   lastClaimTime DateTime?
   lastVaultTime DateTime?
+  longitude     Float        @default(0.0)
+  latitude      Float        @default(0.0)
   ownArmies     Army[]       @relation(name: "ownRealm")
 }
 
@@ -416,4 +418,16 @@ model Army {
   ownRealm Realm @relation("ownRealm", fields: [realmId], references: [realmId])
 
   @@unique([realmId, armyId])
+}
+
+model Travel {
+  eventId               String   @id
+  contractId            Int
+  tokenId               Int
+  nestedId              Int
+  destinationContractId Int
+  destinationTokenId    Int
+  destinationNestedId   Int
+  arrivalTime           DateTime
+  timestamp             DateTime
 }
