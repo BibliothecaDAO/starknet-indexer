@@ -463,6 +463,98 @@ export const BattalionCost: { [key in BattalionName]: Cost } = {
   }
 };
 
+export const BattalionBuildingRequirement: { [key in BattalionName]: number } =
+  {
+    LightCavalry: BuildingId.Castle,
+    HeavyCavalry: BuildingId.Castle,
+    Archer: BuildingId.ArcherTower,
+    Longbow: BuildingId.ArcherTower,
+    Mage: BuildingId.MageTower,
+    Arcanist: BuildingId.MageTower,
+    LightInfantry: BuildingId.Barracks,
+    HeavyInfantry: BuildingId.Barracks
+  };
+
+function createBattalionStatistic(
+  battalionId: number,
+  combatType: "attack" | "defense",
+  type: string,
+  value: number
+) {
+  const battalionName = BattalionNameById[battalionId].replace(
+    " ",
+    ""
+  ) as BattalionName;
+  const buildingId = BattalionBuildingRequirement[battalionName];
+  return {
+    combatType,
+    type,
+    battalionId,
+    battalionName,
+    requiredBuildingId: buildingId,
+    requiredBuildingName: BuildingNameById[buildingId],
+    value
+  };
+}
+
+export const BattalionStats = [
+  // Attack
+  createBattalionStatistic(BattalionId.LightCavalry, "attack", "", 20),
+  createBattalionStatistic(BattalionId.HeavyCavalry, "attack", "", 30),
+  createBattalionStatistic(BattalionId.Archer, "attack", "", 20),
+  createBattalionStatistic(BattalionId.Longbow, "attack", "", 30),
+  createBattalionStatistic(BattalionId.Mage, "attack", "", 20),
+  createBattalionStatistic(BattalionId.Arcanist, "attack", "", 30),
+  createBattalionStatistic(BattalionId.LightInfantry, "attack", "", 20),
+  createBattalionStatistic(BattalionId.HeavyInfantry, "attack", "", 30),
+
+  // Defense
+  // Cavalry
+  createBattalionStatistic(BattalionId.LightCavalry, "defense", "cavalry", 20),
+  createBattalionStatistic(BattalionId.HeavyCavalry, "defense", "cavalry", 30),
+  createBattalionStatistic(BattalionId.Archer, "defense", "cavalry", 15),
+  createBattalionStatistic(BattalionId.Longbow, "defense", "cavalry", 25),
+  createBattalionStatistic(BattalionId.Mage, "defense", "cavalry", 25),
+  createBattalionStatistic(BattalionId.Arcanist, "defense", "cavalry", 35),
+  createBattalionStatistic(BattalionId.LightInfantry, "defense", "cavalry", 25),
+  createBattalionStatistic(BattalionId.HeavyInfantry, "defense", "cavalry", 35),
+
+  // Archery
+  createBattalionStatistic(BattalionId.LightCavalry, "defense", "archery", 25),
+  createBattalionStatistic(BattalionId.HeavyCavalry, "defense", "archery", 35),
+  createBattalionStatistic(BattalionId.Archer, "defense", "archery", 20),
+  createBattalionStatistic(BattalionId.Longbow, "defense", "archery", 30),
+  createBattalionStatistic(BattalionId.Mage, "defense", "archery", 15),
+  createBattalionStatistic(BattalionId.Arcanist, "defense", "archery", 25),
+  createBattalionStatistic(BattalionId.LightInfantry, "defense", "archery", 25),
+  createBattalionStatistic(BattalionId.HeavyInfantry, "defense", "archery", 35),
+
+  // Magic
+  createBattalionStatistic(BattalionId.LightCavalry, "defense", "magic", 25),
+  createBattalionStatistic(BattalionId.HeavyCavalry, "defense", "magic", 35),
+  createBattalionStatistic(BattalionId.Archer, "defense", "magic", 25),
+  createBattalionStatistic(BattalionId.Longbow, "defense", "magic", 35),
+  createBattalionStatistic(BattalionId.Mage, "defense", "magic", 20),
+  createBattalionStatistic(BattalionId.Arcanist, "defense", "magic", 30),
+  createBattalionStatistic(BattalionId.LightInfantry, "defense", "magic", 15),
+  createBattalionStatistic(BattalionId.HeavyInfantry, "defense", "magic", 25),
+
+  // Infantry
+  createBattalionStatistic(BattalionId.LightCavalry, "defense", "infantry", 15),
+  createBattalionStatistic(BattalionId.HeavyCavalry, "defense", "infantry", 25),
+  createBattalionStatistic(BattalionId.Archer, "defense", "infantry", 25),
+  createBattalionStatistic(BattalionId.Longbow, "defense", "infantry", 35),
+  createBattalionStatistic(BattalionId.Mage, "defense", "infantry", 25),
+  createBattalionStatistic(BattalionId.Arcanist, "defense", "infantry", 35),
+  createBattalionStatistic(
+    BattalionId.LightInfantry,
+    "defense",
+    "Infantry",
+    20
+  ),
+  createBattalionStatistic(BattalionId.HeavyInfantry, "defense", "Infantry", 30)
+];
+
 // # used to signal which side won the battle
 export const COMBAT_OUTCOME_ATTACKER_WINS = 1;
 export const COMBAT_OUTCOME_DEFENDER_WINS = 2;

@@ -88,6 +88,17 @@ type BattalionCost {
   resources: JSON!
 }
 
+"""BattalionStats"""
+type BattalionStats {
+  battalionId: Int!
+  battalionName: String!
+  combatType: String!
+  requiredBuildingId: Int!
+  requiredBuildingName: String!
+  type: String!
+  value: Int!
+}
+
 """The Buildings Model"""
 type Building {
   buildingCost: BuildingCost!
@@ -711,6 +722,7 @@ enum OrderType {
 type Query {
   aggregateRealmHistory(cursor: RealmHistoryWhereUniqueInput, orderBy: [RealmHistoryOrderByWithRelationInput!], skip: Int, take: Int, where: RealmHistoryWhereInput): AggregateRealmHistory!
   battalionCosts: [BattalionCost!]!
+  battalionStats: [BattalionStats!]!
   getBuildingCostById: BuildingCost!
   getBuildingCosts: [BuildingCost!]!
   getBuildingsByRealmId(id: Float!): [Building!]!

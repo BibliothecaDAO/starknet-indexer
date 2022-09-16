@@ -1,5 +1,5 @@
 import { Resolver, Query } from "type-graphql";
-import { Army, BattalionCost } from "../../entities";
+import { Army, BattalionCost, BattalionStats } from "../../entities";
 import * as CONSTANTS from "../../utils/game_constants";
 
 @Resolver((_of) => Army)
@@ -27,5 +27,10 @@ export class ArmyResolver {
   @Query(() => [BattalionCost])
   async battalionCosts() {
     return this._battalionCosts;
+  }
+
+  @Query(() => [BattalionStats])
+  async battalionStats() {
+    return CONSTANTS.BattalionStats;
   }
 }

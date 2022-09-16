@@ -15,6 +15,7 @@ import { Relic } from "./Relic";
 import { Food } from "./Food";
 import { Army } from "./Army";
 import { BattalionCost } from "./BattalionCost";
+import { BattalionStats } from "./BattalionStats";
 export {
   Realm,
   RealmHistory,
@@ -32,5 +33,6 @@ export {
   Relic,
   Food,
   Army,
-  BattalionCost
+  BattalionCost,
+  BattalionStats
 };
