@@ -549,10 +549,10 @@ export const BattalionStats = [
   createBattalionStatistic(
     BattalionId.LightInfantry,
     "defense",
-    "Infantry",
+    "infantry",
     20
   ),
-  createBattalionStatistic(BattalionId.HeavyInfantry, "defense", "Infantry", 30)
+  createBattalionStatistic(BattalionId.HeavyInfantry, "defense", "infantry", 30)
 ];
 
 // # used to signal which side won the battle
