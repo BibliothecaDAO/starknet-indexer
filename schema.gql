@@ -35,6 +35,7 @@ type Army {
   mageHealth: Int!
   mageQty: Int!
   realmId: Int!
+  visitingRealm: Realm
   visitingRealmId: Int!
   xp: Int!
 }
@@ -47,6 +48,34 @@ input ArmyListRelationFilter {
 
 input ArmyOrderByRelationAggregateInput {
   _count: SortOrder
+}
+
+input ArmyOrderByWithRelationInput {
+  arcanistHealth: SortOrder
+  arcanistQty: SortOrder
+  archerHealth: SortOrder
+  archerQty: SortOrder
+  armyId: SortOrder
+  armyPacked: SortOrder
+  callSign: SortOrder
+  heavyCavalryHealth: SortOrder
+  heavyCavalryQty: SortOrder
+  heavyInfantryHealth: SortOrder
+  heavyInfantryQty: SortOrder
+  lastAttacked: SortOrder
+  level: SortOrder
+  lightCavalryHealth: SortOrder
+  lightCavalryQty: SortOrder
+  lightInfantryHealth: SortOrder
+  lightInfantryQty: SortOrder
+  longbowHealth: SortOrder
+  longbowQty: SortOrder
+  mageHealth: SortOrder
+  mageQty: SortOrder
+  ownRealm: RealmOrderByWithRelationInput
+  realmId: SortOrder
+  visitingRealmId: SortOrder
+  xp: SortOrder
 }
 
 input ArmyWhereInput {
@@ -721,6 +750,7 @@ enum OrderType {
 
 type Query {
   aggregateRealmHistory(cursor: RealmHistoryWhereUniqueInput, orderBy: [RealmHistoryOrderByWithRelationInput!], skip: Int, take: Int, where: RealmHistoryWhereInput): AggregateRealmHistory!
+  armies(orderBy: ArmyOrderByWithRelationInput, skip: Float = 0, take: Float = 100, where: ArmyWhereInput): [Army!]!
   battalionCosts: [BattalionCost!]!
   battalionStats: [BattalionStats!]!
   getBuildingCostById: BuildingCost!

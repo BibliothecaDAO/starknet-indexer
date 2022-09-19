@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int } from "type-graphql";
 import { __Type } from "graphql";
+import { Realm } from "./Realm";
 
 @ObjectType({ description: "Army" })
 export class Army {
@@ -9,6 +10,8 @@ export class Army {
   armyId: number;
   @Field(() => Int, { nullable: false })
   visitingRealmId: number;
+  @Field(() => Realm, { nullable: true })
+  visitingRealm: Realm;
 
   // ArmyData
   @Field(() => Int, { nullable: false })

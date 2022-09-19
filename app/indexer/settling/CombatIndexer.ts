@@ -36,7 +36,7 @@ export default class CombatIndexer extends BaseContractIndexer {
 
   async buildArmy(event: Event) {
     const params = event.parameters ?? [];
-    await this.updateArmy(params);
+    await this.updateArmy(params, false);
   }
 
   async updateArmyMetadata(event: Event) {
@@ -44,10 +44,12 @@ export default class CombatIndexer extends BaseContractIndexer {
     const armyId = +params[0];
     const realmId = arrayUInt256ToNumber(params.slice(1, 3));
 
-    const armyPacked = +params[3];
-    const lastAttacked = +params[4];
-    const level = +params[5];
-    const callSign = +params[6];
+    // Ignor Army data
+    // Deprecated
+    const armyPacked = 0; //+params[3];
+    const lastAttacked = 0; //+params[4];
+    const level = 0; //+params[5];
+    const callSign = 0; //+params[6];
 
     const updates = {
       armyPacked,
@@ -76,10 +78,14 @@ export default class CombatIndexer extends BaseContractIndexer {
     const combatOutcome = +params[0];
     // Update attacking Army
     const attackingRealm = await this.updateArmy(
-      params.slice(1, armyLength + 1)
+      params.slice(1, armyLength + 1),
+      combatOutcome === COMBAT_OUTCOME_DEFENDER_WINS
     );
     // Update defending Army
-    const defendingRealm = await this.updateArmy(params.slice(armyLength + 1));
+    const defendingRealm = await this.updateArmy(
+      params.slice(armyLength + 1),
+      combatOutcome === COMBAT_OUTCOME_ATTACKER_WINS
+    );
     const defendingRealmOwner = await this.getRealm(defendingRealm.realmId);
     const attackRealmOwner = await this.getRealm(attackingRealm.realmId);
     const pillagedResources = (await this.getPillagedResources(eventId)) ?? [];
@@ -142,24 +148,35 @@ export default class CombatIndexer extends BaseContractIndexer {
     await Promise.all(updates);
   }
 
-  async updateArmy(params: string[]) {
+  async updateArmy(params: string[], isArmyDefeated: boolean) {
     const armyId = +params[0];
     const realmId = arrayUInt256ToNumber(params.slice(1, 3));
     const battalionStats = params
       .slice(3, 3 + BATTALION_LENGTH * BATTALION_ATTR_LENGTH)
       .map((val) => +val);
-    const battalions = this.parseBattalionStats(battalionStats);
-    await this.context.prisma.army.upsert({
-      where: { realmId_armyId: { realmId, armyId } },
-      create: {
-        realmId,
-        armyId,
-        ...battalions
-      },
-      update: {
-        ...battalions
-      }
-    });
+
+    // const isArmyDefeated =
+    //   battalionStats.reduce((sum, current) => sum + current, 0) === 0;
+    if (isArmyDefeated) {
+      console.log("Realm", realmId, "Army:", armyId, "defeated");
+      await this.context.prisma.army.delete({
+        where: { realmId_armyId: { realmId, armyId } }
+      });
+    } else {
+      const battalions = this.parseBattalionStats(battalionStats);
+      await this.context.prisma.army.upsert({
+        where: { realmId_armyId: { realmId, armyId } },
+        create: {
+          realmId,
+          armyId,
+          ...battalions
+        },
+        update: {
+          ...battalions
+        }
+      });
+    }
+
     return {
       armyId,
       realmId

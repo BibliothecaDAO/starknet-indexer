@@ -43,6 +43,11 @@ export default class TravelIndexer extends BaseContractIndexer {
       create: { ...updates, eventId },
       update: { ...updates }
     });
+
+    await this.context.prisma.army.update({
+      where: { realmId_armyId: { realmId: tokenId, armyId: nestedId } },
+      data: { visitingRealmId: destinationTokenId }
+    });
   }
 }
 
