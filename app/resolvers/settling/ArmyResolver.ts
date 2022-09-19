@@ -44,12 +44,12 @@ export class ArmyResolver {
   }
 
   @FieldResolver(() => Realm)
-  async visitingRealm(@Ctx() ctx: Context, @Root() army: Army) {
-    if (!army.visitingRealmId) {
+  async destinationRealm(@Ctx() ctx: Context, @Root() army: Army) {
+    if (!army.destinationRealmId) {
       return null;
     }
     return ctx.prisma.realm.findUnique({
-      where: { realmId: army.visitingRealmId }
+      where: { realmId: army.destinationRealmId }
     });
   }
 

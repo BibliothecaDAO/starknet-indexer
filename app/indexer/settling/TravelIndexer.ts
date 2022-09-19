@@ -26,7 +26,7 @@ export default class TravelIndexer extends BaseContractIndexer {
       params.slice(5, 7)
     ) as number;
     const destinationNestedId = +params[7];
-    const arrivalTime = new Date(+params[8] * 1000);
+    const destinationArrivalTime = new Date(+params[8] * 1000);
 
     const updates = {
       contractId,
@@ -35,7 +35,7 @@ export default class TravelIndexer extends BaseContractIndexer {
       destinationContractId,
       destinationTokenId,
       destinationNestedId,
-      arrivalTime,
+      destinationArrivalTime,
       timestamp: event.timestamp
     };
     await this.context.prisma.travel.upsert({
@@ -46,7 +46,7 @@ export default class TravelIndexer extends BaseContractIndexer {
 
     await this.context.prisma.army.update({
       where: { realmId_armyId: { realmId: tokenId, armyId: nestedId } },
-      data: { visitingRealmId: destinationTokenId }
+      data: { destinationRealmId: destinationTokenId, destinationArrivalTime }
     });
   }
 }

@@ -548,7 +548,7 @@
                   <div class="mt-1 ml-2">
                     <div class="mb-1 font-medium text-gray-600"><a href="#model-Army-fields">Fields</a></div>
                       <ul class="pl-3 ml-1 border-l-2 border-gray-400">
-                      <li><a href="#model-Army-realmId">realmId</a></li><li><a href="#model-Army-armyId">armyId</a></li><li><a href="#model-Army-visitingRealmId">visitingRealmId</a></li><li><a href="#model-Army-armyPacked">armyPacked</a></li><li><a href="#model-Army-lastAttacked">lastAttacked</a></li><li><a href="#model-Army-xp">xp</a></li><li><a href="#model-Army-level">level</a></li><li><a href="#model-Army-callSign">callSign</a></li><li><a href="#model-Army-lightCavalryQty">lightCavalryQty</a></li><li><a href="#model-Army-lightCavalryHealth">lightCavalryHealth</a></li><li><a href="#model-Army-heavyCavalryQty">heavyCavalryQty</a></li><li><a href="#model-Army-heavyCavalryHealth">heavyCavalryHealth</a></li><li><a href="#model-Army-archerQty">archerQty</a></li><li><a href="#model-Army-archerHealth">archerHealth</a></li><li><a href="#model-Army-longbowQty">longbowQty</a></li><li><a href="#model-Army-longbowHealth">longbowHealth</a></li><li><a href="#model-Army-mageQty">mageQty</a></li><li><a href="#model-Army-mageHealth">mageHealth</a></li><li><a href="#model-Army-arcanistQty">arcanistQty</a></li><li><a href="#model-Army-arcanistHealth">arcanistHealth</a></li><li><a href="#model-Army-lightInfantryQty">lightInfantryQty</a></li><li><a href="#model-Army-lightInfantryHealth">lightInfantryHealth</a></li><li><a href="#model-Army-heavyInfantryQty">heavyInfantryQty</a></li><li><a href="#model-Army-heavyInfantryHealth">heavyInfantryHealth</a></li><li><a href="#model-Army-ownRealm">ownRealm</a></li>
+                      <li><a href="#model-Army-realmId">realmId</a></li><li><a href="#model-Army-armyId">armyId</a></li><li><a href="#model-Army-destinationRealmId">destinationRealmId</a></li><li><a href="#model-Army-destinationArrivalTime">destinationArrivalTime</a></li><li><a href="#model-Army-armyPacked">armyPacked</a></li><li><a href="#model-Army-lastAttacked">lastAttacked</a></li><li><a href="#model-Army-xp">xp</a></li><li><a href="#model-Army-level">level</a></li><li><a href="#model-Army-callSign">callSign</a></li><li><a href="#model-Army-lightCavalryQty">lightCavalryQty</a></li><li><a href="#model-Army-lightCavalryHealth">lightCavalryHealth</a></li><li><a href="#model-Army-heavyCavalryQty">heavyCavalryQty</a></li><li><a href="#model-Army-heavyCavalryHealth">heavyCavalryHealth</a></li><li><a href="#model-Army-archerQty">archerQty</a></li><li><a href="#model-Army-archerHealth">archerHealth</a></li><li><a href="#model-Army-longbowQty">longbowQty</a></li><li><a href="#model-Army-longbowHealth">longbowHealth</a></li><li><a href="#model-Army-mageQty">mageQty</a></li><li><a href="#model-Army-mageHealth">mageHealth</a></li><li><a href="#model-Army-arcanistQty">arcanistQty</a></li><li><a href="#model-Army-arcanistHealth">arcanistHealth</a></li><li><a href="#model-Army-lightInfantryQty">lightInfantryQty</a></li><li><a href="#model-Army-lightInfantryHealth">lightInfantryHealth</a></li><li><a href="#model-Army-heavyInfantryQty">heavyInfantryQty</a></li><li><a href="#model-Army-heavyInfantryHealth">heavyInfantryHealth</a></li><li><a href="#model-Army-ownRealm">ownRealm</a></li>
                       </ul>
                   </div>
                   <div class="mt-2 ml-2">
@@ -568,7 +568,7 @@
                   <div class="mt-1 ml-2">
                     <div class="mb-1 font-medium text-gray-600"><a href="#model-Travel-fields">Fields</a></div>
                       <ul class="pl-3 ml-1 border-l-2 border-gray-400">
-                      <li><a href="#model-Travel-eventId">eventId</a></li><li><a href="#model-Travel-contractId">contractId</a></li><li><a href="#model-Travel-tokenId">tokenId</a></li><li><a href="#model-Travel-nestedId">nestedId</a></li><li><a href="#model-Travel-destinationContractId">destinationContractId</a></li><li><a href="#model-Travel-destinationTokenId">destinationTokenId</a></li><li><a href="#model-Travel-destinationNestedId">destinationNestedId</a></li><li><a href="#model-Travel-arrivalTime">arrivalTime</a></li><li><a href="#model-Travel-timestamp">timestamp</a></li>
+                      <li><a href="#model-Travel-eventId">eventId</a></li><li><a href="#model-Travel-contractId">contractId</a></li><li><a href="#model-Travel-tokenId">tokenId</a></li><li><a href="#model-Travel-nestedId">nestedId</a></li><li><a href="#model-Travel-destinationContractId">destinationContractId</a></li><li><a href="#model-Travel-destinationTokenId">destinationTokenId</a></li><li><a href="#model-Travel-destinationNestedId">destinationNestedId</a></li><li><a href="#model-Travel-destinationArrivalTime">destinationArrivalTime</a></li><li><a href="#model-Travel-timestamp">timestamp</a></li>
                       </ul>
                   </div>
                   <div class="mt-2 ml-2">
@@ -20748,9 +20748,9 @@
       </td>
     </tr>
     
-    <tr id="model-Army-visitingRealmId">
+    <tr id="model-Army-destinationRealmId">
       <td class="px-4 py-2 border">
-       visitingRealmId 
+       destinationRealmId 
       </td>
       <td class="px-4 py-2 border">
        Int
@@ -20762,6 +20762,26 @@
       </td>
       <td class="px-4 py-2 border">
         <b>Yes</b>
+      </td>
+      <td class="px-4 py-2 border">
+        -
+      </td>
+    </tr>
+    
+    <tr id="model-Army-destinationArrivalTime">
+      <td class="px-4 py-2 border">
+       destinationArrivalTime 
+      </td>
+      <td class="px-4 py-2 border">
+       DateTime?
+      </td>
+      <td class="px-4 py-2 border">
+        <ul>
+          <li> - </li>
+        </ul>
+      </td>
+      <td class="px-4 py-2 border">
+        No
       </td>
       <td class="px-4 py-2 border">
         -
@@ -21977,9 +21997,9 @@
       </td>
     </tr>
     
-    <tr id="model-Travel-arrivalTime">
+    <tr id="model-Travel-destinationArrivalTime">
       <td class="px-4 py-2 border">
-       arrivalTime 
+       destinationArrivalTime 
       </td>
       <td class="px-4 py-2 border">
        DateTime
@@ -37214,13 +37234,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-IntFilter">IntFilter</a> | Int
       </td>
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-DateTimeNullableFilter">DateTimeNullableFilter</a> | DateTime | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -37530,7 +37562,19 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -37874,7 +37918,19 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -38274,13 +38330,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-IntWithAggregatesFilter">IntWithAggregatesFilter</a> | Int
       </td>
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-DateTimeNullableWithAggregatesFilter">DateTimeNullableWithAggregatesFilter</a> | DateTime | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -38674,7 +38742,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-DateTimeFilter">DateTimeFilter</a> | DateTime
       </td>
@@ -38798,7 +38866,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -38950,7 +39018,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -39170,7 +39238,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-DateTimeWithAggregatesFilter">DateTimeWithAggregatesFilter</a> | DateTime
       </td>
@@ -56230,13 +56298,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int
       </td>
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -56546,13 +56626,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int
       </td>
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -56838,13 +56930,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-IntFieldUpdateOperationsInput">IntFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -57154,13 +57258,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-IntFieldUpdateOperationsInput">IntFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -57458,13 +57574,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int
       </td>
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -57750,13 +57878,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-IntFieldUpdateOperationsInput">IntFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -58054,13 +58194,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-IntFieldUpdateOperationsInput">IntFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -58418,7 +58570,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         DateTime
       </td>
@@ -58542,7 +58694,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         DateTime
       </td>
@@ -58666,7 +58818,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
       </td>
@@ -58790,7 +58942,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
       </td>
@@ -58914,7 +59066,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         DateTime
       </td>
@@ -59038,7 +59190,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
       </td>
@@ -59162,7 +59314,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
       </td>
@@ -74038,7 +74190,19 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -74342,7 +74506,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -74646,7 +74810,19 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -74950,7 +75126,19 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -75254,7 +75442,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -75618,7 +75806,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -75830,7 +76018,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -75954,7 +76142,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -91274,13 +91462,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int
       </td>
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -91566,13 +91766,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int
       </td>
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -93638,13 +93850,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-IntFilter">IntFilter</a> | Int
       </td>
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-DateTimeNullableFilter">DateTimeNullableFilter</a> | DateTime | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -109114,13 +109338,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int
       </td>
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -110486,13 +110722,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-IntFieldUpdateOperationsInput">IntFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -110778,13 +111026,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-IntFieldUpdateOperationsInput">IntFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -111070,13 +111330,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-IntFieldUpdateOperationsInput">IntFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -115544,13 +115816,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int
       </td>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
       </td>
     </tr>
     
@@ -115920,7 +116204,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         DateTime
       </td>
@@ -121840,13 +122124,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int
       </td>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
       </td>
     </tr>
     
@@ -122340,7 +122636,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         DateTime
       </td>
@@ -133052,7 +133348,19 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
+      <td class="px-4 py-2 border">
+        Int
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -133368,7 +133676,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Float
       </td>
@@ -133672,7 +133980,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -133976,9 +134284,21 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
@@ -134280,9 +134600,21 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        visitingRealmId </td>
+        destinationRealmId </td>
       <td class="px-4 py-2 border">
         Int
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        destinationArrivalTime </td>
+      <td class="px-4 py-2 border">
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
@@ -134644,7 +134976,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -134956,7 +135288,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         DateTime
       </td>
@@ -135080,7 +135412,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        arrivalTime </td>
+        destinationArrivalTime </td>
       <td class="px-4 py-2 border">
         DateTime
       </td>

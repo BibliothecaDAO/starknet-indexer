@@ -20,6 +20,9 @@ type Army {
   armyId: Int!
   armyPacked: Int!
   callSign: Int!
+  destinationArrivalTime: Timestamp
+  destinationRealm: Realm
+  destinationRealmId: Int!
   heavyCavalryHealth: Int!
   heavyCavalryQty: Int!
   heavyInfantryHealth: Int!
@@ -35,8 +38,6 @@ type Army {
   mageHealth: Int!
   mageQty: Int!
   realmId: Int!
-  visitingRealm: Realm
-  visitingRealmId: Int!
   xp: Int!
 }
 
@@ -58,6 +59,8 @@ input ArmyOrderByWithRelationInput {
   armyId: SortOrder
   armyPacked: SortOrder
   callSign: SortOrder
+  destinationArrivalTime: SortOrder
+  destinationRealmId: SortOrder
   heavyCavalryHealth: SortOrder
   heavyCavalryQty: SortOrder
   heavyInfantryHealth: SortOrder
@@ -74,7 +77,6 @@ input ArmyOrderByWithRelationInput {
   mageQty: SortOrder
   ownRealm: RealmOrderByWithRelationInput
   realmId: SortOrder
-  visitingRealmId: SortOrder
   xp: SortOrder
 }
 
@@ -89,6 +91,8 @@ input ArmyWhereInput {
   armyId: IntFilter
   armyPacked: IntFilter
   callSign: IntFilter
+  destinationArrivalTime: DateTimeNullableFilter
+  destinationRealmId: IntFilter
   heavyCavalryHealth: IntFilter
   heavyCavalryQty: IntFilter
   heavyInfantryHealth: IntFilter
@@ -105,7 +109,6 @@ input ArmyWhereInput {
   mageQty: IntFilter
   ownRealm: RealmRelationFilter
   realmId: IntFilter
-  visitingRealmId: IntFilter
   xp: IntFilter
 }
 
@@ -1336,8 +1339,8 @@ The javascript `Date` as integer. Type represents date and time as number of mil
 scalar Timestamp
 
 type Travel {
-  arrivalTime: Timestamp!
   contractId: Int!
+  destinationArrivalTime: Timestamp!
   destinationContractId: Int!
   destinationNestedId: Int!
   destinationRealm: Realm
@@ -1350,8 +1353,8 @@ type Travel {
 }
 
 input TravelOrderByWithRelationInput {
-  arrivalTime: SortOrder
   contractId: SortOrder
+  destinationArrivalTime: SortOrder
   destinationContractId: SortOrder
   destinationNestedId: SortOrder
   destinationTokenId: SortOrder
@@ -1362,8 +1365,8 @@ input TravelOrderByWithRelationInput {
 }
 
 enum TravelScalarFieldEnum {
-  arrivalTime
   contractId
+  destinationArrivalTime
   destinationContractId
   destinationNestedId
   destinationTokenId
@@ -1377,8 +1380,8 @@ input TravelWhereInput {
   AND: [TravelWhereInput!]
   NOT: [TravelWhereInput!]
   OR: [TravelWhereInput!]
-  arrivalTime: DateTimeFilter
   contractId: IntFilter
+  destinationArrivalTime: DateTimeFilter
   destinationContractId: IntFilter
   destinationNestedId: IntFilter
   destinationTokenId: IntFilter

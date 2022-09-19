@@ -9,9 +9,11 @@ export class Army {
   @Field(() => Int, { nullable: false })
   armyId: number;
   @Field(() => Int, { nullable: false })
-  visitingRealmId: number;
+  destinationRealmId: number;
   @Field(() => Realm, { nullable: true })
-  visitingRealm: Realm;
+  destinationRealm: Realm;
+  @Field({ nullable: true })
+  destinationArrivalTime: Date;
 
   // ArmyData
   @Field(() => Int, { nullable: false })

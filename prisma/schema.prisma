@@ -386,9 +386,10 @@ model ResourceTransfer {
 
 // Combat
 model Army {
-  realmId         Int
-  armyId          Int
-  visitingRealmId Int @default(0)
+  realmId                Int
+  armyId                 Int
+  destinationRealmId     Int       @default(0)
+  destinationArrivalTime DateTime?
 
   // ArmyData
   armyPacked   Int @default(0)
@@ -421,13 +422,13 @@ model Army {
 }
 
 model Travel {
-  eventId               String   @id
-  contractId            Int
-  tokenId               Int
-  nestedId              Int
-  destinationContractId Int
-  destinationTokenId    Int
-  destinationNestedId   Int
-  arrivalTime           DateTime
-  timestamp             DateTime
+  eventId                String   @id
+  contractId             Int
+  tokenId                Int
+  nestedId               Int
+  destinationContractId  Int
+  destinationTokenId     Int
+  destinationNestedId    Int
+  destinationArrivalTime DateTime
+  timestamp              DateTime
 }
