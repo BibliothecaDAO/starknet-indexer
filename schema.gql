@@ -284,8 +284,20 @@ input EnumRealmTraitTypeFilter {
   notIn: [RealmTraitType!]
 }
 
-"""Exchange Rate"""
 type ExchangeRate {
+  amount: String!
+  buyAmount: String!
+  currencyReserve: String!
+  date: String!
+  hour: Int!
+  lpAmount: String!
+  sellAmount: String!
+  tokenId: Int!
+  tokenReserve: String!
+}
+
+"""Exchange Rate"""
+type ExchangeRate24Hr {
   amount: String!
   buyAmount: String!
   currencyReserve: String!
@@ -297,6 +309,55 @@ type ExchangeRate {
   tokenId: Int!
   tokenName: String!
   tokenReserve: String!
+}
+
+input ExchangeRateDateHourTokenIdCompoundUniqueInput {
+  date: String!
+  hour: Int!
+  tokenId: Int!
+}
+
+input ExchangeRateOrderByWithRelationInput {
+  amount: SortOrder
+  buyAmount: SortOrder
+  currencyReserve: SortOrder
+  date: SortOrder
+  hour: SortOrder
+  lpAmount: SortOrder
+  sellAmount: SortOrder
+  tokenId: SortOrder
+  tokenReserve: SortOrder
+}
+
+enum ExchangeRateScalarFieldEnum {
+  amount
+  buyAmount
+  currencyReserve
+  date
+  hour
+  lpAmount
+  sellAmount
+  tokenId
+  tokenReserve
+}
+
+input ExchangeRateWhereInput {
+  AND: [ExchangeRateWhereInput!]
+  NOT: [ExchangeRateWhereInput!]
+  OR: [ExchangeRateWhereInput!]
+  amount: StringFilter
+  buyAmount: StringFilter
+  currencyReserve: StringFilter
+  date: StringFilter
+  hour: IntFilter
+  lpAmount: StringFilter
+  sellAmount: StringFilter
+  tokenId: IntFilter
+  tokenReserve: StringFilter
+}
+
+input ExchangeRateWhereUniqueInput {
+  date_hour_tokenId: ExchangeRateDateHourTokenIdCompoundUniqueInput
 }
 
 input FloatFilter {
@@ -756,13 +817,14 @@ type Query {
   armies(orderBy: ArmyOrderByWithRelationInput, skip: Float = 0, take: Float = 100, where: ArmyWhereInput): [Army!]!
   battalionCosts: [BattalionCost!]!
   battalionStats: [BattalionStats!]!
+  exchangeRates(cursor: ExchangeRateWhereUniqueInput, distinct: [ExchangeRateScalarFieldEnum!], orderBy: [ExchangeRateOrderByWithRelationInput!], skip: Int, take: Int, where: ExchangeRateWhereInput): [ExchangeRate!]!
   getBuildingCostById: BuildingCost!
   getBuildingCosts: [BuildingCost!]!
   getBuildingsByRealmId(id: Float!): [Building!]!
   getDesiege(id: Float!): Desiege!
   getDesiegeCurrent: Desiege!
   getDesiegeGames: [Desiege!]!
-  getExchangeRates: [ExchangeRate!]!
+  getExchangeRates: [ExchangeRate24Hr!]!
   getFoodByRealmId(id: Float!): [Food!]!
   getLoreEntities(filter: LoreEntityWhereInput, skip: Float = 0, take: Float = 100): [LoreEntity!]!
   getLoreEntity(entityId: Float!): LoreEntity!

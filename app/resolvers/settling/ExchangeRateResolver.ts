@@ -2,12 +2,16 @@ import { BigNumber } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { Resolver, Query, Ctx } from "type-graphql";
 import { Context } from "./../../context";
-
-import { ExchangeRate } from "./../../entities";
+import { ExchangeRate24Hr } from "./../../entities";
+// imporet {} from ''
+import {
+  FindManyExchangeRateResolver,
+  ExchangeRate
+} from "@generated/type-graphql";
 
 @Resolver((_of) => ExchangeRate)
-export class ExchangeRateResolver {
-  @Query((_returns) => [ExchangeRate], { nullable: false })
+export class ExchangeRateResolver extends FindManyExchangeRateResolver {
+  @Query((_returns) => [ExchangeRate24Hr], { nullable: false })
   async getExchangeRates(@Ctx() ctx: Context) {
     const current = await ctx.prisma.exchangeRate.findFirst({
       orderBy: [{ date: "desc" }, { hour: "desc" }]
@@ -50,15 +54,15 @@ export class ExchangeRateResolver {
         previousAmount === "0" ||
         rate.amount === previousAmount
       ) {
-        (rate as ExchangeRate).percentChange24Hr = 0;
+        (rate as ExchangeRate24Hr).percentChange24Hr = 0;
       } else {
         const current = +formatEther(BigNumber.from(rate.amount));
         const previous = +formatEther(BigNumber.from(previousAmount));
         const diff = current - previous;
         try {
-          (rate as ExchangeRate).percentChange24Hr = diff / previous;
+          (rate as ExchangeRate24Hr).percentChange24Hr = diff / previous;
         } catch (e) {
-          (rate as ExchangeRate).percentChange24Hr = 0;
+          (rate as ExchangeRate24Hr).percentChange24Hr = 0;
         }
       }
     }

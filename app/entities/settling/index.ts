@@ -8,7 +8,7 @@ import { RealmHistory } from "./RealmHistory";
 import { Troop } from "./Troop";
 import { TroopCost } from "./TroopCost";
 import { TroopStats } from "./TroopStats";
-import { ExchangeRate } from "./ExchangeRate";
+import { ExchangeRate24Hr } from "./ExchangeRate24Hr";
 import { CombatHistory } from "./CombatHistory";
 import { CombatResult } from "./CombatResult";
 import { Relic } from "./Relic";
@@ -27,7 +27,7 @@ export {
   ResourceAmount,
   BuildingCost,
   RealmTrait,
-  ExchangeRate,
+  ExchangeRate24Hr,
   CombatHistory,
   CombatResult,
   Relic,
