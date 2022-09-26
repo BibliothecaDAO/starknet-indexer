@@ -25,6 +25,4 @@ export class Event {
   timestamp: Date;
   @Field()
   txHash: string;
-  @Field()
-  toAddress: string;
 }

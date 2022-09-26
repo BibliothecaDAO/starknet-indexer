@@ -4,6 +4,7 @@ import BaseContractIndexer from "./../BaseContractIndexer";
 import { uint256ToBN } from "starknet/utils/uint256";
 import { BigNumberish } from "starknet/utils/number";
 import { BigNumber } from "ethers";
+import { formatEther } from "ethers/lib/utils";
 
 function arrayUInt256ToNumber([low, high]: any[]): number {
   return parseInt(uint256ToBN({ low, high }).toString());
@@ -41,7 +42,7 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
       blockNumber,
       transactionNumber,
       amount,
-      amountValue: amount,
+      amountValue: formatEther(amount),
       transactionHash,
       timestamp: event.timestamp
     };
@@ -82,7 +83,7 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
         blockNumber,
         transactionNumber,
         amount,
-        amountValue: amount,
+        amountValue: formatEther(amount),
         transactionHash,
         timestamp
       };

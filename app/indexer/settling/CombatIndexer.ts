@@ -16,6 +16,26 @@ const CONTRACT =
   "0x04d4e010850d0df3c6fd9672a72328514acc5e1285935104a29d215184903582";
 
 const START_BLOCK = 331146;
+const ARMY_SEELCT = {
+  realmId: true,
+  armyId: true,
+  lightCavalryQty: true,
+  lightCavalryHealth: true,
+  heavyCavalryQty: true,
+  heavyCavalryHealth: true,
+  archerQty: true,
+  archerHealth: true,
+  longbowQty: true,
+  longbowHealth: true,
+  mageQty: true,
+  mageHealth: true,
+  arcanistQty: true,
+  arcanistHealth: true,
+  lightInfantryQty: true,
+  lightInfantryHealth: true,
+  heavyInfantryQty: true,
+  heavyInfantryHealth: true
+};
 
 function arrayUInt256ToNumber([low, high]: any[]): BigNumberish {
   return parseInt(uint256ToBN({ low, high }).toString());
@@ -44,15 +64,14 @@ export default class CombatIndexer extends BaseContractIndexer {
     const armyId = +params[0];
     const realmId = arrayUInt256ToNumber(params.slice(1, 3));
 
-    // Ignor Army data
-    // Deprecated
-    const armyPacked = 0; //+params[3];
-    const lastAttacked = 0; //+params[4];
-    const level = 0; //+params[5];
-    const callSign = 0; //+params[6];
+    // Ignore Army data for now
+    // const armyPacked = 0; //+params[3];
+    const lastAttacked = +params[4] ? new Date(+params[4] * 1000) : null;
+    const level = +params[5];
+    const callSign = +params[6];
 
     const updates = {
-      armyPacked,
+      // armyPacked,
       lastAttacked,
       level,
       callSign
@@ -76,16 +95,45 @@ export default class CombatIndexer extends BaseContractIndexer {
 
     const eventId = event.eventId;
     const combatOutcome = +params[0];
+
     // Update attacking Army
+    const attackParams = params.slice(1, armyLength + 1);
+    const attackArmyId = +attackParams[0];
+    const attackRealmId = arrayUInt256ToNumber(attackParams.slice(1, 3));
+
     const attackingRealm = await this.updateArmy(
-      params.slice(1, armyLength + 1),
+      attackParams,
       combatOutcome === COMBAT_OUTCOME_DEFENDER_WINS
     );
+    const attackingArmyStart = await this.context.prisma.army.findUnique({
+      where: {
+        realmId_armyId: {
+          armyId: attackArmyId,
+          realmId: attackRealmId
+        }
+      },
+      select: ARMY_SEELCT
+    });
+
     // Update defending Army
+    const defendingParams = params.slice(armyLength + 1);
+    const defendingArmyId = +defendingParams[0];
+    const defendingRealmId = arrayUInt256ToNumber(defendingParams.slice(1, 3));
+    const defendingArmyStart = await this.context.prisma.army.findUnique({
+      where: {
+        realmId_armyId: {
+          armyId: defendingArmyId,
+          realmId: defendingRealmId
+        }
+      },
+
+      select: ARMY_SEELCT
+    });
     const defendingRealm = await this.updateArmy(
-      params.slice(armyLength + 1),
+      defendingParams,
       combatOutcome === COMBAT_OUTCOME_ATTACKER_WINS
     );
+
     const defendingRealmOwner = await this.getRealm(defendingRealm.realmId);
     const attackRealmOwner = await this.getRealm(attackingRealm.realmId);
     const pillagedResources = (await this.getPillagedResources(eventId)) ?? [];
@@ -102,7 +150,6 @@ export default class CombatIndexer extends BaseContractIndexer {
         realmId: attackingRealm.realmId,
         eventId,
         eventType: "realm_combat_attack",
-        account: event.toAddress,
         timestamp: event.timestamp,
         transactionHash: event.txHash,
         data: {
@@ -111,7 +158,9 @@ export default class CombatIndexer extends BaseContractIndexer {
           defendRealmName: defendingRealmOwner.name,
           defendRealmId: defendingRealm.realmId,
           pillagedResources,
-          ...relicAttackData
+          ...relicAttackData,
+          armiesStart: [attackingArmyStart, defendingArmyStart],
+          armiesEnd: [attackingRealm, defendingRealm]
         }
       })
     );
@@ -128,11 +177,13 @@ export default class CombatIndexer extends BaseContractIndexer {
         transactionHash: event.txHash,
         data: {
           success: combatOutcome === COMBAT_OUTCOME_DEFENDER_WINS,
-          attackRealmOwner: event.toAddress,
+          attackRealmOwner: attackRealmOwner,
           attackRealmId: attackingRealm.realmId,
           attackRealmName: attackRealmOwner.name,
           pillagedResources,
-          ...relicDefendData
+          ...relicDefendData,
+          armiesStart: [attackingArmyStart, defendingArmyStart],
+          armiesEnd: [attackingRealm, defendingRealm]
         }
       })
     );
@@ -155,15 +206,13 @@ export default class CombatIndexer extends BaseContractIndexer {
       .slice(3, 3 + BATTALION_LENGTH * BATTALION_ATTR_LENGTH)
       .map((val) => +val);
 
-    // const isArmyDefeated =
-    //   battalionStats.reduce((sum, current) => sum + current, 0) === 0;
+    const battalions = this.parseBattalionStats(battalionStats);
     if (isArmyDefeated) {
       console.log("Realm", realmId, "Army:", armyId, "defeated");
       await this.context.prisma.army.delete({
         where: { realmId_armyId: { realmId, armyId } }
       });
     } else {
-      const battalions = this.parseBattalionStats(battalionStats);
       await this.context.prisma.army.upsert({
         where: { realmId_armyId: { realmId, armyId } },
         create: {
@@ -179,7 +228,8 @@ export default class CombatIndexer extends BaseContractIndexer {
 
     return {
       armyId,
-      realmId
+      realmId,
+      ...battalions
     };
   }
 
@@ -188,22 +238,22 @@ export default class CombatIndexer extends BaseContractIndexer {
       console.error("Battalions format error");
     }
     return {
-      lightCavalryQty: battalions[0],
-      lightCavalryHealth: battalions[1],
-      heavyCavalryQty: battalions[2],
-      heavyCavalryHealth: battalions[3],
-      archerQty: battalions[4],
-      archerHealth: battalions[5],
-      longbowQty: battalions[6],
-      longbowHealth: battalions[7],
-      mageQty: battalions[8],
-      mageHealth: battalions[9],
-      arcanistQty: battalions[10],
-      arcanistHealth: battalions[11],
-      lightInfantryQty: battalions[12],
-      lightInfantryHealth: battalions[13],
-      heavyInfantryQty: battalions[14],
-      heavyInfantryHealth: battalions[15]
+      lightCavalryQty: battalions[0] ?? 0,
+      lightCavalryHealth: battalions[1] ?? 0,
+      heavyCavalryQty: battalions[2] ?? 0,
+      heavyCavalryHealth: battalions[3] ?? 0,
+      archerQty: battalions[4] ?? 0,
+      archerHealth: battalions[5] ?? 0,
+      longbowQty: battalions[6] ?? 0,
+      longbowHealth: battalions[7] ?? 0,
+      mageQty: battalions[8] ?? 0,
+      mageHealth: battalions[9] ?? 0,
+      arcanistQty: battalions[10] ?? 0,
+      arcanistHealth: battalions[11] ?? 0,
+      lightInfantryQty: battalions[12] ?? 0,
+      lightInfantryHealth: battalions[13] ?? 0,
+      heavyInfantryQty: battalions[14] ?? 0,
+      heavyInfantryHealth: battalions[15] ?? 0
     };
   }
 

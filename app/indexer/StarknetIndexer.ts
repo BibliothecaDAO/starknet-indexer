@@ -33,7 +33,6 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
         contract: event.contract,
         name: event.name,
         parameters: event.parameters,
-        toAddress: event.toAddress,
         keys: event.keys,
         blockNumber: event.blockNumber,
         transactionNumber: event.transactionNumber
@@ -60,8 +59,10 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
         })
       );
     }
+
     if (upserts.length > 0) {
-      await this.context.prisma.$transaction(upserts);
+      await Promise.all(upserts);
+      // await this.context.prisma.$transaction(upserts);
     }
     return;
   }
@@ -76,7 +77,7 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
       orderBy: { eventId: "desc" }
     });
     let lastEventIndexed = lastEvent?.eventId ?? "";
-    let lastBlockNumber = lastEvent?.blockNumber ?? 0;
+    let lastBlockNumber = (lastEvent?.blockNumber ?? 0) + 1;
 
     let fetchMore = true;
     let page = 0;
@@ -91,9 +92,12 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
         }
       });
       if (!resp) {
+        console.error("Error requesting events. Empty results.");
         return;
       }
+
       const blockNumbers = {} as any;
+
       const txHashes = resp.events
         .map((event: any) => {
           blockNumbers[event.transaction_hash] = event.block_number;
@@ -117,8 +121,8 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
           continue;
         }
 
-        for (let i = 0; i < receipt.events.length; i++) {
-          const event = receipt.events[i];
+        for (let eventIdx = 0; eventIdx < receipt.events.length; eventIdx++) {
+          const event = receipt.events[eventIdx];
           if (
             BigNumber.from(event.from_address).toHexString() !==
             BigNumber.from(contract).toHexString()
@@ -136,28 +140,17 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
             return;
           }
 
-          const transaction = await this.provider.getTransactionByHash(
-            transactionHash
-          );
-
-          if (!transaction) {
-            // TODO: handle error
-            console.error("transaction not found", transactionHash);
-            return;
-          }
-
           let transactionNumber = block.transactions.indexOf(transactionHash);
           if (transactionNumber < 0) {
             // TODO: handle error
             console.error("transaction number not found", transactionHash);
             return;
           }
-          const toAddress = transaction.contract_address;
 
           const eventId = `${blockNumber}_${String(transactionNumber).padStart(
             4,
             "0"
-          )}_${String(i).padStart(4, "0")}`;
+          )}_${String(eventIdx).padStart(4, "0")}`;
 
           const timestamp = new Date(block.timestamp * 1000);
           const name = event.keys
@@ -173,7 +166,6 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
               blockNumber,
               transactionNumber,
               transactionHash,
-              toAddress,
               timestamp,
               keys: event.keys ?? [],
               parameters: event.data ?? [],
@@ -184,12 +176,14 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
       }
 
       fetchMore = resp.is_last_page === false;
+
       await this.index(results);
+
       page++;
     } while (fetchMore);
   }
 
-  async syncEvents() {
+  async syncAllEvents() {
     for (let contract of this.contracts()) {
       await this.indexContract(contract);
     }
@@ -225,21 +219,27 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
       return;
     }
 
-    this.isSyncing = true;
+    try {
+      this.isSyncing = true;
+      const blockNumber = await this.provider.blockNumber();
+      if (this.currentBlockNumber < blockNumber) {
+        console.info(
+          "syncing events from starknet started",
+          this.currentBlockNumber
+        );
+        await this.syncAllEvents();
+        console.info("syncing events from starknet complete", blockNumber);
+        this.currentBlockNumber = blockNumber;
+      } else {
+        console.info("no new blocks");
+      }
 
-    const blockNumber = await this.provider.blockNumber();
-    if (this.currentBlockNumber < blockNumber) {
-      console.info("syncing events from starknet started", blockNumber);
-      await this.syncEvents();
-      console.info("syncing events from starknet complete", blockNumber);
-
-      this.currentBlockNumber = await this.provider.blockNumber();
-    } else {
-      console.info("no new blocks");
+      await this.syncIndexers();
+      this.isSyncing = false;
+    } catch (e) {
+      console.log(e);
+      this.isSyncing = false;
     }
-
-    await this.syncIndexers();
-    this.isSyncing = false;
   }
 
   async start() {

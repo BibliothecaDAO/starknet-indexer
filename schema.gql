@@ -97,7 +97,7 @@ input ArmyWhereInput {
   heavyCavalryQty: IntFilter
   heavyInfantryHealth: IntFilter
   heavyInfantryQty: IntFilter
-  lastAttacked: IntFilter
+  lastAttacked: DateTimeNullableFilter
   level: IntFilter
   lightCavalryHealth: IntFilter
   lightCavalryQty: IntFilter

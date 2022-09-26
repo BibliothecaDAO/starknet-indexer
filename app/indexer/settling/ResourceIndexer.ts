@@ -57,7 +57,6 @@ export default class ResourceIndexer extends BaseContractIndexer {
         realmId,
         eventId,
         eventType: "realm_resource_upgraded",
-        account: event.toAddress,
         timestamp: event.timestamp,
         transactionHash: event.txHash,
         data: {

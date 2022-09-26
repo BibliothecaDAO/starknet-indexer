@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 
 const RPC_URL =
-  "https://starknet-goerli.infura.io/v3/" + process.env.INFURA_API_KEY; //"https://starknet-goerli.cartridge.gg/";
+  /* "https://starknet-goerli.infura.io/v3/" + process.env.INFURA_API_KEY; */ "https://starknet-goerli.cartridge.gg/";
 
 type RpcMethod =
   | "getEvents"
@@ -51,9 +51,9 @@ export default class StarknetRpcProvider {
   private txReceiptCache: Cache;
 
   constructor() {
-    this.blockCache = new Cache(1000);
-    this.txCache = new Cache(1000);
-    this.txReceiptCache = new Cache(1000);
+    this.blockCache = new Cache(5000);
+    this.txCache = new Cache(5000);
+    this.txReceiptCache = new Cache(5000);
   }
 
   createRequestBody(method: RpcMethod, params: any[]): any {

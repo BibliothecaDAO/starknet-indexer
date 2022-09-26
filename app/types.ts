@@ -9,7 +9,6 @@ export interface StarkNetEvent {
   eventId: string;
   blockNumber?: number;
   transactionNumber?: number;
-  toAddress?: string;
   chainId?: string;
   contract?: string;
   keys?: Array<string>;

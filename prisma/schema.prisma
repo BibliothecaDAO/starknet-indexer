@@ -79,7 +79,8 @@ model Realm {
   lastVaultTime DateTime?
   longitude     Float        @default(0.0)
   latitude      Float        @default(0.0)
-  ownArmies     Army[]       @relation(name: "ownRealm")
+
+  ownArmies Army[] @relation(name: "ownRealm")
 }
 
 model Building {
@@ -209,7 +210,6 @@ model Event {
   eventId           String   @unique
   blockNumber       Int      @default(0)
   transactionNumber Int      @default(0)
-  toAddress         String   @default("")
   chainId           String
   contract          String
   name              String
@@ -334,7 +334,7 @@ model RealmHistory {
   eventId         String
   eventType       String
   realmId         Int
-  realmOwner      String
+  realmOwner      String     @default("")
   realmName       String     @default("")
   realmOrder      OrderType?
   data            Json
@@ -342,9 +342,6 @@ model RealmHistory {
   transactionHash String     @default("")
 
   @@unique([eventId, eventType])
-  @@index([realmOwner, eventId(sort: Desc)])
-  @@index([realmId, eventId(sort: Desc)])
-  @@index([eventType, eventId(sort: Desc)])
 }
 
 model CombatHistory {
@@ -392,11 +389,11 @@ model Army {
   destinationArrivalTime DateTime?
 
   // ArmyData
-  armyPacked   Int @default(0)
-  lastAttacked Int @default(0)
-  xp           Int @default(0)
-  level        Int @default(0)
-  callSign     Int @default(0)
+  armyPacked   Int       @default(0)
+  lastAttacked DateTime?
+  xp           Int       @default(0)
+  level        Int       @default(0)
+  callSign     Int       @default(0)
 
   // Battalions
   lightCavalryQty     Int @default(0)

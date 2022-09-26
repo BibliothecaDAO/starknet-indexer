@@ -91,39 +91,32 @@ export default class BaseContractIndexer implements Indexer<Event> {
     realmId,
     eventId,
     eventType,
-    account,
     data,
     timestamp,
     transactionHash
   }: RealmEvent): Promise<void> {
-    let realmOwner = account ?? "";
-    // if (!realmOwner) {
     const realm = await this.context.prisma.realm.findFirst({
       where: { realmId }
     });
-    let realmName = "";
-    let realmOrder = undefined;
-    if (!realmOwner) {
-      realmOwner = realm?.settledOwner || realm?.ownerL2 || "";
-    }
-    realmName = realm?.name ?? "";
-    realmOrder = (realm?.orderType as OrderType) ?? undefined;
+    const realmOwner = realm?.settledOwner || realm?.ownerL2 || "";
+    const realmName = realm?.name ?? "";
+    const realmOrder = (realm?.orderType as OrderType) ?? undefined;
 
     await this.context.prisma.realmHistory.upsert({
       where: {
         eventId_eventType: { eventId: eventId, eventType: eventType }
       },
-      update: { realmId, realmOwner, data, timestamp, realmName, realmOrder },
+      update: { realmId, data, timestamp, realmOwner, realmName, realmOrder },
       create: {
         eventId,
         eventType,
         realmId,
         realmOwner,
+        realmName,
+        realmOrder,
         data,
         timestamp,
-        transactionHash,
-        realmName,
-        realmOrder
+        transactionHash
       }
     });
   }

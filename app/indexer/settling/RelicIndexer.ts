@@ -36,7 +36,6 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
         realmId: realmId,
         eventId,
         eventType: "relic_update",
-        account: event.toAddress,
         timestamp: event.timestamp,
         transactionHash: event.txHash,
         data: {

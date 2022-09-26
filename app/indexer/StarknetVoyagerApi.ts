@@ -77,9 +77,9 @@ export default class StarknetVoyagerApi {
     const eventDetails = details.receipt.events.find(
       (ev: any) => ev.id === voyagerEvent.id
     );
-    const toAddress = details.header.to
-      ? BigNumber.from(details.header.to).toHexString()
-      : "";
+    // const toAddress = details.header.to
+    //   ? BigNumber.from(details.header.to).toHexString()
+    //   : "";
 
     return {
       name: "",
@@ -90,7 +90,7 @@ export default class StarknetVoyagerApi {
       contract: voyagerEvent.contract,
       transactionHash: voyagerEvent.transactionHash,
       timestamp: new Date(details.header.timestamp * 1000),
-      toAddress,
+      // toAddress,
       parameters: eventDetails ? eventDetails.data : [],
       keys: eventDetails ? eventDetails.keys : []
     };
