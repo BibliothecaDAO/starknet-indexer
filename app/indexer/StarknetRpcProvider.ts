@@ -1,7 +1,11 @@
 import fetch from "node-fetch";
 
+const NETWORK = process.env.NETWORK ?? "mainnet";
+
 const RPC_URL =
-  /* "https://starknet-goerli.infura.io/v3/" + process.env.INFURA_API_KEY; */ "https://starknet-goerli.cartridge.gg/";
+  NETWORK === "goerli"
+    ? "https://starknet-goerli.cartridge.gg/"
+    : `https://starknet-${NETWORK}.infura.io/v3/${process.env.INFURA_API_KEY}`;
 
 type RpcMethod =
   | "getEvents"

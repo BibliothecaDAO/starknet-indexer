@@ -70,7 +70,10 @@ const main = async () => {
   );
   const realmsL1Indexer = new RealmsL1Indexer(context);
   await realmsL1Indexer.start();
-  await StarkNet().serverWillStart();
+
+  if (process.env.NETWORK === "goerli") {
+    await StarkNet().serverWillStart();
+  }
 };
 
 main().catch((error) => {
