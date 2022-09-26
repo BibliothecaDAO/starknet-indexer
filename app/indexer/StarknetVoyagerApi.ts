@@ -1,7 +1,7 @@
 import { NETWORK } from "./../utils/constants";
 import fetch from "node-fetch";
 import { StarkNetEvent } from "./../types";
-import { BigNumber } from "ethers";
+// import { BigNumber } from "ethers";
 
 const StarknetVoyagerApiUrl = "https://goerli.voyager.online/api";
 
