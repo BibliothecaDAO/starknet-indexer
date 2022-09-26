@@ -342,6 +342,9 @@ model RealmHistory {
   transactionHash String     @default("")
 
   @@unique([eventId, eventType])
+  @@index([realmOwner, eventId(sort: Desc)])
+  @@index([realmId, eventId(sort: Desc)])
+  @@index([eventType, eventId(sort: Desc)])
 }
 
 model CombatHistory {
