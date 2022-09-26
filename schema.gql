@@ -27,7 +27,7 @@ type Army {
   heavyCavalryQty: Int!
   heavyInfantryHealth: Int!
   heavyInfantryQty: Int!
-  lastAttacked: Int!
+  lastAttacked: Timestamp
   level: Int!
   lightCavalryHealth: Int!
   lightCavalryQty: Int!

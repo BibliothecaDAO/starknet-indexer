@@ -18,8 +18,8 @@ export class Army {
   // ArmyData
   @Field(() => Int, { nullable: false })
   armyPacked: number;
-  @Field(() => Int, { nullable: false })
-  lastAttacked: number;
+  @Field({ nullable: true })
+  lastAttacked: Date;
   @Field(() => Int, { nullable: false })
   xp: number;
   @Field(() => Int, { nullable: false })
