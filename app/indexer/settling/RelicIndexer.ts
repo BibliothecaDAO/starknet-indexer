@@ -3,7 +3,7 @@ import { Context } from "./../../context";
 import BaseContractIndexer from "./../BaseContractIndexer";
 
 const RELIC_ADDRESS =
-  "0x027d0dd8dbe02f8dec5ff64b873eb78993c520f7c6f10b95f86cb061857769d0";
+  "0x06052bf4631585f7074a118543121561d12cc910e0ab95b48039eab587e078d2";
 
 export default class RealmsL2Indexer extends BaseContractIndexer {
   constructor(context: Context) {

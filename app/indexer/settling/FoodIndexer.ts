@@ -3,7 +3,7 @@ import { Context } from "./../../context";
 import BaseContractIndexer from "./../BaseContractIndexer";
 
 const CONTRACT =
-  "0x03a34ef38f402d6b66b681db7905edfc48676288a7b08cd79910737c45431093";
+  "0x02d73a83afeaf5927c2dfb51b2412ea9dfe1fb6cd41b1b702607e7345ce47d09";
 
 export default class FoodIndexer extends BaseContractIndexer {
   constructor(context: Context) {

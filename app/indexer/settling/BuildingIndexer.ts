@@ -4,7 +4,7 @@ import BaseContractIndexer from "./../BaseContractIndexer";
 import { BuildingNameById } from "./../../utils/game_constants";
 
 const CONTRACT =
-  "0x07e6ef6eae7a6d03baaace2fe8b5747ed52fa6c7ae615f3e3bd3311ac98d139a";
+  "0x01c7a86cea8febe69d688dd5ffa361e7924f851db730f4256ed67fd805ea8aa7";
 
 export default class BuildingIndexer extends BaseContractIndexer {
   constructor(context: Context) {

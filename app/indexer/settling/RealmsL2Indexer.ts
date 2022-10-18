@@ -2,11 +2,12 @@ import { Event } from "./../../entities/starknet/Event";
 import { Context } from "./../../context";
 import { BigNumber } from "ethers";
 import BaseContractIndexer from "./../BaseContractIndexer";
+import * as Settling from "./SettlingIndexer";
 
-const SETTLING_CONTRACT_ADDRESS =
-  "0x02b4b514e756a7f505711383261214873fe44ba19974f0e0352dce3b5c890d76";
+const SETTLING_CONTRACT_ADDRESS = Settling.CONTRACT;
+
 const CONTRACT =
-  "0x076bb5a142fa1d9c5d3a46eefaec38cc32b44e093432b1eb46466ea124f848a5";
+  "0x02ab849a3eaf4fd54f80e6dbe7a8d182646ec41684d1f1a4f718623bd8cb0695";
 
 export default class RealmsL2Indexer extends BaseContractIndexer {
   constructor(context: Context) {

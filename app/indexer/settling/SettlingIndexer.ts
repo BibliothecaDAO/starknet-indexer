@@ -2,8 +2,8 @@ import { Event } from "./../../entities/starknet/Event";
 import { Context } from "./../../context";
 import BaseContractIndexer from "./../BaseContractIndexer";
 
-const CONTRACT =
-  "0x02b4b514e756a7f505711383261214873fe44ba19974f0e0352dce3b5c890d76";
+export const CONTRACT =
+  "0x007a29730cfaed96839660577c3b3019038862187b0865280b79e944c66ac215";
 
 const START_BLOCK = 241365;
 

@@ -15,7 +15,8 @@ function arrayUInt256ToBigNumber([low, high]: any[]): BigNumberish {
 }
 
 export const CONTRACT =
-  "0x07144f39e676656e81d482dc2cc9f68c98d768fe1beaad28438b43142cc9ff9e";
+  "0x07080e87497f82ac814c6eaf91d66ac93672927a8c019014f05eb6d688ebd0fc";
+
 export default class ResourceERC1155Indexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);

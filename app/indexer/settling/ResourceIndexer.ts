@@ -4,7 +4,7 @@ import BaseContractIndexer from "./../BaseContractIndexer";
 import { ResourceNameById } from "./../../utils/game_constants";
 
 const CONTRACT =
-  "0x06f0e13b23b610534484e8347f78312af6c11cced04e34bd124956a915e5c881";
+  "0x058d3a1a5fe490cdbfbb14c7a648142b3b7debb65747450b76f604c3c39f4cfe";
 export default class ResourceIndexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);

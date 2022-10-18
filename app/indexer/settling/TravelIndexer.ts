@@ -5,7 +5,7 @@ import { uint256ToBN } from "starknet/utils/uint256";
 import { BigNumberish } from "starknet/utils/number";
 
 const CONTRACT =
-  "0x05f273c4a45dab6e8112e2370bd84f58cfd2f1ff83752c2582241c0c0acba9be";
+  "0x0415bda0925437cee1cd70c5782c65a5b1f5c72945c5204dbba71c6d69c8575a";
 
 export default class TravelIndexer extends BaseContractIndexer {
   constructor(context: Context) {
