@@ -25,7 +25,8 @@ import { LorePOIResolver } from "./resolvers/lore/LorePOIResolver";
 
 import {
   AggregateRealmHistoryResolver,
-  GroupByRealmHistoryResolver
+  GroupByRealmHistoryResolver,
+  FindManyWalletBalanceResolver
 } from "@generated/type-graphql";
 const main = async () => {
   const schema = await buildSchema({
@@ -44,7 +45,8 @@ const main = async () => {
       AggregateRealmHistoryResolver,
       GroupByRealmHistoryResolver,
       ArmyResolver,
-      TravelResolver
+      TravelResolver,
+      FindManyWalletBalanceResolver
     ],
     emitSchemaFile: true,
     validate: false,

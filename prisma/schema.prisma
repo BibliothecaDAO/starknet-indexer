@@ -45,24 +45,26 @@ enum OrderType {
   the_Twins
 }
 
-// MILSTONE 1
 model Wallet {
-  id      Int             @id @default(autoincrement())
-  address String          @unique
-  realms  Realm[]         @relation()
-  sRealms SRealm[]        @relation()
-  tokens  ResourceToken[] @relation()
+  id            Int     @id @default(autoincrement())
+  address       String  @unique
+  realmsL1      Realm[] @relation("realmL1")
+  realmsL2      Realm[] @relation("realmL2")
+  realmsSettled Realm[] @relation("realmSettled")
 }
 
 model Realm {
-  id            Int          @id @default(autoincrement())
-  realmId       Int          @unique
+  id            Int     @id @default(autoincrement())
+  realmId       Int     @unique
   name          String?
-  wallet        Wallet?      @relation(fields: [owner], references: [address])
+  wallet        Wallet? @relation(name: "realmL1", fields: [owner], references: [address])
   owner         String?
   bridgedOwner  String?
   ownerL2       String?
+  walletL2      Wallet? @relation(name: "realmL2", fields: [ownerL2], references: [address])
   settledOwner  String?
+  walletSettled Wallet? @relation(name: "realmSettled", fields: [settledOwner], references: [address])
+
   wonder        String?
   rarityRank    Int          @default(0)
   rarityScore   Float        @default(0)
@@ -137,12 +139,14 @@ model Resource {
   @@unique([resourceId, realmId])
 }
 
-model ResourceToken {
-  id         Int    @id @default(autoincrement())
-  resourceId Int
-  qty        Int
-  address    String
-  wallet     Wallet @relation(fields: [address], references: [address])
+model WalletBalance {
+  id          Int     @id @default(autoincrement())
+  address     String
+  tokenId     Int
+  amount      String  @default("0")
+  lastEventId String?
+
+  @@unique([address, tokenId])
 }
 
 model RealmTrait {
@@ -152,14 +156,6 @@ model RealmTrait {
   realm   Realm?         @relation(fields: [realmId], references: [realmId])
 
   @@unique([type, realmId])
-}
-
-// MILSTONE 1
-model SRealm {
-  id      Int     @id @default(autoincrement())
-  realmId Int     @unique
-  wallet  Wallet? @relation(fields: [owner], references: [address])
-  owner   String?
 }
 
 model Troop {

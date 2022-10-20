@@ -846,6 +846,7 @@ type Query {
   realmsCount(filter: RealmWhereInput): Int!
   travels(cursor: TravelWhereUniqueInput, distinct: [TravelScalarFieldEnum!], orderBy: [TravelOrderByWithRelationInput!], skip: Int, take: Int, where: TravelWhereInput): [Travel!]!
   troopStats: [TroopStats!]!
+  walletBalances(cursor: WalletBalanceWhereUniqueInput, distinct: [WalletBalanceScalarFieldEnum!], orderBy: [WalletBalanceOrderByWithRelationInput!], skip: Int, take: Int, where: WalletBalanceWhereInput): [WalletBalance!]!
 }
 
 enum QueryMode {
@@ -1138,6 +1139,8 @@ input RealmOrderByWithRelationInput {
   squad: TroopOrderByRelationAggregateInput
   traits: RealmTraitOrderByRelationAggregateInput
   wallet: WalletOrderByWithRelationInput
+  walletL2: WalletOrderByWithRelationInput
+  walletSettled: WalletOrderByWithRelationInput
   wonder: SortOrder
 }
 
@@ -1210,6 +1213,8 @@ input RealmWhereInput {
   squad: TroopListRelationFilter
   traits: RealmTraitListRelationFilter
   wallet: WalletRelationFilter
+  walletL2: WalletRelationFilter
+  walletSettled: WalletRelationFilter
   wonder: StringNullableFilter
 }
 
@@ -1281,27 +1286,6 @@ input ResourceOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
-input ResourceTokenListRelationFilter {
-  every: ResourceTokenWhereInput
-  none: ResourceTokenWhereInput
-  some: ResourceTokenWhereInput
-}
-
-input ResourceTokenOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
-input ResourceTokenWhereInput {
-  AND: [ResourceTokenWhereInput!]
-  NOT: [ResourceTokenWhereInput!]
-  OR: [ResourceTokenWhereInput!]
-  address: StringFilter
-  id: IntFilter
-  qty: IntFilter
-  resourceId: IntFilter
-  wallet: WalletRelationFilter
-}
-
 input ResourceWhereInput {
   AND: [ResourceWhereInput!]
   NOT: [ResourceWhereInput!]
@@ -1312,26 +1296,6 @@ input ResourceWhereInput {
   realmId: IntNullableFilter
   resourceId: IntFilter
   upgrades: StringNullableListFilter
-}
-
-input SRealmListRelationFilter {
-  every: SRealmWhereInput
-  none: SRealmWhereInput
-  some: SRealmWhereInput
-}
-
-input SRealmOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
-input SRealmWhereInput {
-  AND: [SRealmWhereInput!]
-  NOT: [SRealmWhereInput!]
-  OR: [SRealmWhereInput!]
-  id: IntFilter
-  owner: StringNullableFilter
-  realmId: IntFilter
-  wallet: WalletRelationFilter
 }
 
 enum SortOrder {
@@ -1537,12 +1501,57 @@ type Wallet {
   realmsSettledHeld: Int!
 }
 
+type WalletBalance {
+  address: String!
+  amount: String!
+  id: Int!
+  lastEventId: String
+  tokenId: Int!
+}
+
+input WalletBalanceAddressTokenIdCompoundUniqueInput {
+  address: String!
+  tokenId: Int!
+}
+
+input WalletBalanceOrderByWithRelationInput {
+  address: SortOrder
+  amount: SortOrder
+  id: SortOrder
+  lastEventId: SortOrder
+  tokenId: SortOrder
+}
+
+enum WalletBalanceScalarFieldEnum {
+  address
+  amount
+  id
+  lastEventId
+  tokenId
+}
+
+input WalletBalanceWhereInput {
+  AND: [WalletBalanceWhereInput!]
+  NOT: [WalletBalanceWhereInput!]
+  OR: [WalletBalanceWhereInput!]
+  address: StringFilter
+  amount: StringFilter
+  id: IntFilter
+  lastEventId: StringNullableFilter
+  tokenId: IntFilter
+}
+
+input WalletBalanceWhereUniqueInput {
+  address_tokenId: WalletBalanceAddressTokenIdCompoundUniqueInput
+  id: Int
+}
+
 input WalletOrderByWithRelationInput {
   address: SortOrder
   id: SortOrder
-  realms: RealmOrderByRelationAggregateInput
-  sRealms: SRealmOrderByRelationAggregateInput
-  tokens: ResourceTokenOrderByRelationAggregateInput
+  realmsL1: RealmOrderByRelationAggregateInput
+  realmsL2: RealmOrderByRelationAggregateInput
+  realmsSettled: RealmOrderByRelationAggregateInput
 }
 
 input WalletRelationFilter {
@@ -1556,7 +1565,7 @@ input WalletWhereInput {
   OR: [WalletWhereInput!]
   address: StringFilter
   id: IntFilter
-  realms: RealmListRelationFilter
-  sRealms: SRealmListRelationFilter
-  tokens: ResourceTokenListRelationFilter
+  realmsL1: RealmListRelationFilter
+  realmsL2: RealmListRelationFilter
+  realmsSettled: RealmListRelationFilter
 }

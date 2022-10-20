@@ -14,6 +14,8 @@ function arrayUInt256ToBigNumber([low, high]: any[]): BigNumberish {
   return uint256ToBN({ low, high }).toString();
 }
 
+const NULL_ADDRESS = "0x00";
+
 export const CONTRACT =
   "0x07080e87497f82ac814c6eaf91d66ac93672927a8c019014f05eb6d688ebd0fc";
 
@@ -52,6 +54,14 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
       update: { ...updates },
       create: { ...updates, eventId, resourceId, amount }
     });
+
+    await this.updateWallet(
+      toAddress,
+      fromAddress,
+      resourceId,
+      amount,
+      eventId
+    );
   }
 
   async transferBatch(event: Event): Promise<void> {
@@ -95,7 +105,77 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
           create: { ...updates, eventId, resourceId, amount }
         })
       );
+
+      upserts.push(
+        this.updateWallet(toAddress, fromAddress, resourceId, amount, eventId)
+      );
     }
     await Promise.all(upserts);
+  }
+
+  async updateWallet(
+    toAddress: string,
+    fromAddress: string,
+    resourceId: number,
+    amount: string,
+    eventId: string
+  ) {
+    if (toAddress === NULL_ADDRESS && fromAddress === NULL_ADDRESS) {
+      return;
+    }
+
+    const walletBalance = this.context.prisma.walletBalance;
+    if (toAddress !== NULL_ADDRESS) {
+      const where = {
+        address_tokenId: {
+          address: toAddress,
+          tokenId: resourceId
+        }
+      };
+
+      const balance = await walletBalance.findUnique({ where });
+      if (!balance?.lastEventId || eventId < balance?.lastEventId) {
+        const newAmount = balance
+          ? BigNumber.from(balance.amount)
+              .add(BigNumber.from(amount))
+              .toString()
+          : BigNumber.from(amount).toString();
+
+        await walletBalance.upsert({
+          where,
+          update: { amount: newAmount, lastEventId: eventId },
+          create: {
+            address: toAddress,
+            tokenId: resourceId,
+            amount: newAmount,
+            lastEventId: eventId
+          }
+        });
+      }
+    }
+
+    if (fromAddress !== NULL_ADDRESS) {
+      const where = {
+        address_tokenId: {
+          address: fromAddress,
+          tokenId: resourceId
+        }
+      };
+      const balance = await walletBalance.findUnique({ where });
+      if (
+        balance &&
+        (!balance?.lastEventId || eventId < balance?.lastEventId)
+      ) {
+        await walletBalance.update({
+          where,
+          data: {
+            amount: BigNumber.from(balance.amount)
+              .sub(BigNumber.from(amount))
+              .toString(),
+            lastEventId: eventId
+          }
+        });
+      }
+    }
   }
 }
