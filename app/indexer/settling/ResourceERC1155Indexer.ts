@@ -55,13 +55,20 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
       create: { ...updates, eventId, resourceId, amount }
     });
 
-    await this.updateWallet(
-      toAddress,
-      fromAddress,
-      resourceId,
-      amount,
-      eventId
-    );
+    const lastWalletBalanceEventId = (
+      await this.context.prisma.walletBalance.findFirst({
+        orderBy: { lastEventId: "desc" }
+      })
+    )?.lastEventId;
+    if (!lastWalletBalanceEventId || lastWalletBalanceEventId < eventId) {
+      await this.updateWallet(
+        toAddress,
+        fromAddress,
+        resourceId,
+        amount,
+        eventId
+      );
+    }
   }
 
   async transferBatch(event: Event): Promise<void> {
@@ -81,6 +88,12 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
     const startAmountIdx = startIdIdx + arrayLen * 2 + 1;
 
     const upserts: any[] = [];
+    const lastWalletBalanceEventId = (
+      await this.context.prisma.walletBalance.findFirst({
+        orderBy: { lastEventId: "desc" }
+      })
+    )?.lastEventId;
+
     for (let i = 0; i < arrayLen; i++) {
       let idIdx = startIdIdx + i * 2;
       const resourceId = arrayUInt256ToNumber(params.slice(idIdx, idIdx + 2));
@@ -106,9 +119,11 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
         })
       );
 
-      upserts.push(
-        this.updateWallet(toAddress, fromAddress, resourceId, amount, eventId)
-      );
+      if (!lastWalletBalanceEventId || lastWalletBalanceEventId < eventId) {
+        upserts.push(
+          this.updateWallet(toAddress, fromAddress, resourceId, amount, eventId)
+        );
+      }
     }
     await Promise.all(upserts);
   }
@@ -134,24 +149,20 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
       };
 
       const balance = await walletBalance.findUnique({ where });
-      if (!balance?.lastEventId || eventId < balance?.lastEventId) {
-        const newAmount = balance
-          ? BigNumber.from(balance.amount)
-              .add(BigNumber.from(amount))
-              .toString()
-          : BigNumber.from(amount).toString();
+      const newAmount = balance
+        ? BigNumber.from(balance.amount).add(BigNumber.from(amount)).toString()
+        : BigNumber.from(amount).toString();
 
-        await walletBalance.upsert({
-          where,
-          update: { amount: newAmount, lastEventId: eventId },
-          create: {
-            address: toAddress,
-            tokenId: resourceId,
-            amount: newAmount,
-            lastEventId: eventId
-          }
-        });
-      }
+      await walletBalance.upsert({
+        where,
+        update: { amount: newAmount, lastEventId: eventId },
+        create: {
+          address: toAddress,
+          tokenId: resourceId,
+          amount: newAmount,
+          lastEventId: eventId
+        }
+      });
     }
 
     if (fromAddress !== NULL_ADDRESS) {
@@ -162,10 +173,7 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
         }
       };
       const balance = await walletBalance.findUnique({ where });
-      if (
-        balance &&
-        (!balance?.lastEventId || eventId < balance?.lastEventId)
-      ) {
+      if (balance) {
         await walletBalance.update({
           where,
           data: {
