@@ -101,10 +101,7 @@ export default class CombatIndexer extends BaseContractIndexer {
     const attackArmyId = +attackParams[0];
     const attackRealmId = arrayUInt256ToNumber(attackParams.slice(1, 3));
 
-    const attackingRealm = await this.updateArmy(
-      attackParams,
-      combatOutcome === COMBAT_OUTCOME_DEFENDER_WINS
-    );
+    // get army state before updating army
     const attackingArmyStart = await this.context.prisma.army.findUnique({
       where: {
         realmId_armyId: {
@@ -114,6 +111,12 @@ export default class CombatIndexer extends BaseContractIndexer {
       },
       select: ARMY_SEELCT
     });
+
+    // update attacking army
+    const attackingRealm = await this.updateArmy(
+      attackParams,
+      combatOutcome === COMBAT_OUTCOME_DEFENDER_WINS
+    );
 
     // Update defending Army
     const defendingParams = params.slice(armyLength + 1);
