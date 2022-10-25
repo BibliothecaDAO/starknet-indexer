@@ -266,10 +266,18 @@ export default class CombatIndexer extends BaseContractIndexer {
       const relicEventId = [
         blockNum,
         transactionNum,
-        String(previousEventNumber).padStart(4, "0")
+        "_"
+        // String(previousEventNumber).padStart(4, "0")
       ].join("_");
       const relicEvent = await this.context.prisma.realmHistory.findFirst({
-        where: { eventId: relicEventId, eventType: "relic_update" }
+        where: {
+          eventId: {
+            lt: eventId,
+            startsWith: relicEventId
+          },
+          eventType: "relic_update"
+        },
+        orderBy: { eventId: "desc" }
       });
       if (relicEvent) {
         relicAttackData.relicClaimed = relicEvent.realmId;
