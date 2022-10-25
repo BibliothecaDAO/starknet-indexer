@@ -4,11 +4,7 @@ import BaseContractIndexer from "./../BaseContractIndexer";
 import { uint256ToBN } from "starknet/utils/uint256";
 import { BigNumberish } from "starknet/utils/number";
 import {
-  // GOBLIN_SQUAD_SLOT,
-  // ATTACKING_SQUAD_SLOT,
-  // DEFENDING_SQUAD_SLOT,
   COMBAT_OUTCOME_ATTACKER_WINS,
-  COMBAT_OUTCOME_DEFENDER_WINS,
   ResourceNameById
 } from "../../utils/game_constants";
 
@@ -115,7 +111,7 @@ export default class CombatIndexer extends BaseContractIndexer {
     // update attacking army
     const attackingRealm = await this.updateArmy(
       attackParams,
-      combatOutcome === COMBAT_OUTCOME_DEFENDER_WINS
+      combatOutcome !== COMBAT_OUTCOME_ATTACKER_WINS
     );
 
     // Update defending Army
@@ -179,7 +175,7 @@ export default class CombatIndexer extends BaseContractIndexer {
         timestamp: event.timestamp,
         transactionHash: event.txHash,
         data: {
-          success: combatOutcome === COMBAT_OUTCOME_DEFENDER_WINS,
+          success: combatOutcome !== COMBAT_OUTCOME_ATTACKER_WINS,
           attackRealmOwner: attackRealmOwner,
           attackRealmId: attackingRealm.realmId,
           attackRealmName: attackRealmOwner.name,
