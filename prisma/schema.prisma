@@ -422,6 +422,9 @@ model Travel {
   contractId             Int
   tokenId                Int
   nestedId               Int
+  locationContractId     Int
+  locationTokenId        Int
+  locationNestedId       Int
   destinationContractId  Int
   destinationTokenId     Int
   destinationNestedId    Int

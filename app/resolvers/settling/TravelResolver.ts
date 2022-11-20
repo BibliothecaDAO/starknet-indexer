@@ -17,6 +17,22 @@ export class TravelResolver extends FindManyTravelResolver {
   }
 
   @FieldResolver(() => Realm, { nullable: true })
+  async locationRealm(@Ctx() ctx: Context, @Root() travel: Travel) {
+    // If locationTokenId == 0, army is starting from origin
+    if (travel.locationTokenId === 0) {
+      return this.originRealm(ctx, travel);
+    }
+
+    if (travel.locationContractId !== ExternalContractId.S_Realms) {
+      return null;
+    }
+
+    return await ctx.prisma.realm.findUnique({
+      where: { realmId: travel.locationTokenId }
+    });
+  }
+
+  @FieldResolver(() => Realm, { nullable: true })
   async destinationRealm(@Ctx() ctx: Context, @Root() travel: Travel) {
     if (travel.destinationContractId !== ExternalContractId.S_Realms) {
       return null;

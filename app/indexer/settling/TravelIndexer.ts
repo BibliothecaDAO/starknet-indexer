@@ -11,7 +11,7 @@ export default class TravelIndexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);
 
-    this.on("TravelAction", this.travelAction.bind(this));
+    this.on("TravelAction_2", this.travelAction.bind(this));
   }
 
   async travelAction(event: Event): Promise<void> {
@@ -21,17 +21,24 @@ export default class TravelIndexer extends BaseContractIndexer {
     const tokenId = arrayUInt256ToNumber(params.slice(1, 3)) as number;
     const nestedId = +params[3];
 
-    const destinationContractId = +params[4];
+    const locationContractId = +params[4];
+    const locationTokenId = arrayUInt256ToNumber(params.slice(5, 7)) as number;
+    const locationNestedId = +params[7];
+
+    const destinationContractId = +params[8];
     const destinationTokenId = arrayUInt256ToNumber(
-      params.slice(5, 7)
+      params.slice(9, 11)
     ) as number;
-    const destinationNestedId = +params[7];
-    const destinationArrivalTime = new Date(+params[8] * 1000);
+    const destinationNestedId = +params[11];
+    const destinationArrivalTime = new Date(+params[12] * 1000);
 
     const updates = {
       contractId,
       tokenId,
       nestedId,
+      locationContractId,
+      locationTokenId,
+      locationNestedId,
       destinationContractId,
       destinationTokenId,
       destinationNestedId,

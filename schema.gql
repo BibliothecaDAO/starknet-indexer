@@ -1372,6 +1372,10 @@ type Travel {
   destinationRealm: Realm
   destinationTokenId: Int!
   eventId: String!
+  locationContractId: Int!
+  locationNestedId: Int!
+  locationRealm: Realm
+  locationTokenId: Int!
   nestedId: Int!
   originRealm: Realm
   timestamp: Timestamp!
@@ -1385,6 +1389,9 @@ input TravelOrderByWithRelationInput {
   destinationNestedId: SortOrder
   destinationTokenId: SortOrder
   eventId: SortOrder
+  locationContractId: SortOrder
+  locationNestedId: SortOrder
+  locationTokenId: SortOrder
   nestedId: SortOrder
   timestamp: SortOrder
   tokenId: SortOrder
@@ -1397,6 +1404,9 @@ enum TravelScalarFieldEnum {
   destinationNestedId
   destinationTokenId
   eventId
+  locationContractId
+  locationNestedId
+  locationTokenId
   nestedId
   timestamp
   tokenId
@@ -1412,6 +1422,9 @@ input TravelWhereInput {
   destinationNestedId: IntFilter
   destinationTokenId: IntFilter
   eventId: StringFilter
+  locationContractId: IntFilter
+  locationNestedId: IntFilter
+  locationTokenId: IntFilter
   nestedId: IntFilter
   timestamp: DateTimeFilter
   tokenId: IntFilter
