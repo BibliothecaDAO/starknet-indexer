@@ -3,6 +3,7 @@ import { Context } from "./../../context";
 import BaseContractIndexer from "./../BaseContractIndexer";
 import { uint256ToBN } from "starknet/utils/uint256";
 import { BigNumberish } from "starknet/utils/number";
+import { Realm } from "@prisma/client";
 
 const CONTRACT =
   "0x0415bda0925437cee1cd70c5782c65a5b1f5c72945c5204dbba71c6d69c8575a";
@@ -45,17 +46,58 @@ export default class TravelIndexer extends BaseContractIndexer {
       destinationArrivalTime,
       timestamp: event.timestamp
     };
-    await this.context.prisma.travel.upsert({
-      where: { eventId },
-      create: { ...updates, eventId },
-      update: { ...updates }
-    });
 
-    await this.context.prisma.army.update({
-      where: { realmId_armyId: { realmId: tokenId, armyId: nestedId } },
-      data: { destinationRealmId: destinationTokenId, destinationArrivalTime }
+    const realmIds = [tokenId, locationTokenId, destinationTokenId];
+    const realms = await this.context.prisma.realm.findMany({
+      where: { realmId: { in: realmIds } }
     });
+    const originRealm = realms.find((realm) => realm.realmId === tokenId);
+    const locationRealm =
+      locationTokenId === 0
+        ? originRealm
+        : realms.find((realm) => realm.realmId === locationTokenId);
+    const destinationRealm = realms.find(
+      (realm) => realm.realmId === destinationTokenId
+    );
+
+    await Promise.all([
+      this.context.prisma.travel.upsert({
+        where: { eventId },
+        create: { ...updates, eventId },
+        update: { ...updates }
+      }),
+
+      this.saveRealmHistory({
+        realmId: tokenId,
+        eventId,
+        account: getRealmAccount(originRealm),
+        eventType: "army_travel",
+        timestamp: event.timestamp,
+        transactionHash: event.txHash,
+        data: {
+          originRealmId: tokenId,
+          originRealmOwner: getRealmAccount(originRealm),
+          originArmyId: nestedId,
+          locationRealmId: locationRealm?.realmId,
+          locationRealmOwner: getRealmAccount(locationRealm),
+          destinationRealmId: destinationTokenId,
+          destinationRealmOwner: getRealmAccount(destinationRealm),
+          destinationArrivalTime: new Date(destinationArrivalTime).getTime()
+        }
+      })
+    ]);
+
+    try {
+      await this.context.prisma.army.update({
+        where: { realmId_armyId: { realmId: tokenId, armyId: nestedId } },
+        data: { destinationRealmId: destinationTokenId, destinationArrivalTime }
+      });
+    } catch (e) {}
   }
+}
+
+function getRealmAccount(realm: Realm | undefined) {
+  return realm?.settledOwner || realm?.ownerL2 || "";
 }
 
 function arrayUInt256ToNumber([low, high]: any[]): BigNumberish {
