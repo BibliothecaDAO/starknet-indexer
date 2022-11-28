@@ -206,8 +206,10 @@ export default class CombatIndexer extends BaseContractIndexer {
       .map((val) => +val);
 
     const battalions = this.parseBattalionStats(battalionStats);
-    if (isArmyDefeated) {
-      console.log("Realm", realmId, "Army:", armyId, "defeated");
+    const isArmyKilled =
+      battalionStats.reduce((total, current) => total + current, 0) === 0;
+    if (isArmyDefeated && isArmyKilled) {
+      console.log("Realm", realmId, "Army:", armyId, "killed");
       await this.context.prisma.army.delete({
         where: { realmId_armyId: { realmId, armyId } }
       });
