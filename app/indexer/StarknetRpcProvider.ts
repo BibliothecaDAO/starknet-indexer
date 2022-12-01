@@ -16,11 +16,11 @@ type RpcMethod =
 
 interface EventFilter {
   address: string;
-  fromBlock?: {
+  from_block?: {
     block_number: number;
   };
-  page_number?: number;
-  page_size?: number;
+  continuation_token?: string;
+  chunk_size?: number;
 }
 
 class Cache {

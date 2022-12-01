@@ -79,15 +79,14 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
     let lastEventIndexed = lastEvent?.eventId ?? "";
     let lastBlockNumber = (lastEvent?.blockNumber ?? 0) + 1;
 
-    let fetchMore = true;
-    let page = 0;
+    let continuation_token = undefined;
 
     do {
-      const resp = await this.provider.getEvents({
+      const resp: any = await this.provider.getEvents({
         address: contract,
-        page_number: page,
-        page_size: 100,
-        fromBlock: {
+        continuation_token,
+        chunk_size: 500,
+        from_block: {
           block_number: lastBlockNumber
         }
       });
@@ -95,6 +94,7 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
         console.error("Error requesting events. Empty results.");
         return;
       }
+      continuation_token = resp.continuation_token;
 
       const blockNumbers = {} as any;
 
@@ -175,12 +175,8 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
         }
       }
 
-      fetchMore = resp.is_last_page === false;
-
       await this.index(results);
-
-      page++;
-    } while (fetchMore);
+    } while (continuation_token);
   }
 
   async syncAllEvents() {
