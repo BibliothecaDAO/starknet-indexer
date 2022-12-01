@@ -1,5 +1,5 @@
 import { context } from "./../context";
-import DesiegeIndexer from "./desiege/DesiegeIndexer";
+// import DesiegeIndexer from "./desiege/DesiegeIndexer";
 import LoreIndexer from "./lore/LoreIndexer";
 import BuildingIndexer from "./settling/BuildingIndexer";
 import RealmsL2Indexer from "./settling/RealmsL2Indexer";
@@ -13,6 +13,7 @@ import SettlingIndexer from "./settling/SettlingIndexer";
 import RelicIndexer from "./settling/RelicIndexer";
 import FoodIndexer from "./settling/FoodIndexer";
 import TravelIndexer from "./settling/TravelIndexer";
+import LordsIndexer from "./settling/LordsIndexer";
 
 // import GoblinIndexer from "./settling/GoblinIndexer";
 
@@ -21,7 +22,9 @@ export const StarkNet = () => {
     async serverWillStart() {
       const indexer = new StarknetIndexer(
         [
-          new DesiegeIndexer(context),
+          //TODO: Reenable when Desiege when added back
+          // new DesiegeIndexer(context),
+          new LordsIndexer(context),
           new LoreIndexer(context),
           new RealmsL2Indexer(context),
           new SRealmsIndexer(context),

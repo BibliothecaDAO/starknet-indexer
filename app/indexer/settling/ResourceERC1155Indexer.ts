@@ -1,5 +1,6 @@
 import { Event } from "./../../entities/starknet/Event";
 import { Context } from "./../../context";
+import { updateWallet } from "../../utils/WalletBalance";
 import BaseContractIndexer from "./../BaseContractIndexer";
 import { uint256ToBN } from "starknet/utils/uint256";
 import { BigNumberish } from "starknet/utils/number";
@@ -13,8 +14,6 @@ function arrayUInt256ToNumber([low, high]: any[]): number {
 function arrayUInt256ToBigNumber([low, high]: any[]): BigNumberish {
   return uint256ToBN({ low, high }).toString();
 }
-
-const NULL_ADDRESS = "0x00";
 
 export const CONTRACT =
   "0x07080e87497f82ac814c6eaf91d66ac93672927a8c019014f05eb6d688ebd0fc";
@@ -61,7 +60,8 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
       })
     )?.lastEventId;
     if (!lastWalletBalanceEventId || lastWalletBalanceEventId < eventId) {
-      await this.updateWallet(
+      await updateWallet(
+        this.context,
         toAddress,
         fromAddress,
         resourceId,
@@ -121,69 +121,17 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
 
       if (!lastWalletBalanceEventId || lastWalletBalanceEventId < eventId) {
         upserts.push(
-          this.updateWallet(toAddress, fromAddress, resourceId, amount, eventId)
+          updateWallet(
+            this.context,
+            toAddress,
+            fromAddress,
+            resourceId,
+            amount,
+            eventId
+          )
         );
       }
     }
     await Promise.all(upserts);
-  }
-
-  async updateWallet(
-    toAddress: string,
-    fromAddress: string,
-    resourceId: number,
-    amount: string,
-    eventId: string
-  ) {
-    if (toAddress === NULL_ADDRESS && fromAddress === NULL_ADDRESS) {
-      return;
-    }
-
-    const walletBalance = this.context.prisma.walletBalance;
-    if (toAddress !== NULL_ADDRESS) {
-      const where = {
-        address_tokenId: {
-          address: toAddress,
-          tokenId: resourceId
-        }
-      };
-
-      const balance = await walletBalance.findUnique({ where });
-      const newAmount = balance
-        ? BigNumber.from(balance.amount).add(BigNumber.from(amount)).toString()
-        : BigNumber.from(amount).toString();
-
-      await walletBalance.upsert({
-        where,
-        update: { amount: newAmount, lastEventId: eventId },
-        create: {
-          address: toAddress,
-          tokenId: resourceId,
-          amount: newAmount,
-          lastEventId: eventId
-        }
-      });
-    }
-
-    if (fromAddress !== NULL_ADDRESS) {
-      const where = {
-        address_tokenId: {
-          address: fromAddress,
-          tokenId: resourceId
-        }
-      };
-      const balance = await walletBalance.findUnique({ where });
-      if (balance) {
-        await walletBalance.update({
-          where,
-          data: {
-            amount: BigNumber.from(balance.amount)
-              .sub(BigNumber.from(amount))
-              .toString(),
-            lastEventId: eventId
-          }
-        });
-      }
-    }
   }
 }
