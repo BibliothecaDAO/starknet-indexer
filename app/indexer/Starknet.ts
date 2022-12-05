@@ -14,6 +14,7 @@ import RelicIndexer from "./settling/RelicIndexer";
 import FoodIndexer from "./settling/FoodIndexer";
 import TravelIndexer from "./settling/TravelIndexer";
 import LordsIndexer from "./settling/LordsIndexer";
+import CalculatorIndexer from "./settling/CalculatorIndexer";
 
 // import GoblinIndexer from "./settling/GoblinIndexer";
 
@@ -27,6 +28,7 @@ export const StarkNet = () => {
           new LordsIndexer(context),
           new LoreIndexer(context),
           new RealmsL2Indexer(context),
+          new CalculatorIndexer(context),
           new SRealmsIndexer(context),
           new ResourceIndexer(context),
           new BuildingIndexer(context),

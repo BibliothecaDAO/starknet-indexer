@@ -79,6 +79,9 @@ export class Realm {
   @Field({ nullable: true })
   lastVaultTime: Date;
 
+  @Field({ nullable: true })
+  lastTick: Date;
+
   @Field(() => Float, { nullable: false })
   longitude: number;
 

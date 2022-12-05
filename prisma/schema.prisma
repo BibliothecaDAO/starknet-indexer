@@ -78,6 +78,7 @@ model Realm {
   squad         Troop[]
   lastAttacked  DateTime?
   lastClaimTime DateTime?
+  lastTick      DateTime?
   lastVaultTime DateTime?
   longitude     Float        @default(0.0)
   latitude      Float        @default(0.0)

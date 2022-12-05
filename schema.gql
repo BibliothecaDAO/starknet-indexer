@@ -862,6 +862,7 @@ type Realm {
   imageUrl: String
   lastAttacked: Timestamp
   lastClaimTime: Timestamp
+  lastTick: Timestamp
   lastVaultTime: Timestamp
   latitude: Float!
   longitude: Float!
@@ -1121,6 +1122,7 @@ input RealmOrderByWithRelationInput {
   imageUrl: SortOrder
   lastAttacked: SortOrder
   lastClaimTime: SortOrder
+  lastTick: SortOrder
   lastVaultTime: SortOrder
   latitude: SortOrder
   longitude: SortOrder
@@ -1195,6 +1197,7 @@ input RealmWhereInput {
   imageUrl: StringFilter
   lastAttacked: DateTimeNullableFilter
   lastClaimTime: DateTimeNullableFilter
+  lastTick: DateTimeNullableFilter
   lastVaultTime: DateTimeNullableFilter
   latitude: FloatFilter
   longitude: FloatFilter
