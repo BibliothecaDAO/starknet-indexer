@@ -859,6 +859,7 @@ type Realm {
   bridgedOwner: String
   buildings: [Building!]
   defendTroopIds: [String!]!
+  foods: [Food!]!
   imageUrl: String
   lastAttacked: Timestamp
   lastClaimTime: Timestamp

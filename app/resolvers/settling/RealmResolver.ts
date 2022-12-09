@@ -5,7 +5,7 @@ import {
   Ctx,
   Int,
   FieldResolver,
-  Root
+  Root,
 } from "type-graphql";
 import { Context } from "../../context";
 import {
@@ -18,14 +18,15 @@ import {
   Resource,
   RealmTrait,
   Troop,
-  Relic
+  Relic,
+  Food,
 } from "../../entities";
 import { RealmInput } from "../types";
 import { RealmOrderByInput } from "../types/settling";
 import {
   RealmWhereInput,
   RealmHistoryWhereInput,
-  RealmOrderByWithRelationInput
+  RealmOrderByWithRelationInput,
 } from "@generated/type-graphql";
 import { Prisma } from "@prisma/client";
 
@@ -43,7 +44,7 @@ export class RealmResolver {
       where,
       orderBy,
       take,
-      skip
+      skip,
     });
     return data;
   }
@@ -51,35 +52,42 @@ export class RealmResolver {
   @Query(() => Realm, { nullable: false })
   async realm(@Ctx() ctx: Context, @Arg("id") realmId: number) {
     return await ctx.prisma.realm.findFirst({
-      where: { realmId }
+      where: { realmId },
     });
   }
 
   @FieldResolver(() => [Building])
   async buildings(@Ctx() ctx: Context, @Root() realm: Realm) {
     return await ctx.prisma.building.findMany({
-      where: { realmId: realm.realmId }
+      where: { realmId: realm.realmId },
+    });
+  }
+
+  @FieldResolver(() => [Food])
+  async foods(@Ctx() ctx: Context, @Root() realm: Realm) {
+    return await ctx.prisma.food.findMany({
+      where: { realmId: realm.realmId },
     });
   }
 
   @FieldResolver(() => [Resource])
   async resources(@Ctx() ctx: Context, @Root() realm: Realm) {
     return await ctx.prisma.resource.findMany({
-      where: { realmId: realm.realmId }
+      where: { realmId: realm.realmId },
     });
   }
 
   @FieldResolver(() => [RealmTrait])
   async traits(@Ctx() ctx: Context, @Root() realm: Realm) {
     return await ctx.prisma.realmTrait.findMany({
-      where: { realmId: realm.realmId }
+      where: { realmId: realm.realmId },
     });
   }
 
   @FieldResolver(() => [Troop])
   async troops(@Ctx() ctx: Context, @Root() realm: Realm) {
     return await ctx.prisma.troop.findMany({
-      where: { realmId: realm.realmId }
+      where: { realmId: realm.realmId },
     });
   }
 
@@ -87,20 +95,20 @@ export class RealmResolver {
   async ownArmies(@Ctx() ctx: Context, @Root() realm: Realm) {
     return await ctx.prisma.army.findMany({
       where: { realmId: realm.realmId },
-      orderBy: { armyId: "asc" }
+      orderBy: { armyId: "asc" },
     });
   }
 
   @FieldResolver(() => Relic)
   async relic(@Ctx() ctx: Context, @Root() realm: Realm) {
     return await ctx.prisma.relic.findMany({
-      where: { realmId: realm.realmId }
+      where: { realmId: realm.realmId },
     });
   }
   @FieldResolver(() => [Relic])
   async relicsOwned(@Ctx() ctx: Context, @Root() realm: Realm) {
     return await ctx.prisma.relic.findMany({
-      where: { heldByRealm: realm.realmId }
+      where: { heldByRealm: realm.realmId },
     });
   }
   @Query(() => Int)
@@ -122,7 +130,7 @@ export class RealmResolver {
       where: filter,
       take,
       skip,
-      orderBy: { eventId: "desc" }
+      orderBy: { eventId: "desc" },
     });
   }
 
@@ -136,9 +144,9 @@ export class RealmResolver {
       where: {
         realmId: defendRealmId,
         eventType: "realm_combat_defend",
-        transactionHash
+        transactionHash,
       },
-      orderBy: { eventId: "asc" }
+      orderBy: { eventId: "asc" },
     });
 
     const realmHistoryData = realmHistory?.data as Prisma.JsonObject;
@@ -167,8 +175,8 @@ export class RealmResolver {
         resources: true,
         wallet: true,
         squad: true,
-        ownArmies: true
-      }
+        ownArmies: true,
+      },
     });
     return data;
   }
@@ -189,15 +197,15 @@ export class RealmResolver {
         resources: true,
         wallet: true,
         squad: true,
-        ownArmies: true
+        ownArmies: true,
       },
       orderBy: orderBy
         ? Object.keys(orderBy).map((key: any) => ({
-            [key]: (orderBy as any)[key]
+            [key]: (orderBy as any)[key],
           }))
         : undefined,
       take,
-      skip
+      skip,
     });
     return data;
   }
@@ -213,7 +221,7 @@ export class RealmResolver {
       where: filter,
       take,
       skip,
-      orderBy: { eventId: "desc" }
+      orderBy: { eventId: "desc" },
     });
   }
 
@@ -226,9 +234,9 @@ export class RealmResolver {
     const combatHistory = await ctx.prisma.combatHistory.findMany({
       where: {
         defendRealmId,
-        transactionHash
+        transactionHash,
       },
-      orderBy: { eventId: "asc" }
+      orderBy: { eventId: "asc" },
     });
 
     const eventId = combatHistory[0].eventId;
@@ -236,8 +244,8 @@ export class RealmResolver {
     const resources = await ctx.prisma.resourceTransfer.findMany({
       where: {
         blockNumber: parseInt(blockNumber),
-        transactionNumber: parseInt(transactionNumber)
-      }
+        transactionNumber: parseInt(transactionNumber),
+      },
     });
 
     // Check for relic
@@ -254,10 +262,10 @@ export class RealmResolver {
         const relicEventId = [
           blockNumber,
           transactionNumber,
-          String(previousEventNumber).padStart(4, "0")
+          String(previousEventNumber).padStart(4, "0"),
         ].join("_");
         const relicEvent = await ctx.prisma.realmHistory.findFirst({
-          where: { eventId: relicEventId, eventType: "relic_update" }
+          where: { eventId: relicEventId, eventType: "relic_update" },
         });
         if (relicEvent) {
           relicRealmId = relicEvent.realmId;
@@ -298,18 +306,18 @@ export class RealmResolver {
       rarityScore: data.rarityScore,
       wonder: data.wonder,
       orderType: data.orderType,
-      imageUrl: data.imageUrl
+      imageUrl: data.imageUrl,
     };
     return ctx.prisma.realm.upsert({
       where: {
-        realmId: data.realmId
+        realmId: data.realmId,
       },
       update: {
-        ...updates
+        ...updates,
       },
       create: {
-        ...updates
-      }
+        ...updates,
+      },
     });
   }
 }
