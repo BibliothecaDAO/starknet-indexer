@@ -1,6 +1,7 @@
 import { Event } from "./../../entities/starknet/Event";
 import { Context } from "./../../context";
 import BaseContractIndexer from "./../BaseContractIndexer";
+import { BuildingNameById } from "./../../utils/game_constants";
 
 const CONTRACT =
   "0x02d73a83afeaf5927c2dfb51b2412ea9dfe1fb6cd41b1b702607e7345ce47d09";
@@ -25,28 +26,43 @@ export default class FoodIndexer extends BaseContractIndexer {
     const createdAt = new Date(parseInt(params[5]) * 1000);
 
     const where = {
-      realmId_buildingId: { realmId, buildingId }
+      realmId_buildingId: { realmId, buildingId },
     };
 
-    await this.context.prisma.food.upsert({
-      where,
-      create: {
+    await Promise.all([
+      this.context.prisma.food.upsert({
+        where,
+        create: {
+          realmId,
+          eventId,
+          buildingId,
+          qty,
+          harvests,
+          createdAt,
+          updatedAt: createdAt,
+        },
+        update: {
+          eventId,
+          qty,
+          harvests,
+          createdAt,
+          updatedAt: createdAt,
+        },
+      }),
+      this.saveRealmHistory({
         realmId,
         eventId,
-        buildingId,
-        qty,
-        harvests,
-        createdAt,
-        updatedAt: createdAt
-      },
-      update: {
-        eventId,
-        qty,
-        harvests,
-        createdAt,
-        updatedAt: createdAt
-      }
-    });
+        eventType: "food_created",
+        timestamp: event.timestamp,
+        transactionHash: event.txHash,
+        data: {
+          buildingId,
+          buildingName: BuildingNameById[buildingId + ""],
+          qty,
+          harvests,
+        },
+      }),
+    ]);
   }
 
   async onHarvest(event: Event) {
@@ -54,6 +70,7 @@ export default class FoodIndexer extends BaseContractIndexer {
   }
 
   async onHarvest_2(event: Event) {
+    const eventId = event.eventId;
     const params = event.parameters ?? [];
     const realmId = parseInt(params[0]);
     const buildingId = parseInt(params[2]);
@@ -63,25 +80,40 @@ export default class FoodIndexer extends BaseContractIndexer {
       : event.timestamp;
     try {
       const where = {
-        realmId_buildingId: { realmId, buildingId }
+        realmId_buildingId: { realmId, buildingId },
       };
 
-      await this.context.prisma.food.upsert({
-        where,
-        create: {
+      await Promise.all([
+        this.context.prisma.food.upsert({
+          where,
+          create: {
+            realmId,
+            eventId,
+            buildingId,
+            qty: 1,
+            harvests,
+            createdAt: updatedAt,
+            updatedAt,
+          },
+          update: {
+            harvests,
+            updatedAt,
+          },
+        }),
+        this.saveRealmHistory({
           realmId,
-          eventId: event.eventId,
-          buildingId,
-          qty: 1,
-          harvests,
-          createdAt: updatedAt,
-          updatedAt
-        },
-        update: {
-          harvests,
-          updatedAt
-        }
-      });
+          eventId,
+          eventType: "food_harvest",
+          timestamp: event.timestamp,
+          transactionHash: event.txHash,
+          data: {
+            buildingId,
+            buildingName: BuildingNameById[buildingId + ""],
+            qty: 1,
+            harvests,
+          },
+        }),
+      ]);
     } catch (e) {
       console.log("Food harvest error", event.eventId);
       console.log(e);

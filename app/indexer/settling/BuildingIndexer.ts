@@ -22,7 +22,7 @@ export default class BuildingIndexer extends BaseContractIndexer {
     const buildingIntegrityTimestamp = parseInt(params[3]) || 0;
 
     const where = {
-      realmId_buildingId: { realmId, buildingId }
+      realmId_buildingId: { realmId, buildingId },
     };
     let builds: any[] = [];
     const building = await this.context.prisma.building.findUnique({ where });
@@ -34,33 +34,36 @@ export default class BuildingIndexer extends BaseContractIndexer {
     if (builds.indexOf(timestamp) === -1) {
       builds.push(timestamp);
     }
-    await this.context.prisma.building.upsert({
-      where,
-      create: {
+
+    await Promise.all([
+      this.context.prisma.building.upsert({
+        where,
+        create: {
+          realmId,
+          eventId,
+          buildingIntegrity: buildingIntegrityTimestamp,
+          buildingId,
+          builds: [...builds],
+        },
+        update: {
+          buildingId,
+          eventId,
+          buildingIntegrity: buildingIntegrityTimestamp,
+          builds: [...builds],
+        },
+      }),
+      this.saveRealmHistory({
         realmId,
         eventId,
-        buildingIntegrity: buildingIntegrityTimestamp,
-        buildingId,
-        builds: [...builds]
-      },
-      update: {
-        buildingId,
-        eventId,
-        buildingIntegrity: buildingIntegrityTimestamp,
-        builds: [...builds]
-      }
-    });
-    await this.saveRealmHistory({
-      realmId,
-      eventId,
-      eventType: "realm_building_built",
-      timestamp: event.timestamp,
-      transactionHash: event.txHash,
-      data: {
-        buildingId,
-        buildingName: BuildingNameById[buildingId + ""],
-        buildingIntegrity: buildingIntegrityTimestamp
-      }
-    });
+        eventType: "realm_building_built",
+        timestamp: event.timestamp,
+        transactionHash: event.txHash,
+        data: {
+          buildingId,
+          buildingName: BuildingNameById[buildingId + ""],
+          buildingIntegrity: buildingIntegrityTimestamp,
+        },
+      }),
+    ]);
   }
 }
