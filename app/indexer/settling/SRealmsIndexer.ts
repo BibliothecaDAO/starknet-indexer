@@ -34,16 +34,11 @@ export default class SRealmsIndexer extends BaseContractIndexer {
       await this.context.prisma.wallet.upsert({
         where: { address: toAddress },
         update: { address: toAddress },
-        create: { address: toAddress }
+        create: { address: toAddress },
       });
 
-      const isSettle = params[0] === "0";
-      const isUnSettle = params[1] === "0";
-
-      await this.context.prisma.realm.update({
-        data: { settledOwner: !isUnSettle ? toAddress : null },
-        where
-      });
+      const isSettle = fromAddress === "0x00";
+      const isUnSettle = toAddress === "0x00";
 
       const eventType = isSettle
         ? "realm_settle"
@@ -51,18 +46,21 @@ export default class SRealmsIndexer extends BaseContractIndexer {
         ? "realm_unsettle"
         : "realm_transfer";
 
-      await this.saveRealmHistory({
-        realmId,
-        eventId,
-        eventType,
-        account,
-        timestamp: event.timestamp,
-        transactionHash: event.txHash,
-        data: {
-          fromAddress,
-          toAddress
-        }
-      });
+      await Promise.all([
+        this.context.prisma.realm.update({
+          data: { settledOwner: !isUnSettle ? toAddress : null },
+          where,
+        }),
+        this.saveRealmHistory({
+          realmId,
+          eventId,
+          eventType,
+          account,
+          timestamp: event.timestamp,
+          transactionHash: event.txHash,
+          data: { fromAddress, toAddress },
+        }),
+      ]);
     } catch (e) {
       console.error(
         `Invalid realms update: Event: ${event.eventId}, Params: `,
