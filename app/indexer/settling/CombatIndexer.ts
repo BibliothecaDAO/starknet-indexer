@@ -5,7 +5,7 @@ import { uint256ToBN } from "starknet/utils/uint256";
 import { BigNumberish } from "starknet/utils/number";
 import {
   COMBAT_OUTCOME_ATTACKER_WINS,
-  ResourceNameById
+  ResourceNameById,
 } from "../../utils/game_constants";
 
 const CONTRACT =
@@ -30,7 +30,7 @@ const ARMY_SEELCT = {
   lightInfantryQty: true,
   lightInfantryHealth: true,
   heavyInfantryQty: true,
-  heavyInfantryHealth: true
+  heavyInfantryHealth: true,
 };
 
 function arrayUInt256ToNumber([low, high]: any[]): BigNumberish {
@@ -55,7 +55,15 @@ export default class CombatIndexer extends BaseContractIndexer {
     const armyId = +params[0];
     const realmId = arrayUInt256ToNumber(params.slice(1, 3));
     try {
-      await this.updateArmy(params, false);
+      const data = await this.updateArmy(params, false);
+      await this.saveRealmHistory({
+        realmId,
+        eventId: event.eventId,
+        eventType: "army_built",
+        timestamp: event.timestamp,
+        transactionHash: event.txHash,
+        data,
+      });
     } catch (e) {
       console.error(
         "Failed to update army realmId:",
@@ -83,14 +91,14 @@ export default class CombatIndexer extends BaseContractIndexer {
       // armyPacked,
       lastAttacked,
       level,
-      callSign
+      callSign,
     };
 
     try {
       await this.context.prisma.army.upsert({
         where: { realmId_armyId: { realmId, armyId } },
         create: { realmId, armyId, ...updates },
-        update: { ...updates }
+        update: { ...updates },
       });
     } catch (e) {
       console.error(
@@ -127,10 +135,10 @@ export default class CombatIndexer extends BaseContractIndexer {
         where: {
           realmId_armyId: {
             armyId: attackArmyId,
-            realmId: attackRealmId
-          }
+            realmId: attackRealmId,
+          },
         },
-        select: ARMY_SEELCT
+        select: ARMY_SEELCT,
       });
 
       // update attacking army
@@ -149,11 +157,11 @@ export default class CombatIndexer extends BaseContractIndexer {
         where: {
           realmId_armyId: {
             armyId: defendingArmyId,
-            realmId: defendingRealmId
-          }
+            realmId: defendingRealmId,
+          },
         },
 
-        select: ARMY_SEELCT
+        select: ARMY_SEELCT,
       });
       const defendingRealm = await this.updateArmy(
         defendingParams,
@@ -187,8 +195,8 @@ export default class CombatIndexer extends BaseContractIndexer {
             pillagedResources,
             ...relicAttackData,
             armiesStart: [attackingArmyStart, defendingArmyStart],
-            armiesEnd: [attackingRealm, defendingRealm]
-          }
+            armiesEnd: [attackingRealm, defendingRealm],
+          },
         })
       );
 
@@ -210,8 +218,8 @@ export default class CombatIndexer extends BaseContractIndexer {
             pillagedResources,
             ...relicDefendData,
             armiesStart: [attackingArmyStart, defendingArmyStart],
-            armiesEnd: [attackingRealm, defendingRealm]
-          }
+            armiesEnd: [attackingRealm, defendingRealm],
+          },
         })
       );
 
@@ -219,7 +227,7 @@ export default class CombatIndexer extends BaseContractIndexer {
       updates.push(
         this.context.prisma.realm.update({
           where: { realmId: defendingRealm.realmId },
-          data: { lastAttacked: event.timestamp }
+          data: { lastAttacked: event.timestamp },
         })
       );
 
@@ -249,7 +257,7 @@ export default class CombatIndexer extends BaseContractIndexer {
     if (isArmyDefeated && isArmyKilled) {
       console.log("Realm", realmId, "Army:", armyId, "killed");
       await this.context.prisma.army.delete({
-        where: { realmId_armyId: { realmId, armyId } }
+        where: { realmId_armyId: { realmId, armyId } },
       });
     } else {
       await this.context.prisma.army.upsert({
@@ -257,18 +265,18 @@ export default class CombatIndexer extends BaseContractIndexer {
         create: {
           realmId,
           armyId,
-          ...battalions
+          ...battalions,
         },
         update: {
-          ...battalions
-        }
+          ...battalions,
+        },
       });
     }
 
     return {
       armyId,
       realmId,
-      ...battalions
+      ...battalions,
     };
   }
 
@@ -292,7 +300,7 @@ export default class CombatIndexer extends BaseContractIndexer {
       lightInfantryQty: battalions[12] ?? 0,
       lightInfantryHealth: battalions[13] ?? 0,
       heavyInfantryQty: battalions[14] ?? 0,
-      heavyInfantryHealth: battalions[15] ?? 0
+      heavyInfantryHealth: battalions[15] ?? 0,
     };
   }
 
@@ -306,18 +314,18 @@ export default class CombatIndexer extends BaseContractIndexer {
       const relicEventId = [
         blockNum,
         transactionNum,
-        "_"
+        "_",
         // String(previousEventNumber).padStart(4, "0")
       ].join("_");
       const relicEvent = await this.context.prisma.realmHistory.findFirst({
         where: {
           eventId: {
             lt: eventId,
-            startsWith: relicEventId
+            startsWith: relicEventId,
           },
-          eventType: "relic_update"
+          eventType: "relic_update",
         },
-        orderBy: { eventId: "desc" }
+        orderBy: { eventId: "desc" },
       });
       if (relicEvent) {
         relicAttackData.relicClaimed = relicEvent.realmId;
@@ -326,13 +334,13 @@ export default class CombatIndexer extends BaseContractIndexer {
     }
     return {
       relicAttackData,
-      relicDefendData
+      relicDefendData,
     };
   }
 
   async getRealm(realmId: number) {
     const realm = await this.context.prisma.realm.findFirst({
-      where: { realmId }
+      where: { realmId },
     });
     const account = realm?.settledOwner || realm?.ownerL2 || "";
     const name = realm?.name;
@@ -345,14 +353,14 @@ export default class CombatIndexer extends BaseContractIndexer {
     const resources = await this.context.prisma.resourceTransfer.findMany({
       where: {
         blockNumber: parseInt(blockNumber),
-        transactionNumber: parseInt(transactionNumber)
-      }
+        transactionNumber: parseInt(transactionNumber),
+      },
     });
     return resources.map((resource) => {
       return {
         resourceId: resource.resourceId,
         resourceName: ResourceNameById[String(resource.resourceId)] ?? "",
-        amount: resource.amount
+        amount: resource.amount,
       };
     });
   }
