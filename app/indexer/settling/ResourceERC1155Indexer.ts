@@ -46,17 +46,17 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
       amount,
       amountValue: formatEther(amount),
       transactionHash,
-      timestamp: event.timestamp
+      timestamp: event.timestamp,
     };
     await this.context.prisma.resourceTransfer.upsert({
       where: { resourceId_eventId: { eventId, resourceId } },
       update: { ...updates },
-      create: { ...updates, eventId, resourceId, amount }
+      create: { ...updates, eventId, resourceId, amount },
     });
 
     const lastWalletBalanceEventId = (
       await this.context.prisma.walletBalance.findFirst({
-        orderBy: { lastEventId: "desc" }
+        orderBy: { lastEventId: "desc" },
       })
     )?.lastEventId;
     if (!lastWalletBalanceEventId || lastWalletBalanceEventId < eventId) {
@@ -90,7 +90,8 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
     const upserts: any[] = [];
     const lastWalletBalanceEventId = (
       await this.context.prisma.walletBalance.findFirst({
-        orderBy: { lastEventId: "desc" }
+        where: { tokenId: { not: 0 } },
+        orderBy: { lastEventId: "desc" },
       })
     )?.lastEventId;
 
@@ -109,13 +110,13 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
         amount,
         amountValue: formatEther(amount),
         transactionHash,
-        timestamp
+        timestamp,
       };
       upserts.push(
         this.context.prisma.resourceTransfer.upsert({
           where: { resourceId_eventId: { eventId, resourceId } },
           update: { ...updates },
-          create: { ...updates, eventId, resourceId, amount }
+          create: { ...updates, eventId, resourceId, amount },
         })
       );
 

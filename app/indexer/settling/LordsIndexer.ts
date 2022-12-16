@@ -29,7 +29,8 @@ export default class LordsIndexer extends BaseContractIndexer {
 
     const lastWalletBalanceEventId = (
       await this.context.prisma.walletBalance.findFirst({
-        orderBy: { lastEventId: "desc" }
+        where: { tokenId: 0 },
+        orderBy: { lastEventId: "desc" },
       })
     )?.lastEventId;
     if (!lastWalletBalanceEventId || lastWalletBalanceEventId < eventId) {
