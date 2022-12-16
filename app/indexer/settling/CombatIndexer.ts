@@ -55,7 +55,7 @@ export default class CombatIndexer extends BaseContractIndexer {
     const armyId = +params[0];
     const realmId = arrayUInt256ToNumber(params.slice(1, 3));
     try {
-      const data = await this.updateArmy(params, false);
+      const data = await this.updateArmy(params);
       await this.saveRealmHistory({
         realmId,
         eventId: event.eventId,
@@ -142,10 +142,7 @@ export default class CombatIndexer extends BaseContractIndexer {
       });
 
       // update attacking army
-      const attackingRealm = await this.updateArmy(
-        attackParams,
-        combatOutcome !== COMBAT_OUTCOME_ATTACKER_WINS
-      );
+      const attackingRealm = await this.updateArmy(attackParams);
 
       // Update defending Army
       const defendingParams = params.slice(armyLength + 1);
@@ -163,10 +160,7 @@ export default class CombatIndexer extends BaseContractIndexer {
 
         select: ARMY_SEELCT,
       });
-      const defendingRealm = await this.updateArmy(
-        defendingParams,
-        combatOutcome === COMBAT_OUTCOME_ATTACKER_WINS
-      );
+      const defendingRealm = await this.updateArmy(defendingParams);
 
       const defendingRealmOwner = await this.getRealm(defendingRealm.realmId);
       const attackRealmOwner = await this.getRealm(attackingRealm.realmId);
@@ -244,7 +238,7 @@ export default class CombatIndexer extends BaseContractIndexer {
     }
   }
 
-  async updateArmy(params: string[], isArmyDefeated: boolean) {
+  async updateArmy(params: string[]) {
     const armyId = +params[0];
     const realmId = arrayUInt256ToNumber(params.slice(1, 3));
     const battalionStats = params
@@ -254,7 +248,7 @@ export default class CombatIndexer extends BaseContractIndexer {
     const battalions = this.parseBattalionStats(battalionStats);
     const isArmyKilled =
       battalionStats.reduce((total, current) => total + current, 0) === 0;
-    if (isArmyDefeated && isArmyKilled) {
+    if (isArmyKilled) {
       console.log("Realm", realmId, "Army:", armyId, "killed");
       await this.context.prisma.army.delete({
         where: { realmId_armyId: { realmId, armyId } },
