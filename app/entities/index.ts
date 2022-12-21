@@ -18,7 +18,8 @@ import {
   Food,
   Army,
   BattalionCost,
-  BattalionStats
+  BattalionStats,
+  ResourceLaborAndToolCost,
 } from "./settling";
 import { Wallet } from "./wallet/Wallet";
 
@@ -43,6 +44,7 @@ export {
   Food,
   Army,
   BattalionCost,
-  BattalionStats
+  BattalionStats,
+  ResourceLaborAndToolCost,
   // LorePOI,
 };

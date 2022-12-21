@@ -74,6 +74,7 @@ export class RealmResolver {
   async resources(@Ctx() ctx: Context, @Root() realm: Realm) {
     return await ctx.prisma.resource.findMany({
       where: { realmId: realm.realmId },
+      include: { labor: true },
     });
   }
 

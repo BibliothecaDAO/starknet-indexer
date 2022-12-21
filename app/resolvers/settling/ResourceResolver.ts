@@ -1,14 +1,15 @@
 import { Resolver, Arg, Query, Ctx } from "type-graphql";
 import { Context } from "./../../context";
-import { Resource } from "./../../entities";
+import { Resource, ResourceLaborAndToolCost } from "./../../entities";
 import { ResourceInput } from "./../types";
+import { ResourceLaborAndToolCosts } from "../../utils/game_constants";
 
 @Resolver((_of) => Resource)
 export class ResourceResolver {
   @Query((_returns) => Resource, { nullable: false })
   async getResource(@Arg("id") id: number, @Ctx() ctx: Context) {
     return await ctx.prisma.resource.findUnique({
-      where: { id }
+      where: { id },
     });
   }
 
@@ -24,9 +25,14 @@ export class ResourceResolver {
   ) {
     return await ctx.prisma.resource.findMany({
       where: {
-        realm: { owner: address }
-      }
+        realm: { owner: address },
+      },
     });
+  }
+
+  @Query(() => [ResourceLaborAndToolCost])
+  async getResourceLaborAndToolCosts() {
+    return ResourceLaborAndToolCosts;
   }
 
   // @Mutation(() => Resource)
@@ -39,17 +45,17 @@ export class ResourceResolver {
       where: {
         resourceId_realmId: {
           realmId: data.realmId,
-          resourceId: data.resourceId
-        }
+          resourceId: data.resourceId,
+        },
       },
       update: {
         resourceId: data.resourceId,
-        realmId: data.realmId
+        realmId: data.realmId,
       },
       create: {
         resourceId: data.resourceId,
-        realmId: data.realmId
-      }
+        realmId: data.realmId,
+      },
     });
   }
 }

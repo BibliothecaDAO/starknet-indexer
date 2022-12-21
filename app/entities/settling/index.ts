@@ -16,6 +16,8 @@ import { Food } from "./Food";
 import { Army } from "./Army";
 import { BattalionCost } from "./BattalionCost";
 import { BattalionStats } from "./BattalionStats";
+import { ResourceLaborAndToolCost } from "./ResourceLaborAndToolCost";
+
 export {
   Realm,
   RealmHistory,
@@ -34,5 +36,6 @@ export {
   Food,
   Army,
   BattalionCost,
-  BattalionStats
+  BattalionStats,
+  ResourceLaborAndToolCost,
 };

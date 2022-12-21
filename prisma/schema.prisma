@@ -128,16 +128,34 @@ model BuildingRealmTraitConstraint {
   @@unique([buildingId])
 }
 
-// MILSTONE 1
 model Resource {
-  id         Int      @id @default(autoincrement())
+  id         Int    @id @default(autoincrement())
   resourceId Int
   realmId    Int?
-  realm      Realm?   @relation(fields: [realmId], references: [realmId])
-  level      Int      @default(0)
-  upgrades   String[]
+  realm      Realm? @relation(fields: [realmId], references: [realmId])
+  labor      Labor?
+
+  // Deprecated
+  level    Int      @default(0)
+  upgrades String[]
 
   @@unique([resourceId, realmId])
+}
+
+model Labor {
+  id           Int       @id @default(autoincrement())
+  realmId      Int
+  resourceId   Int
+  vaultBalance DateTime?
+  balance      DateTime?
+  lastUpdate   DateTime?
+  lastEventId  String?
+  createdAt    DateTime
+  updatedAt    DateTime
+
+  resoure Resource @relation(fields: [realmId, resourceId], references: [realmId, resourceId])
+
+  @@unique([realmId, resourceId])
 }
 
 model WalletBalance {

@@ -15,6 +15,7 @@ import FoodIndexer from "./settling/FoodIndexer";
 import TravelIndexer from "./settling/TravelIndexer";
 import LordsIndexer from "./settling/LordsIndexer";
 import CalculatorIndexer from "./settling/CalculatorIndexer";
+import LaborIndexer from "./settling/LaborIndexer";
 
 // import GoblinIndexer from "./settling/GoblinIndexer";
 
@@ -37,15 +38,16 @@ export const StarkNet = () => {
           new ResourceERC1155Indexer(context),
           new SettlingIndexer(context),
           new FoodIndexer(context),
+          new LaborIndexer(context),
           new TravelIndexer(context),
           // Resource Events must be processed before combat events
-          new CombatIndexer(context)
+          new CombatIndexer(context),
           //TODO: Renable when Goblins are added to combat v3
           // new GoblinIndexer(context)
         ],
         context
       );
       await indexer.start();
-    }
+    },
   };
 };

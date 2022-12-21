@@ -2,6 +2,7 @@ import { ObjectType, Field, ID, Int } from "type-graphql";
 import { __Type } from "graphql";
 import { Realm } from "./Realm";
 import { ResourceNameById } from "./../../utils/game_constants";
+import { Labor } from "@generated/type-graphql";
 
 @ObjectType({ description: "The Resource Model" })
 export class Resource {
@@ -19,6 +20,9 @@ export class Resource {
 
   @Field(() => Realm, { nullable: false })
   realm: Realm;
+
+  @Field(() => Labor, { nullable: true })
+  labor?: Labor;
 
   @Field(() => Int)
   level: number;

@@ -65,7 +65,7 @@ export default class StarknetRpcProvider {
       jsonrpc: "2.0",
       id: 1,
       method: `starknet_${method}`,
-      params
+      params,
     };
   }
 
@@ -74,7 +74,7 @@ export default class StarknetRpcProvider {
       const resp = await fetch(RPC_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify(requestBody),
       });
       const data = await resp.json();
       if (!data || !data.result) {
@@ -106,7 +106,7 @@ export default class StarknetRpcProvider {
       return data;
     }
     const requestBody = this.createRequestBody("getTransactionByHash", [
-      txHash
+      txHash,
     ]);
     data = await this.fetch(requestBody);
 
@@ -123,7 +123,7 @@ export default class StarknetRpcProvider {
       return data;
     }
     const requestBody = this.createRequestBody("getTransactionReceipt", [
-      txHash
+      txHash,
     ]);
     data = await this.fetch(requestBody);
 
@@ -140,7 +140,7 @@ export default class StarknetRpcProvider {
       return data;
     }
     const requestBody = this.createRequestBody("getBlockWithTxHashes", [
-      blockNumber
+      blockNumber,
     ]);
     data = await this.fetch(requestBody);
     if (!data) {

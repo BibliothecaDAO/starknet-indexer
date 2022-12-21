@@ -459,6 +459,39 @@ input JsonWithAggregatesFilter {
   string_starts_with: String
 }
 
+type Labor {
+  balance: Timestamp
+  createdAt: Timestamp!
+  id: Int!
+  lastEventId: String
+  lastUpdate: Timestamp
+  realmId: Int!
+  resourceId: Int!
+  updatedAt: Timestamp!
+  vaultBalance: Timestamp
+}
+
+input LaborRelationFilter {
+  is: LaborWhereInput
+  isNot: LaborWhereInput
+}
+
+input LaborWhereInput {
+  AND: [LaborWhereInput!]
+  NOT: [LaborWhereInput!]
+  OR: [LaborWhereInput!]
+  balance: DateTimeNullableFilter
+  createdAt: DateTimeFilter
+  id: IntFilter
+  lastEventId: StringNullableFilter
+  lastUpdate: DateTimeNullableFilter
+  realmId: IntFilter
+  resourceId: IntFilter
+  resoure: ResourceRelationFilter
+  updatedAt: DateTimeFilter
+  vaultBalance: DateTimeNullableFilter
+}
+
 """Lore Entity"""
 type LoreEntity {
   id: ID!
@@ -834,6 +867,7 @@ type Query {
   getRealmHistory(filter: RealmHistoryWhereInput, skip: Float = 0, take: Float = 20): [RealmHistory!]!
   getRealms(filter: RealmWhereInput, orderBy: RealmOrderByInput, skip: Float = 0, take: Float = 100): [Realm!]!
   getResource(id: Float!): Resource!
+  getResourceLaborAndToolCosts: [ResourceLaborAndToolCost!]!
   getResources: [Resource!]!
   getResourcesByAddress(address: String!): [Resource!]!
   getTroopStats: [TroopStats!]!
@@ -1265,6 +1299,7 @@ input RelicWhereInput {
 """The Resource Model"""
 type Resource {
   id: ID!
+  labor: Labor
   level: Int!
   realm: Realm!
   realmId: Float
@@ -1280,6 +1315,15 @@ type ResourceAmount {
   resourceName: String!
 }
 
+"""Resource Labor and Tool Cost Model"""
+type ResourceLaborAndToolCost {
+  amount: Float!
+  costs: JSON!
+  resourceId: Int!
+  resourceName: String!
+  tier: String!
+}
+
 input ResourceListRelationFilter {
   every: ResourceWhereInput
   none: ResourceWhereInput
@@ -1290,11 +1334,17 @@ input ResourceOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
+input ResourceRelationFilter {
+  is: ResourceWhereInput
+  isNot: ResourceWhereInput
+}
+
 input ResourceWhereInput {
   AND: [ResourceWhereInput!]
   NOT: [ResourceWhereInput!]
   OR: [ResourceWhereInput!]
   id: IntFilter
+  labor: LaborRelationFilter
   level: IntFilter
   realm: RealmRelationFilter
   realmId: IntNullableFilter
