@@ -1,3 +1,5 @@
+const COST_FACTOR = 0.1;
+
 export const TroopId = {
   Skirmisher: 1,
   Longbow: 2,
@@ -234,7 +236,7 @@ interface Cost {
 const createResourceCost = (resourceId: number, amount: number) => ({
   resourceId,
   resourceName: ResourceNameById[resourceId],
-  amount,
+  amount: +(amount * COST_FACTOR).toFixed(2),
 });
 
 export const BuildingCost: { [key in BuildingName]: Cost } = {
