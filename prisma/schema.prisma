@@ -150,6 +150,7 @@ model Labor {
   balance      DateTime?
   lastUpdate   DateTime?
   lastEventId  String?
+  qtyBuilt     Int       @default(0)
   createdAt    DateTime
   updatedAt    DateTime
 

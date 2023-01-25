@@ -9,9 +9,10 @@ import {
   WalletResolver,
   RealmResolver,
   RealmTraitResolver,
-  ResourceResolver
+  ResourceResolver,
 } from "./../resolvers";
 import { CONTRACTS, REALMS_L1_SUBGRAPH_URL } from "./../utils/constants";
+import { ResourceId } from "../utils/game_constants";
 
 const REALMS_L1_MAINNET_URL =
   "https://api.thegraph.com/subgraphs/name/bibliothecaforadventurers/realms";
@@ -40,7 +41,7 @@ const RESOURCES = [
   "Alchemical Silver",
   "Adamantine",
   "Mithral",
-  "Dragonhide"
+  "Dragonhide",
 ];
 
 export class RealmsL1Indexer {
@@ -77,7 +78,7 @@ export class RealmsL1Indexer {
           orderType: realm.attributes
             .find((trait: any) => trait.trait_type === "Order")
             .value.replace("The Order of ", "")
-            .replace(" ", "_")
+            .replace(" ", "_"),
         },
         this.context
       );
@@ -104,12 +105,20 @@ export class RealmsL1Indexer {
             {
               type: resourceType,
               realmId: parseInt(realm.id),
-              qty: parseInt(resource.value)
+              qty: parseInt(resource.value),
             },
             this.context
           );
         }
       }
+      await this.resource.createOrUpdateResources(
+        { resourceId: ResourceId.Wheat, realmId: parseInt(realm.id) },
+        this.context
+      );
+      await this.resource.createOrUpdateResources(
+        { resourceId: ResourceId.Fish, realmId: parseInt(realm.id) },
+        this.context
+      );
     }
   }
 
@@ -140,8 +149,8 @@ export class RealmsL1Indexer {
         where: { realmId: parseInt(realm.id) },
         data: {
           owner: realmOwner,
-          bridgedOwner: bridgedOwner ? bridgedOwner.address : undefined
-        }
+          bridgedOwner: bridgedOwner ? bridgedOwner.address : undefined,
+        },
       });
     }
   }
@@ -182,7 +191,7 @@ export class RealmsL1Indexer {
       console.log(`Syncing realms ${skip} to ${skip + first}`);
       const realms = (await getRealms(first, last)).map((realm: any) => ({
         ...realm,
-        ...traitsDb[realm.id]
+        ...traitsDb[realm.id],
       }));
 
       if (realms.length === 0) {
@@ -222,8 +231,8 @@ export class RealmsL1Indexer {
         where: { realmId },
         data: {
           owner: to,
-          bridgedOwner
-        }
+          bridgedOwner,
+        },
       });
       console.info(`Realm transfered from ${from}, to ${to} `);
     });
@@ -240,7 +249,7 @@ export class RealmsL1Indexer {
 
 function getTraitsDb() {
   const data = readFileSync(__dirname + "/../db/realmsL1DB.json", {
-    encoding: "utf-8"
+    encoding: "utf-8",
   });
   return JSON.parse(data);
 }
@@ -262,8 +271,8 @@ async function getRealms(first: number, last: string, subgraphUrl?: string) {
                   currentOwner {address}
               }
           }
-          `
-    })
+          `,
+    }),
   });
   const result = await response.json();
   return result.data?.realms ?? [];

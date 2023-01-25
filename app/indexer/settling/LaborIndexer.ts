@@ -21,6 +21,7 @@ export default class LaborIndexer extends BaseContractIndexer {
     super(context, CONTRACT);
 
     this.on("UpdateLabor", this.updateLabor.bind(this));
+    this.on("FoodBuildingsBuilt", this.foodBuildingsBuilt.bind(this));
   }
 
   async updateLabor(event: Event): Promise<void> {
@@ -58,6 +59,49 @@ export default class LaborIndexer extends BaseContractIndexer {
         realmId,
         eventId,
         eventType: "labor_updated",
+        timestamp: event.timestamp,
+        transactionHash: event.txHash,
+        data: {
+          resourceId,
+          resourceName: ResourceNameById[resourceId + ""],
+          ...updates,
+        },
+      }),
+    ]);
+  }
+
+  async foodBuildingsBuilt(event: Event): Promise<void> {
+    const eventId = event.eventId;
+    const params = event.parameters ?? [];
+    const realmId = arrayUInt256ToNumber(params.slice(0, 2));
+    const resourceId = arrayUInt256ToNumber(params.slice(2, 4));
+
+    const qtyBuilt = parseInt(params[4]) || 0;
+
+    const updatedAt = new Date();
+    const where = {
+      realmId_resourceId: { realmId, resourceId },
+    };
+    const updates = {
+      qtyBuilt,
+      updatedAt,
+      lastEventId: eventId,
+    };
+
+    await Promise.all([
+      this.context.prisma.labor.upsert({
+        where,
+        create: {
+          ...where.realmId_resourceId,
+          ...updates,
+          createdAt: updatedAt,
+        },
+        update: { ...updates },
+      }),
+      this.saveRealmHistory({
+        realmId,
+        eventId,
+        eventType: "food_building_built",
         timestamp: event.timestamp,
         transactionHash: event.txHash,
         data: {

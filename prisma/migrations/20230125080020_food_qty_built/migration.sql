@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Labor" ADD COLUMN     "qtyBuilt" INTEGER NOT NULL DEFAULT 0;

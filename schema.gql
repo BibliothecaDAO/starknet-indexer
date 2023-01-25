@@ -465,6 +465,7 @@ type Labor {
   id: Int!
   lastEventId: String
   lastUpdate: Timestamp
+  qtyBuilt: Int!
   realmId: Int!
   resourceId: Int!
   updatedAt: Timestamp!
@@ -485,6 +486,7 @@ input LaborWhereInput {
   id: IntFilter
   lastEventId: StringNullableFilter
   lastUpdate: DateTimeNullableFilter
+  qtyBuilt: IntFilter
   realmId: IntFilter
   resourceId: IntFilter
   resoure: ResourceRelationFilter
