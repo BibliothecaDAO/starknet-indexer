@@ -398,6 +398,8 @@ model ResourceTransfer {
   @@unique([resourceId, eventId])
   @@index([fromAddress, toAddress, eventId(sort: Desc)])
   @@index([blockNumber, transactionNumber, eventId(sort: Desc)])
+  @@index([toAddress, resourceId, timestamp(sort: Desc)])
+  @@index([fromAddress, resourceId, timestamp(sort: Desc)])
 }
 
 // Combat
@@ -450,4 +452,26 @@ model Travel {
   destinationNestedId    Int
   destinationArrivalTime DateTime
   timestamp              DateTime
+}
+
+enum ExchangeEventType {
+  LiquidityAdded
+  LiquidityRemoved
+  TokensPurchased
+  CurrencyPurchased
+}
+
+model ExchangeEvent {
+  eventId             String            @id @unique
+  type                ExchangeEventType
+  resourceId          Int
+  address             String
+  currencyAmount      String
+  currencyAmountValue Decimal           @default(0) @db.Decimal(80, 20)
+  resourceAmount      String
+  resourceAmountValue Decimal           @default(0) @db.Decimal(80, 20)
+  timestamp           DateTime
+
+  @@index([eventId(sort: Desc)])
+  @@index([resourceId, type, timestamp(sort: Desc)])
 }

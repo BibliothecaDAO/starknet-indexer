@@ -280,9 +280,7 @@ export class RealmResolver {
     result.transactionHash = transactionHash;
     result.history = combatHistory;
     result.resourcesPillaged = resources.map((resource) => {
-      const amount = new ResourceAmount();
-      amount.resourceId = resource.resourceId;
-      amount.amount = resource.amount;
+      const amount = new ResourceAmount(resource.resourceId, resource.amount);
       return amount;
     });
     result.relicLost = relicRealmId;

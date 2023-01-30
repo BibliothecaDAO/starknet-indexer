@@ -3,13 +3,18 @@ import BaseContractIndexer from "./../BaseContractIndexer";
 import { Contract } from "starknet";
 import { bnToUint256, uint256ToBN } from "starknet/utils/uint256";
 import ExchangeABI from "./../../abis/Exchange_ERC20_1155.json";
+import { BigNumberish } from "starknet/utils/number";
+import { BigNumber } from "ethers";
+import { Event } from "./../../entities/starknet/Event";
+import { formatEther } from "ethers/lib/utils";
+import { ExchangeEventType } from "@prisma/client";
 
 const CONTRACT =
   "0x042bf805eb946855cc55b1321a86cd4ece9904b2d15f50c47439af3166c7c5e2";
 
 const RESOURCE_IDS = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-  10000, 10001
+  10000, 10001,
 ];
 
 const TOKEN_IDS = RESOURCE_IDS.map((resourceId) =>
@@ -21,6 +26,14 @@ const TOKEN_AMOUNTS = [...TOKEN_IDS].fill(
   0,
   TOKEN_IDS.length
 );
+
+function arrayUInt256ToNumber([low, high]: any[]): number {
+  return parseInt(uint256ToBN({ low, high }).toString());
+}
+
+function arrayUInt256ToBigNumber([low, high]: any[]): BigNumberish {
+  return uint256ToBN({ low, high }).toString();
+}
 
 export default class ExchangeIndexer extends BaseContractIndexer {
   private contract: Contract;
@@ -44,11 +57,52 @@ export default class ExchangeIndexer extends BaseContractIndexer {
     this.interval = setInterval(this.fetchPrices.bind(this), 5000);
   }
 
-  // TODO
-  async addLiquidity() {}
-  async removeLiquidity() {}
-  async purchaseTokens() {}
-  async purchaseCurrency() {}
+  async addLiquidity(event: Event) {
+    await this.updateExchange(ExchangeEventType.LiquidityAdded, event);
+  }
+
+  async removeLiquidity(event: Event) {
+    await this.updateExchange(ExchangeEventType.LiquidityRemoved, event);
+  }
+
+  async purchaseTokens(event: Event) {
+    await this.updateExchange(ExchangeEventType.TokensPurchased, event);
+  }
+
+  async purchaseCurrency(event: Event) {
+    await this.updateExchange(ExchangeEventType.CurrencyPurchased, event);
+  }
+
+  async updateExchange(type: ExchangeEventType, event: Event) {
+    const params = event.parameters ?? [];
+    const eventId = event.eventId;
+    const address = BigNumber.from(params[0]).toHexString();
+    const currencyAmount = arrayUInt256ToBigNumber(params.slice(1, 3));
+    const currencyAmountValue = formatEther(currencyAmount);
+    const resourceId = arrayUInt256ToNumber(params.slice(3, 5));
+    const resourceAmount = arrayUInt256ToBigNumber(params.slice(5, 7));
+    const resourceAmountValue = formatEther(resourceAmount);
+    const timestamp = event.timestamp;
+
+    const updates = {
+      type,
+      address,
+      resourceId,
+      currencyAmount,
+      currencyAmountValue,
+      resourceAmount,
+      resourceAmountValue,
+      timestamp,
+    };
+    await this.context.prisma.exchangeEvent.upsert({
+      where: { eventId },
+      update: { ...updates },
+      create: {
+        eventId,
+        ...updates,
+      },
+    });
+  }
 
   async fetchPrices() {
     if (this.isUpdatingPrices) {
@@ -62,7 +116,7 @@ export default class ExchangeIndexer extends BaseContractIndexer {
         this.contract.get_all_rates(TOKEN_IDS, TOKEN_AMOUNTS),
         this.contract.get_all_buy_price(TOKEN_IDS, TOKEN_AMOUNTS),
         this.contract.get_all_sell_price(TOKEN_IDS, TOKEN_AMOUNTS),
-        this.contract.get_all_currency_reserves(TOKEN_IDS, TOKEN_AMOUNTS)
+        this.contract.get_all_currency_reserves(TOKEN_IDS, TOKEN_AMOUNTS),
       ];
 
       const [rates, buys, sells, lps] = await Promise.all(calls);
@@ -81,15 +135,15 @@ export default class ExchangeIndexer extends BaseContractIndexer {
             date_hour_tokenId: {
               date,
               hour,
-              tokenId
-            }
+              tokenId,
+            },
           },
           update: {
             amount,
             buyAmount,
             sellAmount,
             currencyReserve,
-            tokenReserve
+            tokenReserve,
           },
           create: {
             date,
@@ -99,8 +153,8 @@ export default class ExchangeIndexer extends BaseContractIndexer {
             buyAmount,
             sellAmount,
             currencyReserve,
-            tokenReserve
-          }
+            tokenReserve,
+          },
         });
       });
 

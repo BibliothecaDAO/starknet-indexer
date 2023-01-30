@@ -4,6 +4,11 @@ import { ResourceNameById } from "../../utils/game_constants";
 
 @ObjectType({ description: "The Token Amount Model" })
 export class ResourceAmount {
+  constructor(resourceId: number, amount: string) {
+    this.resourceId = resourceId;
+    this.amount = amount;
+  }
+
   @Field(() => Int)
   resourceId: number;
 

@@ -852,6 +852,12 @@ type Query {
   armies(orderBy: ArmyOrderByWithRelationInput, skip: Float = 0, take: Float = 100, where: ArmyWhereInput): [Army!]!
   battalionCosts: [BattalionCost!]!
   battalionStats: [BattalionStats!]!
+  economyExchangeLordsPurchasedTotal: String!
+  economyExchangeResourcePurchasedTotals: [ResourceAmount!]!
+  economyLpResourceBurnedTotals: [ResourceAmount!]!
+  economyLpResourceMintedTotals: [ResourceAmount!]!
+  economyResourceBurnedTotals: [ResourceAmount!]!
+  economyResourceMintedTotals: [ResourceAmount!]!
   exchangeRates(cursor: ExchangeRateWhereUniqueInput, distinct: [ExchangeRateScalarFieldEnum!], orderBy: [ExchangeRateOrderByWithRelationInput!], skip: Int, take: Int, where: ExchangeRateWhereInput): [ExchangeRate!]!
   getBuildingCostById: BuildingCost!
   getBuildingCosts: [BuildingCost!]!

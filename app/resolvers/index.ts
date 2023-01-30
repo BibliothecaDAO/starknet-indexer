@@ -9,10 +9,11 @@ import {
   TroopResolver,
   FoodResolver,
   ArmyResolver,
-  TravelResolver
+  TravelResolver,
 } from "./settling";
 import { DesiegeResolver } from "./desiege/DesiegeResolver";
 import { EventResolver } from "./starknet/EventResolver";
+import { EconomyResolver } from "./economy/EconomyResolver";
 
 export {
   WalletResolver,
@@ -27,5 +28,6 @@ export {
   TroopResolver,
   FoodResolver,
   ArmyResolver,
-  TravelResolver
+  TravelResolver,
+  EconomyResolver,
 };
