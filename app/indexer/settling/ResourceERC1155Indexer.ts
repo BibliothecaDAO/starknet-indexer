@@ -29,6 +29,7 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
   async transferSingle(event: Event): Promise<void> {
     const params = event.parameters ?? [];
     const eventId = event.eventId;
+    const operatorAddress = BigNumber.from(params[0]).toHexString();
     const fromAddress = BigNumber.from(params[1]).toHexString();
     const toAddress = BigNumber.from(params[2]).toHexString();
     const resourceId = arrayUInt256ToNumber(params.slice(3, 5));
@@ -39,6 +40,7 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
       .map((value) => parseInt(value)) as number[];
 
     const updates = {
+      operatorAddress,
       toAddress,
       fromAddress,
       blockNumber,
@@ -81,6 +83,7 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
       .split("_")
       .map((value) => parseInt(value)) as number[];
 
+    const operatorAddress = BigNumber.from(params[0]).toHexString();
     const fromAddress = BigNumber.from(params[1]).toHexString() as string;
     const toAddress = BigNumber.from(params[2]).toHexString() as string;
     const arrayLen = parseInt(params[3]);
@@ -103,6 +106,7 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
         params.slice(amountIdx, amountIdx + 2)
       );
       const updates = {
+        operatorAddress,
         toAddress,
         fromAddress,
         blockNumber,

@@ -1,7 +1,11 @@
 import { Realm } from "./Realm";
 import { Building } from "./Building";
 import { Resource } from "./Resource";
-import { ResourceAmount } from "./ResourceAmount";
+import {
+  ResourceAmount,
+  ResourceAmountByBattalion,
+  ResourceAmountByBuilding,
+} from "./ResourceAmount";
 import { BuildingCost } from "./BuildingCost";
 import { RealmTrait } from "./RealmTrait";
 import { RealmHistory } from "./RealmHistory";
@@ -27,6 +31,8 @@ export {
   Building,
   Resource,
   ResourceAmount,
+  ResourceAmountByBattalion,
+  ResourceAmountByBuilding,
   BuildingCost,
   RealmTrait,
   ExchangeRate24Hr,

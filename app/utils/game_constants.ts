@@ -29,7 +29,7 @@ export const BattalionId = {
   Arcanist: 6,
   LightInfantry: 7,
   HeavyInfantry: 8,
-};
+} as const;
 
 export type BattalionName = keyof typeof BattalionId;
 

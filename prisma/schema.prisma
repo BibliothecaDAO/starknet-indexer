@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["extendedIndexes", "filterJson"]
+  previewFeatures = []
 }
 
 generator docs {
@@ -388,6 +388,7 @@ model ResourceTransfer {
   eventId           String
   blockNumber       Int      @default(0)
   transactionNumber Int      @default(0)
+  operatorAddress   String   @default("")
   fromAddress       String
   toAddress         String
   amount            String
@@ -474,4 +475,42 @@ model ExchangeEvent {
 
   @@index([eventId(sort: Desc)])
   @@index([resourceId, type, timestamp(sort: Desc)])
+}
+
+model BuildArmyEvent {
+  eventId String @id @unique
+  realmId Int
+  armyId  Int
+
+  // Battalions
+  lightCavalryQty     Int      @default(0)
+  lightCavalryHealth  Int      @default(0)
+  heavyCavalryQty     Int      @default(0)
+  heavyCavalryHealth  Int      @default(0)
+  archerQty           Int      @default(0)
+  archerHealth        Int      @default(0)
+  longbowQty          Int      @default(0)
+  longbowHealth       Int      @default(0)
+  mageQty             Int      @default(0)
+  mageHealth          Int      @default(0)
+  arcanistQty         Int      @default(0)
+  arcanistHealth      Int      @default(0)
+  lightInfantryQty    Int      @default(0)
+  lightInfantryHealth Int      @default(0)
+  heavyInfantryQty    Int      @default(0)
+  heavyInfantryHealth Int      @default(0)
+  timestamp           DateTime
+
+  @@index([eventId(sort: Desc)])
+}
+
+model BuildBuildingEvent {
+  eventId           String   @id @unique
+  buildingId        Int
+  realmId           Int
+  buildingIntegrity Int
+  count             Int
+  timestamp         DateTime
+
+  @@index([eventId(sort: Desc)])
 }

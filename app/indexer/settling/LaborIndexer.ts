@@ -5,7 +5,7 @@ import { ResourceNameById } from "./../../utils/game_constants";
 import { BigNumberish } from "starknet/utils/number";
 import { uint256ToBN } from "starknet/utils/uint256";
 
-const CONTRACT =
+export const CONTRACT =
   "0x03c934d404e76daae48d9b17eb2a4a973938dbd3115bd353e756bcefe0d799a3";
 
 function arrayUInt256ToNumber([low, high]: any[]): BigNumberish {

@@ -857,7 +857,13 @@ type Query {
   economyLpResourceBurnedTotals: [ResourceAmount!]!
   economyLpResourceMintedTotals: [ResourceAmount!]!
   economyResourceBurnedTotals: [ResourceAmount!]!
+  economyResourceBurnedTotalsByBattalionAll: [ResourceAmount!]!
+  economyResourceBurnedTotalsByBattalionId: [ResourceAmountByBattalion!]!
+  economyResourceBurnedTotalsByBuildingAll: [ResourceAmount!]!
+  economyResourceBurnedTotalsByBuildingId: [ResourceAmountByBuilding!]!
+  economyResourceBurnedTotalsByLaborAll: [ResourceAmount!]!
   economyResourceMintedTotals: [ResourceAmount!]!
+  economySettledRealmsTotal: Int!
   exchangeRates(cursor: ExchangeRateWhereUniqueInput, distinct: [ExchangeRateScalarFieldEnum!], orderBy: [ExchangeRateOrderByWithRelationInput!], skip: Int, take: Int, where: ExchangeRateWhereInput): [ExchangeRate!]!
   getBuildingCostById: BuildingCost!
   getBuildingCosts: [BuildingCost!]!
@@ -1319,6 +1325,24 @@ type Resource {
 """The Token Amount Model"""
 type ResourceAmount {
   amount: String!
+  resourceId: Int!
+  resourceName: String!
+}
+
+"""The Token Amount Model"""
+type ResourceAmountByBattalion {
+  amount: String!
+  battalionId: Int!
+  battalionName: String!
+  resourceId: Int!
+  resourceName: String!
+}
+
+"""The Token Amount Model"""
+type ResourceAmountByBuilding {
+  amount: String!
+  buildingId: Int!
+  buildingName: String!
   resourceId: Int!
   resourceName: String!
 }

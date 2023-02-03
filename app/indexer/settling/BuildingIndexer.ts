@@ -3,7 +3,7 @@ import { Context } from "./../../context";
 import BaseContractIndexer from "./../BaseContractIndexer";
 import { BuildingNameById } from "./../../utils/game_constants";
 
-const CONTRACT =
+export const CONTRACT =
   "0x01c7a86cea8febe69d688dd5ffa361e7924f851db730f4256ed67fd805ea8aa7";
 
 export default class BuildingIndexer extends BaseContractIndexer {
@@ -35,7 +35,24 @@ export default class BuildingIndexer extends BaseContractIndexer {
       builds.push(timestamp);
     }
 
+    const count = getBuildingCount(
+      buildingIntegrityTimestamp,
+      timestamp,
+      buildingId
+    );
+    const updates = {
+      buildingId,
+      realmId,
+      buildingIntegrity: buildingIntegrityTimestamp,
+      count,
+      timestamp,
+    };
     await Promise.all([
+      this.context.prisma.buildBuildingEvent.upsert({
+        where: { eventId },
+        create: { eventId, ...updates },
+        update: { ...updates },
+      }),
       this.context.prisma.building.upsert({
         where,
         create: {
@@ -67,3 +84,28 @@ export default class BuildingIndexer extends BaseContractIndexer {
     ]);
   }
 }
+
+const DAY = 86400;
+const BUILDING_INTEGRITY = [
+  0,
+  3 * DAY,
+  2000,
+  2000,
+  2000,
+  2000,
+  7 * DAY,
+  7 * DAY,
+  7 * DAY,
+  7 * DAY,
+];
+const getBuildingCount = (
+  integrity: number,
+  timestamp: any,
+  buildingId: number
+) => {
+  const buildings = Math.floor(
+    (integrity - new Date(timestamp).getTime() / 1000) /
+      BUILDING_INTEGRITY[buildingId]
+  );
+  return buildings < 0 ? 0 : buildings;
+};

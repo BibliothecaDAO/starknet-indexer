@@ -8,7 +8,7 @@ import {
   ResourceNameById,
 } from "../../utils/game_constants";
 
-const CONTRACT =
+export const CONTRACT =
   "0x039f40b33de4d22b2c140fccbcf2092ccc24ebdb7ed985716b93f763ae5607e8";
 
 const START_BLOCK = 331146;
@@ -51,19 +51,27 @@ export default class CombatIndexer extends BaseContractIndexer {
   }
 
   async buildArmy(event: Event) {
+    const { eventId, timestamp } = event;
     const params = event.parameters ?? [];
     const armyId = +params[0];
     const realmId = arrayUInt256ToNumber(params.slice(1, 3));
     try {
       const data = await this.updateArmy(params);
-      await this.saveRealmHistory({
-        realmId,
-        eventId: event.eventId,
-        eventType: "army_built",
-        timestamp: event.timestamp,
-        transactionHash: event.txHash,
-        data,
-      });
+      await Promise.all([
+        this.context.prisma.buildArmyEvent.upsert({
+          where: { eventId },
+          create: { ...data, timestamp, eventId },
+          update: { ...data, timestamp },
+        }),
+        this.saveRealmHistory({
+          realmId,
+          eventId: event.eventId,
+          eventType: "army_built",
+          timestamp: event.timestamp,
+          transactionHash: event.txHash,
+          data,
+        }),
+      ]);
     } catch (e) {
       console.error(
         "Failed to update army realmId:",
