@@ -25,23 +25,28 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
         return;
       }
       const eventId = event.eventId;
+      const udpates = {
+        heldByRealm: ownerTokenId,
+        isAnnexed: ownerTokenId != realmId,
+      };
+      await Promise.all([
+        this.context.prisma.relic.upsert({
+          where: { realmId },
+          create: { realmId, ...udpates },
+          update: { ...udpates },
+        }),
 
-      await this.context.prisma.relic.upsert({
-        where: { realmId },
-        create: { realmId, heldByRealm: ownerTokenId },
-        update: { heldByRealm: ownerTokenId }
-      });
-
-      this.saveRealmHistory({
-        realmId: realmId,
-        eventId,
-        eventType: "relic_update",
-        timestamp: event.timestamp,
-        transactionHash: event.txHash,
-        data: {
-          heldByRealm: ownerTokenId
-        }
-      });
+        this.saveRealmHistory({
+          realmId: realmId,
+          eventId,
+          eventType: "relic_update",
+          timestamp: event.timestamp,
+          transactionHash: event.txHash,
+          data: {
+            ...udpates,
+          },
+        }),
+      ]);
     } catch (e) {
       console.error(
         `Invalid realms update: Event: ${event.eventId}, Params: `,

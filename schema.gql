@@ -131,6 +131,11 @@ type BattalionStats {
   value: Int!
 }
 
+input BoolFilter {
+  equals: Boolean
+  not: NestedBoolFilter
+}
+
 """The Buildings Model"""
 type Building {
   buildingCost: BuildingCost!
@@ -650,6 +655,11 @@ input LorePropsOnEntityRevisionsWhereInput {
 
 type Mutation {
   reindexDesiege: Boolean!
+}
+
+input NestedBoolFilter {
+  equals: Boolean
+  not: NestedBoolFilter
 }
 
 input NestedDateTimeFilter {
@@ -1273,6 +1283,7 @@ input RealmWhereInput {
 """The Relic Model"""
 type Relic {
   heldByRealm: Float
+  isAnnexed: Boolean!
   originRealm: Realm!
   realmHolder: Realm!
   realmId: Float
@@ -1290,6 +1301,7 @@ input RelicOrderByRelationAggregateInput {
 
 input RelicOrderByWithRelationInput {
   heldByRealm: SortOrder
+  isAnnexed: SortOrder
   originRealm: RealmOrderByWithRelationInput
   realmHolder: RealmOrderByWithRelationInput
   realmId: SortOrder
@@ -1305,6 +1317,7 @@ input RelicWhereInput {
   NOT: [RelicWhereInput!]
   OR: [RelicWhereInput!]
   heldByRealm: IntFilter
+  isAnnexed: BoolFilter
   originRealm: RealmRelationFilter
   realmHolder: RealmRelationFilter
   realmId: IntFilter

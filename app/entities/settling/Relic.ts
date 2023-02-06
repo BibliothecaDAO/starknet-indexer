@@ -19,4 +19,7 @@ export class Relic {
 
   @Field(() => Realm, { nullable: false })
   realmHolder: Realm;
+
+  @Field({ nullable: false })
+  isAnnexed: boolean;
 }

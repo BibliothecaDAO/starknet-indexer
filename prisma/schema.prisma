@@ -113,9 +113,10 @@ model Food {
 
 model Relic {
   realmId     Int
-  originRealm Realm? @relation(name: "originRealm", fields: [realmId], references: [realmId])
+  originRealm Realm?  @relation(name: "originRealm", fields: [realmId], references: [realmId])
   heldByRealm Int
-  realmHolder Realm? @relation(name: "heldByRealm", fields: [heldByRealm], references: [realmId])
+  realmHolder Realm?  @relation(name: "heldByRealm", fields: [heldByRealm], references: [realmId])
+  isAnnexed   Boolean @default(false)
 
   @@unique([realmId])
 }
