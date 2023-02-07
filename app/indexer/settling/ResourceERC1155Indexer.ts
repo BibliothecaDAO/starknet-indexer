@@ -1,6 +1,5 @@
 import { Event } from "./../../entities/starknet/Event";
 import { Context } from "./../../context";
-import { updateWallet } from "../../utils/WalletBalance";
 import BaseContractIndexer from "./../BaseContractIndexer";
 import { uint256ToBN } from "starknet/utils/uint256";
 import { BigNumberish } from "starknet/utils/number";
@@ -55,23 +54,6 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
       update: { ...updates },
       create: { ...updates, eventId, resourceId, amount },
     });
-
-    const lastWalletBalanceEventId = (
-      await this.context.prisma.walletBalance.findFirst({
-        where: { tokenId: resourceId },
-        orderBy: { lastEventId: "desc" },
-      })
-    )?.lastEventId;
-    if (!lastWalletBalanceEventId || lastWalletBalanceEventId < eventId) {
-      await updateWallet(
-        this.context,
-        toAddress,
-        fromAddress,
-        resourceId,
-        amount,
-        eventId
-      );
-    }
   }
 
   async transferBatch(event: Event): Promise<void> {
@@ -92,13 +74,6 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
     const startAmountIdx = startIdIdx + arrayLen * 2 + 1;
 
     const upserts: any[] = [];
-    const lastWalletBalanceEventId = (
-      await this.context.prisma.walletBalance.findFirst({
-        where: { tokenId: { not: 0 } },
-        orderBy: { lastEventId: "desc" },
-      })
-    )?.lastEventId;
-
     for (let i = 0; i < arrayLen; i++) {
       let idIdx = startIdIdx + i * 2;
       const resourceId = arrayUInt256ToNumber(params.slice(idIdx, idIdx + 2));
@@ -124,19 +99,6 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
           create: { ...updates, eventId, resourceId, amount },
         })
       );
-
-      if (!lastWalletBalanceEventId || lastWalletBalanceEventId < eventId) {
-        upserts.push(
-          updateWallet(
-            this.context,
-            toAddress,
-            fromAddress,
-            resourceId,
-            amount,
-            eventId
-          )
-        );
-      }
     }
     await Promise.all(upserts);
   }

@@ -404,6 +404,21 @@ model ResourceTransfer {
   @@index([fromAddress, resourceId, timestamp(sort: Desc)])
 }
 
+model LordTransfer {
+  eventId           String   @id
+  blockNumber       Int      @default(0)
+  transactionNumber Int      @default(0)
+  fromAddress       String
+  toAddress         String
+  amount            String
+  amountValue       Decimal  @default(0) @db.Decimal(80, 20)
+  transactionHash   String   @default("")
+  timestamp         DateTime
+
+  @@index([fromAddress, toAddress, eventId(sort: Desc)])
+  @@index([blockNumber, transactionNumber, eventId(sort: Desc)])
+}
+
 // Combat
 model Army {
   realmId                Int

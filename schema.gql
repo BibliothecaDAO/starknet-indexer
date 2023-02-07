@@ -895,13 +895,13 @@ type Query {
   getResources: [Resource!]!
   getResourcesByAddress(address: String!): [Resource!]!
   getTroopStats: [TroopStats!]!
-  getWallet(address: String!): Wallet!
   groupByRealmHistory(by: [RealmHistoryScalarFieldEnum!]!, having: RealmHistoryScalarWhereWithAggregatesInput, orderBy: [RealmHistoryOrderByWithAggregationInput!], skip: Int, take: Int, where: RealmHistoryWhereInput): [RealmHistoryGroupBy!]!
   realm(id: Float!): Realm!
   realmCombatHistory(defendRealmId: Float!, transactionHash: String!): CombatResult!
   realmHistory(filter: RealmHistoryWhereInput, skip: Float = 0, take: Float = 20): [RealmHistory!]!
   realms(filter: RealmWhereInput, orderBy: RealmOrderByWithRelationInput, skip: Float = 0, take: Float = 100): [Realm!]!
   realmsCount(filter: RealmWhereInput): Int!
+  tokenBalances(address: String!): [TokenBalance!]!
   travels(cursor: TravelWhereUniqueInput, distinct: [TravelScalarFieldEnum!], orderBy: [TravelOrderByWithRelationInput!], skip: Int, take: Int, where: TravelWhereInput): [Travel!]!
   troopStats: [TroopStats!]!
   walletBalances(cursor: WalletBalanceWhereUniqueInput, distinct: [WalletBalanceScalarFieldEnum!], orderBy: [WalletBalanceOrderByWithRelationInput!], skip: Int, take: Int, where: WalletBalanceWhereInput): [WalletBalance!]!
@@ -1462,6 +1462,13 @@ input StringWithAggregatesFilter {
 The javascript `Date` as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
 """
 scalar Timestamp
+
+"""TokenBalance"""
+type TokenBalance {
+  address: String!
+  amount: String!
+  tokenId: Int!
+}
 
 type Travel {
   contractId: Int!

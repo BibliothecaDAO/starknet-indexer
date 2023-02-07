@@ -24,6 +24,7 @@ import {
   ResourceLaborAndToolCost,
 } from "./settling";
 import { Wallet } from "./wallet/Wallet";
+import { TokenBalance } from "./wallet/TokenBalance";
 
 export {
   Desiege,
@@ -50,5 +51,6 @@ export {
   BattalionCost,
   BattalionStats,
   ResourceLaborAndToolCost,
+  TokenBalance,
   // LorePOI,
 };
