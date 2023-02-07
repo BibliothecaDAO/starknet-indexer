@@ -51,7 +51,7 @@ export async function updateWallet(
     const balance = await walletBalance.findUnique({ where });
     const newAmount = balance
       ? BigNumber.from(balance.amount).sub(BigNumber.from(amount)).toString()
-      : BigNumber.from(amount).toString();
+      : BigNumber.from("0").sub(BigNumber.from(amount)).toString();
     await walletBalance.upsert({
       where,
       update: { amount: newAmount, lastEventId: eventId },

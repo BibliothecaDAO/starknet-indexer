@@ -32,7 +32,7 @@ export default class BaseContractIndexer implements Indexer<Event> {
   on(name: string, handle: (event: Event) => Promise<boolean>) {
     this.handlers[selectorHash(hash.getSelectorFromName(name))] = {
       name,
-      handle
+      handle,
     };
   }
 
@@ -41,23 +41,26 @@ export default class BaseContractIndexer implements Indexer<Event> {
   }
 
   async index(events: Event[]): Promise<void> {
-    let indexed: string[] = [];
     try {
       for (const event of events) {
         const eventId = event.eventId;
         const handlerObject = this.handlers[selectorHash(event.keys[0])];
+        const updates = [];
         if (handlerObject) {
-          await handlerObject.handle(event);
+          updates.push(handlerObject.handle(event));
         }
-        indexed.push(eventId);
+        updates.push(
+          await this.context.prisma.event.updateMany({
+            where: { eventId },
+            data: { status: 2 },
+          })
+        );
+        await Promise.all(updates);
       }
     } catch (e) {
       console.error(e);
     }
-    await this.context.prisma.event.updateMany({
-      where: { eventId: { in: indexed } },
-      data: { status: 2 }
-    });
+
     return;
   }
 
@@ -65,11 +68,11 @@ export default class BaseContractIndexer implements Indexer<Event> {
     const event = await this.context.prisma.event.findFirst({
       where: {
         contract: { in: this.contracts() },
-        status: 2
+        status: 2,
       },
       orderBy: {
-        eventId: "desc"
-      }
+        eventId: "desc",
+      },
     });
     return event?.eventId ?? "";
   }
@@ -78,11 +81,11 @@ export default class BaseContractIndexer implements Indexer<Event> {
     const event = await this.context.prisma.event.findFirst({
       where: {
         contract: { in: this.contracts() },
-        status: 2
+        status: 2,
       },
       orderBy: {
-        eventId: "desc"
-      }
+        eventId: "desc",
+      },
     });
     return event?.blockNumber ?? 0;
   }
@@ -93,10 +96,10 @@ export default class BaseContractIndexer implements Indexer<Event> {
     eventType,
     data,
     timestamp,
-    transactionHash
+    transactionHash,
   }: RealmEvent): Promise<void> {
     const realm = await this.context.prisma.realm.findFirst({
-      where: { realmId }
+      where: { realmId },
     });
     const realmOwner = realm?.settledOwner || realm?.ownerL2 || "";
     const realmName = realm?.name ?? "";
@@ -104,7 +107,7 @@ export default class BaseContractIndexer implements Indexer<Event> {
 
     await this.context.prisma.realmHistory.upsert({
       where: {
-        eventId_eventType: { eventId: eventId, eventType: eventType }
+        eventId_eventType: { eventId: eventId, eventType: eventType },
       },
       update: { realmId, data, timestamp, realmOwner, realmName, realmOrder },
       create: {
@@ -116,8 +119,8 @@ export default class BaseContractIndexer implements Indexer<Event> {
         realmOrder,
         data,
         timestamp,
-        transactionHash
-      }
+        transactionHash,
+      },
     });
   }
 }

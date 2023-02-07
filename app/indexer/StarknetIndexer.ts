@@ -199,7 +199,7 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
     const events = await this.context.prisma.event.findMany({
       where: { status: 1 },
       orderBy: { eventId: "asc" },
-      take: 5000,
+      take: 1000,
     });
     console.info("indexing", events.length, "events");
     for (let event of events) {
