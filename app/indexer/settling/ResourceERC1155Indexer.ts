@@ -58,6 +58,7 @@ export default class ResourceERC1155Indexer extends BaseContractIndexer {
 
     const lastWalletBalanceEventId = (
       await this.context.prisma.walletBalance.findFirst({
+        where: { tokenId: resourceId },
         orderBy: { lastEventId: "desc" },
       })
     )?.lastEventId;
