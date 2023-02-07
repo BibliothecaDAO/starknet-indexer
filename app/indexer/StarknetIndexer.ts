@@ -35,7 +35,7 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
         parameters: event.parameters,
         keys: event.keys,
         blockNumber: event.blockNumber,
-        transactionNumber: event.transactionNumber
+        transactionNumber: event.transactionNumber,
       };
 
       if (event.timestamp) {
@@ -54,8 +54,8 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
             eventId: event.eventId,
             name: event.name ?? "",
             timestamp: event.timestamp ?? new Date(0),
-            txHash: event.transactionHash ?? ""
-          }
+            txHash: event.transactionHash ?? "",
+          },
         })
       );
     }
@@ -74,7 +74,7 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
     }
     const lastEvent = await this.context.prisma.event.findFirst({
       where: { contract, status: { gt: 0 } },
-      orderBy: { eventId: "desc" }
+      orderBy: { eventId: "desc" },
     });
     let lastEventIndexed = lastEvent?.eventId ?? "";
     let lastBlockNumber = (lastEvent?.blockNumber ?? 0) + 1;
@@ -87,8 +87,8 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
         continuation_token,
         chunk_size: 500,
         from_block: {
-          block_number: lastBlockNumber
-        }
+          block_number: lastBlockNumber,
+        },
       });
       if (!resp) {
         console.error("Error requesting events. Empty results.");
@@ -132,7 +132,7 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
 
           const blockNumber = blockNumbers[transactionHash];
           const block = await this.provider.getBlockWithTxHashes({
-            block_number: blockNumber
+            block_number: blockNumber,
           });
           if (!block) {
             // TODO: handle error
@@ -169,7 +169,7 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
               timestamp,
               keys: event.keys ?? [],
               parameters: event.data ?? [],
-              status: 1
+              status: 1,
             });
           }
         }
@@ -199,7 +199,7 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
     const events = await this.context.prisma.event.findMany({
       where: { status: 1 },
       orderBy: { eventId: "asc" },
-      take: 1000
+      take: 5000,
     });
     console.info("indexing", events.length, "events");
     for (let event of events) {
@@ -248,7 +248,7 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
 
   async lastEventId(): Promise<string> {
     const event = await this.context.prisma.event.findFirst({
-      orderBy: { eventId: "desc" }
+      orderBy: { eventId: "desc" },
     });
     if (event) {
       return event.eventId;
@@ -258,7 +258,7 @@ export default class StarknetIndexer implements Indexer<StarkNetEvent> {
 
   async lastBlockNumber(): Promise<number> {
     const event = await this.context.prisma.event.findFirst({
-      orderBy: { eventId: "desc" }
+      orderBy: { eventId: "desc" },
     });
     if (event) {
       return event.blockNumber;

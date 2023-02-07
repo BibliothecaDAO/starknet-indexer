@@ -20,8 +20,8 @@ export async function updateWallet(
     const where = {
       address_tokenId: {
         address: toAddress,
-        tokenId: resourceId
-      }
+        tokenId: resourceId,
+      },
     };
 
     const balance = await walletBalance.findUnique({ where });
@@ -36,8 +36,8 @@ export async function updateWallet(
         address: toAddress,
         tokenId: resourceId,
         amount: newAmount,
-        lastEventId: eventId
-      }
+        lastEventId: eventId,
+      },
     });
   }
 
@@ -45,20 +45,22 @@ export async function updateWallet(
     const where = {
       address_tokenId: {
         address: fromAddress,
-        tokenId: resourceId
-      }
+        tokenId: resourceId,
+      },
     };
     const balance = await walletBalance.findUnique({ where });
-    if (balance) {
-      await walletBalance.update({
-        where,
-        data: {
-          amount: BigNumber.from(balance.amount)
-            .sub(BigNumber.from(amount))
-            .toString(),
-          lastEventId: eventId
-        }
-      });
-    }
+    const newAmount = balance
+      ? BigNumber.from(balance.amount).sub(BigNumber.from(amount)).toString()
+      : BigNumber.from(amount).toString();
+    await walletBalance.upsert({
+      where,
+      update: { amount: newAmount, lastEventId: eventId },
+      create: {
+        address: fromAddress,
+        tokenId: resourceId,
+        amount: newAmount,
+        lastEventId: eventId,
+      },
+    });
   }
 }
