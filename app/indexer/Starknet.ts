@@ -15,6 +15,7 @@ import TravelIndexer from "./settling/TravelIndexer";
 import LordsIndexer from "./settling/LordsIndexer";
 import CalculatorIndexer from "./settling/CalculatorIndexer";
 import LaborIndexer from "./settling/LaborIndexer";
+import ApibaraTestBuildingIndexer from "./settling/ApibaraTest";
 
 // import FoodIndexer from "./settling/FoodIndexer";
 // import GoblinIndexer from "./settling/GoblinIndexer";
@@ -44,6 +45,8 @@ export const StarkNet = () => {
           new CombatIndexer(context),
           //TODO: Renable when Goblins are added to combat v3
           // new GoblinIndexer(context)
+
+          new ApibaraTestBuildingIndexer(context)
         ],
         context
       );

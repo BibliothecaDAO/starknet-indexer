@@ -31,6 +31,8 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
+    "@apibara/protocol": "^0.4.3",
+    "@apibara/starknet": "^0.2.1",
     "@prisma/client": "^4.9.0",
     "@types/graphql-fields": "^1.3.4",
     "@types/node-fetch": "^2.6.1",
