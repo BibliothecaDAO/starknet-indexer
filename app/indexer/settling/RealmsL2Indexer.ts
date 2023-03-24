@@ -7,7 +7,7 @@ import * as Settling from "./SettlingIndexer";
 const SETTLING_CONTRACT_ADDRESS = Settling.CONTRACT;
 
 const CONTRACT =
-  "0x02ab849a3eaf4fd54f80e6dbe7a8d182646ec41684d1f1a4f718623bd8cb0695";
+  "0x0797b22f293f1392eb03105f9d24df29212627c29abaaa3dc90856f02f437238";
 
 export default class RealmsL2Indexer extends BaseContractIndexer {
   constructor(context: Context) {
@@ -41,7 +41,7 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
       await this.context.prisma.wallet.upsert({
         where: { address: toAddress },
         update: { address: toAddress },
-        create: { address: toAddress }
+        create: { address: toAddress },
       });
 
       const isMint = params[0] === "0";
@@ -52,7 +52,7 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
 
       await this.context.prisma.realm.update({
         data: { ownerL2: toAddress },
-        where
+        where,
       });
 
       if (!isSettlingEvent) {
@@ -66,8 +66,8 @@ export default class RealmsL2Indexer extends BaseContractIndexer {
           transactionHash: event.txHash,
           data: {
             fromAddress,
-            toAddress
-          }
+            toAddress,
+          },
         });
       }
     } catch (e) {

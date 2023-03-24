@@ -6,7 +6,7 @@ import { BigNumberish } from "starknet/utils/number";
 import { uint256ToBN } from "starknet/utils/uint256";
 
 export const CONTRACT =
-  "0x03c934d404e76daae48d9b17eb2a4a973938dbd3115bd353e756bcefe0d799a3";
+  "0x00c2a68871aa763c7827cbc8f3457f80fd4e27ddc7da3bc574f04a0342446216";
 
 function arrayUInt256ToNumber([low, high]: any[]): BigNumberish {
   return parseInt(uint256ToBN({ low, high }).toString());

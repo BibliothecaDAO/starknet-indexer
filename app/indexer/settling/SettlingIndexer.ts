@@ -3,7 +3,7 @@ import { Context } from "./../../context";
 import BaseContractIndexer from "./../BaseContractIndexer";
 
 export const CONTRACT =
-  "0x007a29730cfaed96839660577c3b3019038862187b0865280b79e944c66ac215";
+  "0x05db01dca6c5986b10b079b39b44ac312eb213d8081a29d83556cf93f98a0872";
 
 const START_BLOCK = 241365;
 
@@ -37,7 +37,7 @@ export default class SettlingIndexer extends BaseContractIndexer {
     const timestamp = new Date(parseInt(params[2]) * 1000);
     await this.context.prisma.realm.update({
       where: { realmId },
-      data: { lastClaimTime: timestamp }
+      data: { lastClaimTime: timestamp },
     });
   }
 
@@ -58,7 +58,7 @@ export default class SettlingIndexer extends BaseContractIndexer {
     const timestamp = new Date(parseInt(params[2]) * 1000);
     await this.context.prisma.realm.update({
       where: { realmId },
-      data: { lastVaultTime: timestamp }
+      data: { lastVaultTime: timestamp },
     });
   }
 }

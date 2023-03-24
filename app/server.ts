@@ -23,6 +23,9 @@ import { StarkNet } from "./indexer/Starknet";
 import { RealmsL1Indexer } from "./indexer/RealmsL1Indexer";
 import { LoreResolver } from "./resolvers/lore/LoreResolver";
 import { LorePOIResolver } from "./resolvers/lore/LorePOIResolver";
+import initLore from "./db/loreInit";
+import loadRealmCoordinates from "./db/loadRealmCoordinates";
+import addWheteAndFishResources from "./db/addWheatAndFishResources";
 
 import {
   AggregateRealmHistoryResolver,
@@ -74,11 +77,20 @@ const main = async () => {
   );
   const realmsL1Indexer = new RealmsL1Indexer(context);
   await realmsL1Indexer.start();
+  await initDb();
 
   if (process.env.NETWORK === "goerli") {
     await StarkNet().serverWillStart();
   }
 };
+
+function initDb() {
+  return Promise.allSettled([
+    initLore(context.prisma),
+    loadRealmCoordinates(context.prisma),
+    addWheteAndFishResources(context.prisma),
+  ]);
+}
 
 main().catch((error) => {
   console.log(error, "error");

@@ -4,7 +4,7 @@ import BaseContractIndexer from "./../BaseContractIndexer";
 import { ResourceNameById } from "./../../utils/game_constants";
 
 const CONTRACT =
-  "0x058d3a1a5fe490cdbfbb14c7a648142b3b7debb65747450b76f604c3c39f4cfe";
+  "0x054d2bdfd40648d6ee9b069a3cfeda69c76758f0f9f403bc8ce721ea2f0656df";
 export default class ResourceIndexer extends BaseContractIndexer {
   constructor(context: Context) {
     super(context, CONTRACT);
@@ -24,11 +24,11 @@ export default class ResourceIndexer extends BaseContractIndexer {
       where = {
         resourceId_realmId: {
           realmId,
-          resourceId
-        }
+          resourceId,
+        },
       };
       resource = await this.context.prisma.resource.findUnique({
-        where
+        where,
       });
     } catch (e) {
       console.error(
@@ -49,8 +49,8 @@ export default class ResourceIndexer extends BaseContractIndexer {
         where,
         data: {
           level,
-          upgrades: [...upgrades]
-        }
+          upgrades: [...upgrades],
+        },
       });
 
       await this.saveRealmHistory({
@@ -62,8 +62,8 @@ export default class ResourceIndexer extends BaseContractIndexer {
         data: {
           resourceId,
           resourceName: ResourceNameById[resourceId + ""],
-          level
-        }
+          level,
+        },
       });
     }
   }

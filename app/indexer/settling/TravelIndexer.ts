@@ -6,7 +6,7 @@ import { BigNumberish } from "starknet/utils/number";
 import { Realm } from "@prisma/client";
 
 const CONTRACT =
-  "0x0415bda0925437cee1cd70c5782c65a5b1f5c72945c5204dbba71c6d69c8575a";
+  "0x0593c3cf5559886c7243107581f0a67c083128c04532c51e75c74eafa78a0479";
 
 export default class TravelIndexer extends BaseContractIndexer {
   constructor(context: Context) {
@@ -44,12 +44,12 @@ export default class TravelIndexer extends BaseContractIndexer {
       destinationTokenId,
       destinationNestedId,
       destinationArrivalTime,
-      timestamp: event.timestamp
+      timestamp: event.timestamp,
     };
 
     const realmIds = [tokenId, locationTokenId, destinationTokenId];
     const realms = await this.context.prisma.realm.findMany({
-      where: { realmId: { in: realmIds } }
+      where: { realmId: { in: realmIds } },
     });
     const originRealm = realms.find((realm) => realm.realmId === tokenId);
     const locationRealm =
@@ -64,7 +64,7 @@ export default class TravelIndexer extends BaseContractIndexer {
       this.context.prisma.travel.upsert({
         where: { eventId },
         create: { ...updates, eventId },
-        update: { ...updates }
+        update: { ...updates },
       }),
 
       this.saveRealmHistory({
@@ -82,15 +82,18 @@ export default class TravelIndexer extends BaseContractIndexer {
           locationRealmOwner: getRealmAccount(locationRealm),
           destinationRealmId: destinationTokenId,
           destinationRealmOwner: getRealmAccount(destinationRealm),
-          destinationArrivalTime: new Date(destinationArrivalTime).getTime()
-        }
-      })
+          destinationArrivalTime: new Date(destinationArrivalTime).getTime(),
+        },
+      }),
     ]);
 
     try {
       await this.context.prisma.army.update({
         where: { realmId_armyId: { realmId: tokenId, armyId: nestedId } },
-        data: { destinationRealmId: destinationTokenId, destinationArrivalTime }
+        data: {
+          destinationRealmId: destinationTokenId,
+          destinationArrivalTime,
+        },
       });
     } catch (e) {}
   }

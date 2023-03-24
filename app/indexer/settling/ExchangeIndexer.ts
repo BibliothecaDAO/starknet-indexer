@@ -10,7 +10,7 @@ import { formatEther } from "ethers/lib/utils";
 import { ExchangeEventType } from "@prisma/client";
 
 const CONTRACT =
-  "0x042bf805eb946855cc55b1321a86cd4ece9904b2d15f50c47439af3166c7c5e2";
+  "0x04c906be925dac8f1accbbd074adf9f7d23cfe208ca326bc9c05cf4a664bfee2";
 
 const RESOURCE_IDS = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,

@@ -9,7 +9,7 @@ import {
 } from "../../utils/game_constants";
 
 export const CONTRACT =
-  "0x039f40b33de4d22b2c140fccbcf2092ccc24ebdb7ed985716b93f763ae5607e8";
+  "0x07692e8a91e525e31b3fc8a7fc23bb0523a7dd401a72163ec5de8d5457b51d77";
 
 const START_BLOCK = 331146;
 const ARMY_SEELCT = {

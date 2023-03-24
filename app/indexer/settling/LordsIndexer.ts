@@ -11,7 +11,7 @@ function arrayUInt256ToBigNumber([low, high]: any[]): BigNumberish {
 }
 
 export const CONTRACT =
-  "0x0371e76cc9dc2cf151201e3fff62dc816636fe918e4c90604e9ed1369b7d1d5e";
+  "0x0012c7b2514421e3c7c215287b7338fd6c59ae64d7b0be64a7887b9641f78c8f";
 
 export default class LordsIndexer extends BaseContractIndexer {
   constructor(context: Context) {

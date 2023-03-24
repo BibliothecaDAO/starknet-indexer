@@ -2,9 +2,7 @@ import "reflect-metadata";
 import { PrismaClient } from "@prisma/client";
 import { ResourceId } from "../utils/game_constants";
 
-const prisma = new PrismaClient();
-
-export async function main() {
+export default async function main(prisma: PrismaClient) {
   const realms = await prisma.realm.findMany({ select: { realmId: true } });
 
   const updates = realms
@@ -21,11 +19,14 @@ export async function main() {
   }
 }
 
-main()
-  .catch((e) => {
-    throw e;
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-    console.log("done");
-  });
+if (require.main === module) {
+  const prisma = new PrismaClient();
+  main(prisma)
+    .catch((e) => {
+      throw e;
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+      console.log("done");
+    });
+}
