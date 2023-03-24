@@ -2,10 +2,10 @@ import fetch from "node-fetch";
 
 const NETWORK = process.env.NETWORK ?? "mainnet";
 
-const RPC_URL =
-  NETWORK === "goerli"
-    ? "https://starknet-goerli.cartridge.gg/"
-    : `https://starknet-${NETWORK}.infura.io/v3/${process.env.INFURA_API_KEY}`;
+const RPC_URL = `https://starknet-${NETWORK}.infura.io/v3/${process.env.INFURA_API_KEY}`;
+// NETWORK === "goerli"
+//   ? "https://starknet-goerli.cartridge.gg/"
+//   : `https://starknet-${NETWORK}.infura.io/v3/${process.env.INFURA_API_KEY}`;
 
 type RpcMethod =
   | "getEvents"
