@@ -11,7 +11,10 @@ export class BastionLocationResolver extends FindManyBastionLocationResolver {
   @FieldResolver(() => [Army])
   async armies(@Ctx() ctx: Context, @Root() location: BastionLocation) {
     return ctx.prisma.army.findMany({
-      where: { bastionId: location.bastionId },
+      where: {
+        bastionId: location.bastionId,
+        bastionCurrentLocation: location.locationId,
+      },
     });
   }
 }
