@@ -923,6 +923,7 @@ enum OrderType {
 type Query {
   aggregateRealmHistory(cursor: RealmHistoryWhereUniqueInput, orderBy: [RealmHistoryOrderByWithRelationInput!], skip: Int, take: Int, where: RealmHistoryWhereInput): AggregateRealmHistory!
   armies(orderBy: ArmyOrderByWithRelationInput, skip: Float = 0, take: Float = 100, where: ArmyWhereInput): [Army!]!
+  bastion(id: Float!): Bastion!
   bastionLocations(cursor: BastionLocationWhereUniqueInput, distinct: [BastionLocationScalarFieldEnum!], orderBy: [BastionLocationOrderByWithRelationInput!], skip: Int, take: Int, where: BastionLocationWhereInput): [BastionLocation!]!
   bastions: [Bastion!]!
   battalionCosts: [BattalionCost!]!
