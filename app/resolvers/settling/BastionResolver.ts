@@ -17,6 +17,7 @@ export class BastionResolver extends FindManyBastionResolver {
   async locations(@Ctx() ctx: Context, @Root() bastion: Bastion) {
     return ctx.prisma.bastionLocation.findMany({
       where: { bastionId: bastion.bastionId },
+      orderBy: { locationId: "asc" },
     });
   }
 }

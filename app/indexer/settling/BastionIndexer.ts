@@ -67,7 +67,7 @@ export default class BastionIndexer extends BaseContractIndexer {
 }
 
 function createBastionId(lat: number, lon: number) {
-  return `${lat}_${lon}`;
+  return lat + lon;
 }
 
 function arrayUInt256ToNumber([low, high]: any[]) {

@@ -102,7 +102,7 @@ input ArmyWhereInput {
   armyPacked: IntFilter
   bastionArrivalBlock: IntFilter
   bastionCurrentLocation: IntFilter
-  bastionId: StringNullableFilter
+  bastionId: IntFilter
   bastionPastLocation: IntFilter
   callSign: IntFilter
   destinationArrivalTime: DateTimeNullableFilter
@@ -128,7 +128,7 @@ input ArmyWhereInput {
 }
 
 type Bastion {
-  bastionId: String!
+  bastionId: Int!
   latitude: Float!
   locations: [BastionLocation!]!
   longitude: Float!
@@ -136,14 +136,14 @@ type Bastion {
 
 type BastionLocation {
   armies: [Army!]!
-  bastionId: String!
+  bastionId: Int!
   defendingOrderId: Int!
   locationId: Int!
   takenBlock: Int!
 }
 
 input BastionLocationBastionIdLocationIdCompoundUniqueInput {
-  bastionId: String!
+  bastionId: Int!
   locationId: Int!
 }
 
@@ -165,7 +165,7 @@ input BastionLocationWhereInput {
   AND: [BastionLocationWhereInput!]
   NOT: [BastionLocationWhereInput!]
   OR: [BastionLocationWhereInput!]
-  bastionId: StringFilter
+  bastionId: IntFilter
   defendingOrderId: IntFilter
   locationId: IntFilter
   takenBlock: IntFilter

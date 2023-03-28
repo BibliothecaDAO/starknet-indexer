@@ -60,45 +60,74 @@ export default class TravelIndexer extends BaseContractIndexer {
       (realm) => realm.realmId === destinationTokenId
     );
 
-    await Promise.allSettled([
-      this.context.prisma.travel.upsert({
-        where: { eventId },
-        create: { ...updates, eventId },
-        update: { ...updates },
-      }),
-      this.saveRealmHistory({
-        realmId: tokenId,
-        eventId,
-        account: getRealmAccount(originRealm),
-        eventType: "army_travel",
-        timestamp: event.timestamp,
-        transactionHash: event.txHash,
-        data: {
-          originRealmId: tokenId,
-          originRealmOwner: getRealmAccount(originRealm),
-          originArmyId: nestedId,
-          locationRealmId: locationRealm?.realmId,
-          locationRealmOwner: getRealmAccount(locationRealm),
-          destinationRealmId: destinationTokenId,
-          destinationRealmOwner: getRealmAccount(destinationRealm),
-          destinationArrivalTime: new Date(destinationArrivalTime).getTime(),
-        },
-      }),
-    ]);
-
-    try {
-      await this.context.prisma.army.update({
-        where: { realmId_armyId: { realmId: tokenId, armyId: nestedId } },
-        data: {
-          destinationRealmId: destinationTokenId,
-          destinationArrivalTime,
-          bastionId: null,
-          bastionPastLocation: 0,
-          bastionCurrentLocation: 0,
-          bastionArrivalBlock: 0,
-        },
-      });
-    } catch (e) {}
+    // Entering Bastion
+    if (destinationContractId === 17) {
+      try {
+        await Promise.allSettled([
+          this.context.prisma.bastionLocation.upsert({
+            where: {
+              bastionId_locationId: {
+                bastionId: destinationTokenId,
+                locationId: 0,
+              },
+            },
+            update: {},
+            create: {
+              bastionId: destinationTokenId,
+              locationId: 0,
+            },
+          }),
+          this.context.prisma.army.update({
+            where: { realmId_armyId: { realmId: tokenId, armyId: nestedId } },
+            data: {
+              bastionId: destinationTokenId,
+              bastionPastLocation: 0,
+              bastionCurrentLocation: 0,
+              bastionArrivalBlock: event.blockNumber,
+            },
+          }),
+        ]);
+      } catch (e) {}
+    } else {
+      await Promise.allSettled([
+        this.context.prisma.travel.upsert({
+          where: { eventId },
+          create: { ...updates, eventId },
+          update: { ...updates },
+        }),
+        this.saveRealmHistory({
+          realmId: tokenId,
+          eventId,
+          account: getRealmAccount(originRealm),
+          eventType: "army_travel",
+          timestamp: event.timestamp,
+          transactionHash: event.txHash,
+          data: {
+            originRealmId: tokenId,
+            originRealmOwner: getRealmAccount(originRealm),
+            originArmyId: nestedId,
+            locationRealmId: locationRealm?.realmId,
+            locationRealmOwner: getRealmAccount(locationRealm),
+            destinationRealmId: destinationTokenId,
+            destinationRealmOwner: getRealmAccount(destinationRealm),
+            destinationArrivalTime: new Date(destinationArrivalTime).getTime(),
+          },
+        }),
+      ]);
+      try {
+        await this.context.prisma.army.update({
+          where: { realmId_armyId: { realmId: tokenId, armyId: nestedId } },
+          data: {
+            destinationRealmId: destinationTokenId,
+            destinationArrivalTime,
+            bastionId: 0,
+            bastionPastLocation: 0,
+            bastionCurrentLocation: 0,
+            bastionArrivalBlock: 0,
+          },
+        });
+      } catch (e) {}
+    }
   }
 }
 
