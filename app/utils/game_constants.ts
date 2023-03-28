@@ -775,3 +775,22 @@ export const ResourceLaborAndToolCosts = [
   ...createResourceLaborAndToolCosts(2),
   ...createResourceLaborAndToolCosts(3),
 ];
+
+export const Orders = {
+  Power: 1,
+  Giants: 2,
+  Titans: 3,
+  Skill: 4,
+  Perfection: 5,
+  Brilliance: 6,
+  Enlightenment: 7,
+  Protection: 8,
+  Anger: 9,
+  Rage: 10,
+  Fury: 11,
+  Vitriol: 12,
+  the_Fox: 13,
+  Detection: 14,
+  Reflection: 15,
+  the_Twins: 16,
+} as const;

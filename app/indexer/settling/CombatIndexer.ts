@@ -5,6 +5,7 @@ import { uint256ToBN } from "starknet/utils/uint256";
 import { BigNumberish } from "starknet/utils/number";
 import {
   COMBAT_OUTCOME_ATTACKER_WINS,
+  Orders,
   ResourceNameById,
 } from "../../utils/game_constants";
 
@@ -262,14 +263,20 @@ export default class CombatIndexer extends BaseContractIndexer {
         where: { realmId_armyId: { realmId, armyId } },
       });
     } else {
+      const realm = await this.context.prisma.realm.findUnique({
+        where: { realmId },
+      });
+      const orderId = (Orders as any)[realm?.orderType as string] ?? 0;
       await this.context.prisma.army.upsert({
         where: { realmId_armyId: { realmId, armyId } },
         create: {
           realmId,
           armyId,
+          orderId,
           ...battalions,
         },
         update: {
+          orderId,
           ...battalions,
         },
       });

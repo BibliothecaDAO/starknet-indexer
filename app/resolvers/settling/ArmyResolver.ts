@@ -3,7 +3,7 @@ import { Resolver, Query, Ctx, Root, Arg, FieldResolver } from "type-graphql";
 import { Army, BattalionCost, BattalionStats, Realm } from "../../entities";
 import {
   ArmyWhereInput,
-  ArmyOrderByWithRelationInput
+  ArmyOrderByWithRelationInput,
 } from "@generated/type-graphql";
 import * as CONSTANTS from "../../utils/game_constants";
 
@@ -21,7 +21,7 @@ export class ArmyResolver {
         battalionId:
           CONSTANTS.BattalionId[battalionName as CONSTANTS.BattalionName],
         battalionName,
-        ...battalionCost
+        ...battalionCost,
       };
     });
   }
@@ -38,7 +38,7 @@ export class ArmyResolver {
       where,
       orderBy,
       take,
-      skip
+      skip,
     });
     return data;
   }
@@ -49,7 +49,7 @@ export class ArmyResolver {
       return null;
     }
     return ctx.prisma.realm.findUnique({
-      where: { realmId: army.destinationRealmId }
+      where: { realmId: army.destinationRealmId },
     });
   }
 

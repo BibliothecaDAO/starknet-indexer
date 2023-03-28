@@ -423,6 +423,7 @@ model LordTransfer {
 model Army {
   realmId                Int
   armyId                 Int
+  orderId                Int       @default(0)
   destinationRealmId     Int       @default(0)
   destinationArrivalTime DateTime?
 
@@ -451,9 +452,29 @@ model Army {
   heavyInfantryQty    Int @default(0)
   heavyInfantryHealth Int @default(0)
 
+  bastionId              String?
+  bastionPastLocation    Int     @default(0)
+  bastionCurrentLocation Int     @default(0)
+  bastionArrivalBlock    Int     @default(0)
+
   ownRealm Realm @relation("ownRealm", fields: [realmId], references: [realmId])
 
   @@unique([realmId, armyId])
+}
+
+model Bastion {
+  bastionId String @id
+  longitude Float  @default(0.0)
+  latitude  Float  @default(0.0)
+}
+
+model BastionLocation {
+  bastionId        String
+  locationId       Int
+  defendingOrderId Int    @default(0)
+  takenBlock       Int    @default(0)
+
+  @@unique([bastionId, locationId])
 }
 
 model Travel {

@@ -18,6 +18,8 @@ import {
   ArmyResolver,
   TravelResolver,
   EconomyResolver,
+  BastionResolver,
+  BastionLocationResolver,
 } from "./resolvers";
 import { StarkNet } from "./indexer/Starknet";
 import { RealmsL1Indexer } from "./indexer/RealmsL1Indexer";
@@ -52,6 +54,8 @@ const main = async () => {
       TravelResolver,
       FindManyWalletBalanceResolver,
       EconomyResolver,
+      BastionResolver,
+      BastionLocationResolver,
     ],
     emitSchemaFile: true,
     validate: false,

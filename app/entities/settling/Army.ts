@@ -9,6 +9,8 @@ export class Army {
   @Field(() => Int, { nullable: false })
   armyId: number;
   @Field(() => Int, { nullable: false })
+  orderId: number;
+  @Field(() => Int, { nullable: false })
   destinationRealmId: number;
   @Field(() => Realm, { nullable: true })
   destinationRealm: Realm;
@@ -60,4 +62,13 @@ export class Army {
   heavyInfantryQty: number;
   @Field(() => Int, { nullable: false })
   heavyInfantryHealth: number;
+
+  @Field(() => String, { nullable: true })
+  bastionId?: string;
+  @Field(() => Int, { nullable: false })
+  bastionPastLocation: number;
+  @Field(() => Int, { nullable: false })
+  bastionCurrentLocation: number;
+  @Field(() => Int, { nullable: false })
+  bastionArrivalBlock: number;
 }

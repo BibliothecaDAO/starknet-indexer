@@ -60,13 +60,12 @@ export default class TravelIndexer extends BaseContractIndexer {
       (realm) => realm.realmId === destinationTokenId
     );
 
-    await Promise.all([
+    await Promise.allSettled([
       this.context.prisma.travel.upsert({
         where: { eventId },
         create: { ...updates, eventId },
         update: { ...updates },
       }),
-
       this.saveRealmHistory({
         realmId: tokenId,
         eventId,
@@ -93,6 +92,10 @@ export default class TravelIndexer extends BaseContractIndexer {
         data: {
           destinationRealmId: destinationTokenId,
           destinationArrivalTime,
+          bastionId: null,
+          bastionPastLocation: 0,
+          bastionCurrentLocation: 0,
+          bastionArrivalBlock: 0,
         },
       });
     } catch (e) {}

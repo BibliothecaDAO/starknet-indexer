@@ -10,6 +10,8 @@ import {
   FoodResolver,
   ArmyResolver,
   TravelResolver,
+  BastionResolver,
+  BastionLocationResolver,
 } from "./settling";
 import { DesiegeResolver } from "./desiege/DesiegeResolver";
 import { EventResolver } from "./starknet/EventResolver";
@@ -30,4 +32,6 @@ export {
   ArmyResolver,
   TravelResolver,
   EconomyResolver,
+  BastionResolver,
+  BastionLocationResolver,
 };

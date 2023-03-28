@@ -19,6 +19,10 @@ type Army {
   archerQty: Int!
   armyId: Int!
   armyPacked: Int!
+  bastionArrivalBlock: Int!
+  bastionCurrentLocation: Int!
+  bastionId: String
+  bastionPastLocation: Int!
   callSign: Int!
   destinationArrivalTime: Timestamp
   destinationRealm: Realm
@@ -37,6 +41,7 @@ type Army {
   longbowQty: Int!
   mageHealth: Int!
   mageQty: Int!
+  orderId: Int!
   realmId: Int!
   xp: Int!
 }
@@ -58,6 +63,10 @@ input ArmyOrderByWithRelationInput {
   archerQty: SortOrder
   armyId: SortOrder
   armyPacked: SortOrder
+  bastionArrivalBlock: SortOrder
+  bastionCurrentLocation: SortOrder
+  bastionId: SortOrder
+  bastionPastLocation: SortOrder
   callSign: SortOrder
   destinationArrivalTime: SortOrder
   destinationRealmId: SortOrder
@@ -75,6 +84,7 @@ input ArmyOrderByWithRelationInput {
   longbowQty: SortOrder
   mageHealth: SortOrder
   mageQty: SortOrder
+  orderId: SortOrder
   ownRealm: RealmOrderByWithRelationInput
   realmId: SortOrder
   xp: SortOrder
@@ -90,6 +100,10 @@ input ArmyWhereInput {
   archerQty: IntFilter
   armyId: IntFilter
   armyPacked: IntFilter
+  bastionArrivalBlock: IntFilter
+  bastionCurrentLocation: IntFilter
+  bastionId: StringNullableFilter
+  bastionPastLocation: IntFilter
   callSign: IntFilter
   destinationArrivalTime: DateTimeNullableFilter
   destinationRealmId: IntFilter
@@ -107,9 +121,58 @@ input ArmyWhereInput {
   longbowQty: IntFilter
   mageHealth: IntFilter
   mageQty: IntFilter
+  orderId: IntFilter
   ownRealm: RealmRelationFilter
   realmId: IntFilter
   xp: IntFilter
+}
+
+type Bastion {
+  bastionId: String!
+  latitude: Float!
+  locations: [BastionLocation!]!
+  longitude: Float!
+}
+
+type BastionLocation {
+  armies: [Army!]!
+  bastionId: String!
+  defendingOrderId: Int!
+  locationId: Int!
+  takenBlock: Int!
+}
+
+input BastionLocationBastionIdLocationIdCompoundUniqueInput {
+  bastionId: String!
+  locationId: Int!
+}
+
+input BastionLocationOrderByWithRelationInput {
+  bastionId: SortOrder
+  defendingOrderId: SortOrder
+  locationId: SortOrder
+  takenBlock: SortOrder
+}
+
+enum BastionLocationScalarFieldEnum {
+  bastionId
+  defendingOrderId
+  locationId
+  takenBlock
+}
+
+input BastionLocationWhereInput {
+  AND: [BastionLocationWhereInput!]
+  NOT: [BastionLocationWhereInput!]
+  OR: [BastionLocationWhereInput!]
+  bastionId: StringFilter
+  defendingOrderId: IntFilter
+  locationId: IntFilter
+  takenBlock: IntFilter
+}
+
+input BastionLocationWhereUniqueInput {
+  bastionId_locationId: BastionLocationBastionIdLocationIdCompoundUniqueInput
 }
 
 """Battalion Cost Model"""
@@ -860,6 +923,8 @@ enum OrderType {
 type Query {
   aggregateRealmHistory(cursor: RealmHistoryWhereUniqueInput, orderBy: [RealmHistoryOrderByWithRelationInput!], skip: Int, take: Int, where: RealmHistoryWhereInput): AggregateRealmHistory!
   armies(orderBy: ArmyOrderByWithRelationInput, skip: Float = 0, take: Float = 100, where: ArmyWhereInput): [Army!]!
+  bastionLocations(cursor: BastionLocationWhereUniqueInput, distinct: [BastionLocationScalarFieldEnum!], orderBy: [BastionLocationOrderByWithRelationInput!], skip: Int, take: Int, where: BastionLocationWhereInput): [BastionLocation!]!
+  bastions: [Bastion!]!
   battalionCosts: [BattalionCost!]!
   battalionStats: [BattalionStats!]!
   economyExchangeLordsPurchasedTotal: String!

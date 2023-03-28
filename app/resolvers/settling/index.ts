@@ -8,6 +8,8 @@ import { TroopResolver } from "./TroopResolver";
 import { FoodResolver } from "./FoodResolver";
 import { ArmyResolver } from "./ArmyResolver";
 import { TravelResolver } from "./TravelResolver";
+import { BastionResolver } from "./BastionResolver";
+import { BastionLocationResolver } from "./BastionLocationResolver";
 
 export {
   BuildingResolver,
@@ -19,5 +21,7 @@ export {
   RealmHistoryResolver,
   FoodResolver,
   ArmyResolver,
-  TravelResolver
+  TravelResolver,
+  BastionResolver,
+  BastionLocationResolver,
 };
