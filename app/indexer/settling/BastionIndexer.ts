@@ -21,8 +21,9 @@ export default class BastionIndexer extends BaseContractIndexer {
     const lat = BigNumber.from(params[1]).toNumber();
     const bastionPastLocation = parseInt(params[2]);
     const bastionCurrentLocation = parseInt(params[3]);
-    const realmId = arrayUInt256ToNumber(params.slice(4, 6));
-    const armyId = parseInt(params[6]);
+    const bastionArrivalBlock = parseInt(params[4]);
+    const realmId = arrayUInt256ToNumber(params.slice(5, 7));
+    const armyId = parseInt(params[7]);
     const bastionId = createBastionId(lat, lon);
 
     try {
@@ -32,7 +33,7 @@ export default class BastionIndexer extends BaseContractIndexer {
           bastionId,
           bastionPastLocation,
           bastionCurrentLocation,
-          bastionArrivalBlock: event.blockNumber,
+          bastionArrivalBlock: bastionArrivalBlock,
         },
       });
     } catch (e) {}
