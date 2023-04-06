@@ -351,6 +351,7 @@ model RealmHistory {
   eventId         String
   eventType       String
   realmId         Int
+  bastionId       Int        @default(0)
   realmOwner      String     @default("")
   realmName       String     @default("")
   realmOrder      OrderType?
@@ -361,6 +362,7 @@ model RealmHistory {
   @@unique([eventId, eventType])
   @@index([realmOwner, eventId(sort: Desc)])
   @@index([realmId, eventId(sort: Desc)])
+  @@index([bastionId, eventId(sort: Desc)])
   @@index([eventType, eventId(sort: Desc)])
 }
 

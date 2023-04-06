@@ -92,6 +92,7 @@ export default class BaseContractIndexer implements Indexer<Event> {
 
   async saveRealmHistory({
     realmId,
+    bastionId = 0,
     eventId,
     eventType,
     data,
@@ -109,11 +110,12 @@ export default class BaseContractIndexer implements Indexer<Event> {
       where: {
         eventId_eventType: { eventId: eventId, eventType: eventType },
       },
-      update: { realmId, data, timestamp, realmOwner, realmName, realmOrder },
+      update: { realmId, data, bastionId, timestamp, realmOwner, realmName, realmOrder },
       create: {
         eventId,
         eventType,
         realmId,
+        bastionId,
         realmOwner,
         realmName,
         realmOrder,

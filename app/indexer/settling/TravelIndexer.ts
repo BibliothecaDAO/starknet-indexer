@@ -60,6 +60,16 @@ export default class TravelIndexer extends BaseContractIndexer {
       (realm) => realm.realmId === destinationTokenId
     );
 
+    // related to a bastionid if travel from or to a bastion
+    let bastionId;
+    if (destinationContractId === 17) {
+      bastionId = destinationTokenId;
+    } else if (locationContractId === 17) {
+      bastionId = locationTokenId;
+    } else {
+      bastionId = 0;
+    }
+
     // Entering Bastion
     if (destinationContractId === 17) {
       try {
@@ -89,31 +99,6 @@ export default class TravelIndexer extends BaseContractIndexer {
         ]);
       } catch (e) {}
     } else {
-      await Promise.allSettled([
-        this.context.prisma.travel.upsert({
-          where: { eventId },
-          create: { ...updates, eventId },
-          update: { ...updates },
-        }),
-        this.saveRealmHistory({
-          realmId: tokenId,
-          eventId,
-          account: getRealmAccount(originRealm),
-          eventType: "army_travel",
-          timestamp: event.timestamp,
-          transactionHash: event.txHash,
-          data: {
-            originRealmId: tokenId,
-            originRealmOwner: getRealmAccount(originRealm),
-            originArmyId: nestedId,
-            locationRealmId: locationRealm?.realmId,
-            locationRealmOwner: getRealmAccount(locationRealm),
-            destinationRealmId: destinationTokenId,
-            destinationRealmOwner: getRealmAccount(destinationRealm),
-            destinationArrivalTime: new Date(destinationArrivalTime).getTime(),
-          },
-        }),
-      ]);
       try {
         await this.context.prisma.army.update({
           where: { realmId_armyId: { realmId: tokenId, armyId: nestedId } },
@@ -128,6 +113,32 @@ export default class TravelIndexer extends BaseContractIndexer {
         });
       } catch (e) {}
     }
+    await Promise.allSettled([
+      this.context.prisma.travel.upsert({
+        where: { eventId },
+        create: { ...updates, eventId },
+        update: { ...updates },
+      }),
+      this.saveRealmHistory({
+        realmId: tokenId,
+        bastionId: bastionId,
+        eventId,
+        account: getRealmAccount(originRealm),
+        eventType: "army_travel",
+        timestamp: event.timestamp,
+        transactionHash: event.txHash,
+        data: {
+          originRealmId: tokenId,
+          originRealmOwner: getRealmAccount(originRealm),
+          originArmyId: nestedId,
+          locationRealmId: locationRealm?.realmId,
+          locationRealmOwner: getRealmAccount(locationRealm),
+          destinationRealmId: destinationTokenId,
+          destinationRealmOwner: getRealmAccount(destinationRealm),
+          destinationArrivalTime: new Date(destinationArrivalTime).getTime(),
+        },
+      }),
+    ]);
   }
 }
 

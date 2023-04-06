@@ -32,6 +32,8 @@ const ARMY_SEELCT = {
   lightInfantryHealth: true,
   heavyInfantryQty: true,
   heavyInfantryHealth: true,
+  bastionId: true,
+  bastionCurrentLocation: true,
 };
 
 function arrayUInt256ToNumber([low, high]: any[]): BigNumberish {
@@ -66,6 +68,7 @@ export default class CombatIndexer extends BaseContractIndexer {
         }),
         this.saveRealmHistory({
           realmId,
+          bastionId: 0,
           eventId: event.eventId,
           eventType: "army_built",
           timestamp: event.timestamp,
@@ -150,6 +153,12 @@ export default class CombatIndexer extends BaseContractIndexer {
         select: ARMY_SEELCT,
       });
 
+      // if indexer is started from the beginning then since combat indexer happens
+      // before bastion move indexer, the locationId will be 0 at all time (since move has been inexed yet), 
+      // but as the events come in live, the locationId will be the correct one
+      const bastionId = attackingArmyStart?.bastionId
+      const locationId = attackingArmyStart?.bastionCurrentLocation
+
       // update attacking army
       const attackingRealm = await this.updateArmy(attackParams);
 
@@ -186,12 +195,14 @@ export default class CombatIndexer extends BaseContractIndexer {
       updates.push(
         this.saveRealmHistory({
           realmId: attackingRealm.realmId,
+          bastionId,
           eventId,
           eventType: "realm_combat_attack",
           timestamp: event.timestamp,
           transactionHash: event.txHash,
           data: {
             success: combatOutcome === COMBAT_OUTCOME_ATTACKER_WINS,
+            locationId: locationId,
             defendRealmOwner: defendingRealmOwner.account,
             defendRealmName: defendingRealmOwner.name,
             defendRealmId: defendingRealm.realmId,
@@ -208,6 +219,7 @@ export default class CombatIndexer extends BaseContractIndexer {
       updates.push(
         this.saveRealmHistory({
           realmId: defendingRealm.realmId,
+          bastionId,
           eventId,
           account: defendingRealmOwner.account,
           eventType: "realm_combat_defend",

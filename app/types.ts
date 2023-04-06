@@ -36,6 +36,7 @@ export interface RealmEvent {
   eventId: string;
   eventType: string;
   realmId: number;
+  bastionId?: number;
   account?: string;
   data: any;
   timestamp: Date;
