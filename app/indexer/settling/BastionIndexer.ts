@@ -27,8 +27,11 @@ export default class BastionIndexer extends BaseContractIndexer {
     const armyId = parseInt(params[7]);
     const bastionId = createBastionId(latitude, longitude);
 
+    // only index events with 8 params
+    // 1 param was added in event in the last version of the contract
+    if (params.length === 8) {
     try {
-      await Promise.allSettled([
+      const promises = await Promise.allSettled([
       this.context.prisma.army.update({
         where: { realmId_armyId: { realmId, armyId } },
         data: {
@@ -53,8 +56,11 @@ export default class BastionIndexer extends BaseContractIndexer {
         },
       })
     ]);
-  } catch (e) {};
-}
+    console.log(promises)
+    } catch (e) {};
+    }
+
+  }
 
   // TODO: add the realm id, army id and previous order to the event
   async bastionLocationTaken(event: Event): Promise<void> {
