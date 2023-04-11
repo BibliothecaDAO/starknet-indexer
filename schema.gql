@@ -134,6 +134,36 @@ type Bastion {
   longitude: Float!
 }
 
+"""The Bastion History Model"""
+type BastionHistory {
+  bastionId: Int!
+  realmHistory: RealmHistory!
+  realmHistoryEventId: String!
+  realmHistoryEventType: String!
+}
+
+input BastionHistoryOrderByWithRelationInput {
+  bastionId: SortOrder
+  realmHistory: RealmHistoryOrderByWithRelationInput
+  realmHistoryEventId: SortOrder
+  realmHistoryEventType: SortOrder
+}
+
+input BastionHistoryRelationFilter {
+  is: BastionHistoryWhereInput
+  isNot: BastionHistoryWhereInput
+}
+
+input BastionHistoryWhereInput {
+  AND: [BastionHistoryWhereInput!]
+  NOT: [BastionHistoryWhereInput!]
+  OR: [BastionHistoryWhereInput!]
+  bastionId: IntFilter
+  realmHistory: RealmHistoryRelationFilter
+  realmHistoryEventId: StringFilter
+  realmHistoryEventType: StringFilter
+}
+
 type BastionLocation {
   armies: [Army!]!
   bastionId: Int!
@@ -941,6 +971,7 @@ type Query {
   economyResourceMintedTotals: [ResourceAmount!]!
   economySettledRealmsTotal: Int!
   exchangeRates(cursor: ExchangeRateWhereUniqueInput, distinct: [ExchangeRateScalarFieldEnum!], orderBy: [ExchangeRateOrderByWithRelationInput!], skip: Int, take: Int, where: ExchangeRateWhereInput): [ExchangeRate!]!
+  getBastionHistory(filter: BastionHistoryWhereInput, skip: Float = 0, take: Float = 20): [BastionHistory!]!
   getBuildingCostById: BuildingCost!
   getBuildingCosts: [BuildingCost!]!
   getBuildingsByRealmId(id: Float!): [Building!]!
@@ -1012,7 +1043,6 @@ type Realm {
 
 """The Realm History Model"""
 type RealmHistory {
-  bastionId: Int!
   data: JSON
   eventId: String
   eventType: String
@@ -1027,20 +1057,17 @@ type RealmHistory {
 }
 
 type RealmHistoryAvgAggregate {
-  bastionId: Float
   id: Float
   realmId: Float
 }
 
 input RealmHistoryAvgOrderByAggregateInput {
-  bastionId: SortOrder
   id: SortOrder
   realmId: SortOrder
 }
 
 type RealmHistoryCountAggregate {
   _all: Int!
-  bastionId: Int!
   data: Int!
   eventId: Int!
   eventType: Int!
@@ -1054,7 +1081,6 @@ type RealmHistoryCountAggregate {
 }
 
 input RealmHistoryCountOrderByAggregateInput {
-  bastionId: SortOrder
   data: SortOrder
   eventId: SortOrder
   eventType: SortOrder
@@ -1078,7 +1104,6 @@ type RealmHistoryGroupBy {
   _max: RealmHistoryMaxAggregate
   _min: RealmHistoryMinAggregate
   _sum: RealmHistorySumAggregate
-  bastionId: Int!
   data: JSON!
   eventId: String!
   eventType: String!
@@ -1092,7 +1117,6 @@ type RealmHistoryGroupBy {
 }
 
 type RealmHistoryMaxAggregate {
-  bastionId: Int
   eventId: String
   eventType: String
   id: Int
@@ -1105,7 +1129,6 @@ type RealmHistoryMaxAggregate {
 }
 
 input RealmHistoryMaxOrderByAggregateInput {
-  bastionId: SortOrder
   eventId: SortOrder
   eventType: SortOrder
   id: SortOrder
@@ -1118,7 +1141,6 @@ input RealmHistoryMaxOrderByAggregateInput {
 }
 
 type RealmHistoryMinAggregate {
-  bastionId: Int
   eventId: String
   eventType: String
   id: Int
@@ -1131,7 +1153,6 @@ type RealmHistoryMinAggregate {
 }
 
 input RealmHistoryMinOrderByAggregateInput {
-  bastionId: SortOrder
   eventId: SortOrder
   eventType: SortOrder
   id: SortOrder
@@ -1149,7 +1170,6 @@ input RealmHistoryOrderByWithAggregationInput {
   _max: RealmHistoryMaxOrderByAggregateInput
   _min: RealmHistoryMinOrderByAggregateInput
   _sum: RealmHistorySumOrderByAggregateInput
-  bastionId: SortOrder
   data: SortOrder
   eventId: SortOrder
   eventType: SortOrder
@@ -1163,7 +1183,7 @@ input RealmHistoryOrderByWithAggregationInput {
 }
 
 input RealmHistoryOrderByWithRelationInput {
-  bastionId: SortOrder
+  BastionHistory: BastionHistoryOrderByWithRelationInput
   data: SortOrder
   eventId: SortOrder
   eventType: SortOrder
@@ -1176,8 +1196,12 @@ input RealmHistoryOrderByWithRelationInput {
   transactionHash: SortOrder
 }
 
+input RealmHistoryRelationFilter {
+  is: RealmHistoryWhereInput
+  isNot: RealmHistoryWhereInput
+}
+
 enum RealmHistoryScalarFieldEnum {
-  bastionId
   data
   eventId
   eventType
@@ -1194,7 +1218,6 @@ input RealmHistoryScalarWhereWithAggregatesInput {
   AND: [RealmHistoryScalarWhereWithAggregatesInput!]
   NOT: [RealmHistoryScalarWhereWithAggregatesInput!]
   OR: [RealmHistoryScalarWhereWithAggregatesInput!]
-  bastionId: IntWithAggregatesFilter
   data: JsonWithAggregatesFilter
   eventId: StringWithAggregatesFilter
   eventType: StringWithAggregatesFilter
@@ -1208,22 +1231,20 @@ input RealmHistoryScalarWhereWithAggregatesInput {
 }
 
 type RealmHistorySumAggregate {
-  bastionId: Int
   id: Int
   realmId: Int
 }
 
 input RealmHistorySumOrderByAggregateInput {
-  bastionId: SortOrder
   id: SortOrder
   realmId: SortOrder
 }
 
 input RealmHistoryWhereInput {
   AND: [RealmHistoryWhereInput!]
+  BastionHistory: BastionHistoryRelationFilter
   NOT: [RealmHistoryWhereInput!]
   OR: [RealmHistoryWhereInput!]
-  bastionId: IntFilter
   data: JsonFilter
   eventId: StringFilter
   eventType: StringFilter

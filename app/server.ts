@@ -20,6 +20,7 @@ import {
   EconomyResolver,
   BastionResolver,
   BastionLocationResolver,
+  BastionHistoryResolver,
 } from "./resolvers";
 import { StarkNet } from "./indexer/Starknet";
 import { RealmsL1Indexer } from "./indexer/RealmsL1Indexer";
@@ -45,6 +46,7 @@ const main = async () => {
       ExchangeRateResolver,
       DesiegeResolver,
       RealmHistoryResolver,
+      BastionHistoryResolver,
       LoreResolver,
       LorePOIResolver,
       FoodResolver,

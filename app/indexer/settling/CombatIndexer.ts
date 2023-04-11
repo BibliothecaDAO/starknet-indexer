@@ -68,7 +68,6 @@ export default class CombatIndexer extends BaseContractIndexer {
         }),
         this.saveRealmHistory({
           realmId,
-          bastionId: 0,
           eventId: event.eventId,
           eventType: "army_built",
           timestamp: event.timestamp,
@@ -195,7 +194,6 @@ export default class CombatIndexer extends BaseContractIndexer {
       updates.push(
         this.saveRealmHistory({
           realmId: attackingRealm.realmId,
-          bastionId,
           eventId,
           eventType: "realm_combat_attack",
           timestamp: event.timestamp,
@@ -211,6 +209,11 @@ export default class CombatIndexer extends BaseContractIndexer {
             armiesStart: [attackingArmyStart, defendingArmyStart],
             armiesEnd: [attackingRealm, defendingRealm],
           },
+        }).then((realmHistory) => {
+          if (bastionId && bastionId !== 0) {
+            this.saveBastionHistory({bastionId, realmHistoryEventId: realmHistory.eventId, realmHistoryEventType: realmHistory.eventType})
+          }
+
         })
       );
 
@@ -219,7 +222,6 @@ export default class CombatIndexer extends BaseContractIndexer {
       updates.push(
         this.saveRealmHistory({
           realmId: defendingRealm.realmId,
-          bastionId,
           eventId,
           account: defendingRealmOwner.account,
           eventType: "realm_combat_defend",

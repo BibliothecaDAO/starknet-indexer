@@ -9,6 +9,7 @@ import {
 import { BuildingCost } from "./BuildingCost";
 import { RealmTrait } from "./RealmTrait";
 import { RealmHistory } from "./RealmHistory";
+import { BastionHistory } from "./BastionHistory";
 import { Troop } from "./Troop";
 import { TroopCost } from "./TroopCost";
 import { TroopStats } from "./TroopStats";
@@ -25,6 +26,7 @@ import { ResourceLaborAndToolCost } from "./ResourceLaborAndToolCost";
 export {
   Realm,
   RealmHistory,
+  BastionHistory,
   Troop,
   TroopCost,
   TroopStats,

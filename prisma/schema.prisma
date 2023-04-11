@@ -347,23 +347,31 @@ model ExchangeRate {
 }
 
 model RealmHistory {
-  id              Int        @id @default(autoincrement())
+  id              Int              @id @default(autoincrement())
   eventId         String
   eventType       String
   realmId         Int
-  bastionId       Int        @default(0)
-  realmOwner      String     @default("")
-  realmName       String     @default("")
+  realmOwner      String           @default("")
+  realmName       String           @default("")
   realmOrder      OrderType?
   data            Json
   timestamp       DateTime
-  transactionHash String     @default("")
+  transactionHash String           @default("")
+  BastionHistory  BastionHistory?
 
   @@unique([eventId, eventType])
   @@index([realmOwner, eventId(sort: Desc)])
   @@index([realmId, eventId(sort: Desc)])
-  @@index([bastionId, eventId(sort: Desc)])
   @@index([eventType, eventId(sort: Desc)])
+}
+
+model BastionHistory {
+  bastionId      Int          
+  realmHistory   RealmHistory @relation(fields: [realmHistoryEventId, realmHistoryEventType], references: [eventId, eventType])
+  realmHistoryEventId String               
+  realmHistoryEventType String             
+
+  @@unique([realmHistoryEventId, realmHistoryEventType])
 }
 
 model CombatHistory {

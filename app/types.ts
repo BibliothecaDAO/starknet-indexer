@@ -36,9 +36,16 @@ export interface RealmEvent {
   eventId: string;
   eventType: string;
   realmId: number;
-  bastionId?: number;
   account?: string;
   data: any;
   timestamp: Date;
   transactionHash: string;
 }
+
+export interface BastionEvent {
+  bastionId: number;
+  realmHistoryEventId: string,
+  realmHistoryEventType: string,
+}
+
+

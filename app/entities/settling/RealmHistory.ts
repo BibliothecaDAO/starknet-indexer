@@ -12,9 +12,6 @@ export class RealmHistory {
   @Field(() => Int, { nullable: false })
   realmId: number;
 
-  @Field(() => Int, { nullable: false })
-  bastionId: number;
-
   @Field(() => String, { nullable: true })
   eventId: string;
 

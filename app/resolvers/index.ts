@@ -2,6 +2,7 @@ import { WalletResolver } from "./wallet/WalletResolver";
 import {
   RealmResolver,
   RealmHistoryResolver,
+  BastionHistoryResolver,
   BuildingResolver,
   ResourceResolver,
   RealmTraitResolver,
@@ -21,6 +22,7 @@ export {
   WalletResolver,
   RealmResolver,
   RealmHistoryResolver,
+  BastionHistoryResolver,
   BuildingResolver,
   DesiegeResolver,
   ResourceResolver,

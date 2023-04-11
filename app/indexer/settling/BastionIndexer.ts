@@ -27,11 +27,21 @@ export default class BastionIndexer extends BaseContractIndexer {
     const armyId = parseInt(params[7]);
     const bastionId = createBastionId(latitude, longitude);
 
+    //create if bastionLocation is not created 
+    const bastionLocation = await this.context.prisma.bastionLocation.findUnique({where: {bastionId_locationId: {bastionId, locationId: bastionCurrentLocation}}});
+    if (!bastionLocation) {
+      await this.context.prisma.bastionLocation.create({
+        data: {
+          bastionId,
+          locationId: bastionCurrentLocation,
+        },
+      })
+    };
+
     // only index events with 8 params
     // 1 param was added in event in the last version of the contract
     if (params.length === 8) {
-    try {
-      const promises = await Promise.allSettled([
+      await Promise.allSettled([
       this.context.prisma.army.update({
         where: { realmId_armyId: { realmId, armyId } },
         data: {
@@ -42,27 +52,26 @@ export default class BastionIndexer extends BaseContractIndexer {
         },
       }),
       this.saveRealmHistory({
-        realmId,
-        bastionId: bastionId,
-        eventId,
-        eventType: "bastion_army_move",
-        timestamp: event.timestamp,
-        transactionHash: event.txHash,
-        data: {
-          armyId,
-          bastionPastLocation,
-          bastionCurrentLocation,
-          bastionArrivalBlock,
-        },
-      })
-    ]);
-    console.log(promises)
-    } catch (e) {};
+            realmId,
+            eventId,
+            eventType: "bastion_army_move",
+            timestamp: event.timestamp,
+            transactionHash: event.txHash,
+            data: {
+              armyId,
+              bastionPastLocation,
+              bastionCurrentLocation,
+              bastionArrivalBlock,
+            },
+          }).then((realmHistory) => {
+            if (bastionId) {
+            this.saveBastionHistory({bastionId, realmHistoryEventId: realmHistory.eventId, realmHistoryEventType: realmHistory.eventType})
+            }
+          })
+      ])
     }
-
   }
 
-  // TODO: add the realm id, army id and previous order to the event
   async bastionLocationTaken(event: Event): Promise<void> {
     const eventId = event.eventId as string;
     const params = event.parameters;
@@ -81,12 +90,7 @@ export default class BastionIndexer extends BaseContractIndexer {
     })
     const previousDefendingOrderId = bastionLocation?.defendingOrderId
 
-    await Promise.allSettled([
-      this.context.prisma.bastion.upsert({
-        where: { bastionId },
-        update: { longitude, latitude },
-        create: { bastionId, longitude, latitude },
-      }),
+    await Promise.allSettled([  
       this.context.prisma.bastionLocation.upsert({
         where: { bastionId_locationId: { bastionId, locationId } },
         update: { defendingOrderId, takenBlock: event.blockNumber },
@@ -99,7 +103,6 @@ export default class BastionIndexer extends BaseContractIndexer {
       }),
       this.saveRealmHistory({
         realmId: 0,
-        bastionId: bastionId,
         eventId,
         eventType: "bastion_take_location",
         timestamp: event.timestamp,
@@ -110,6 +113,10 @@ export default class BastionIndexer extends BaseContractIndexer {
           cooldownEnd,
           previousDefendingOrderId: previousDefendingOrderId? previousDefendingOrderId: 0,
         },
+      }).then((realmHistory) => {
+          if (bastionId) {
+            this.saveBastionHistory({bastionId, realmHistoryEventId: realmHistory.eventId, realmHistoryEventType: realmHistory.eventType})
+          }
       })
     ]);
   }
