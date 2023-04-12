@@ -10,6 +10,7 @@ import { ArmyResolver } from "./ArmyResolver";
 import { TravelResolver } from "./TravelResolver";
 import { BastionResolver } from "./BastionResolver";
 import { BastionLocationResolver } from "./BastionLocationResolver";
+import { BastionHistoryResolver } from "./BastionHistoryResolver";
 
 export {
   BuildingResolver,
@@ -19,6 +20,7 @@ export {
   ExchangeRateResolver,
   TroopResolver,
   RealmHistoryResolver,
+  BastionHistoryResolver,
   FoodResolver,
   ArmyResolver,
   TravelResolver,

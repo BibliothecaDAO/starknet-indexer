@@ -1,9 +1,10 @@
 import { Event } from "./../entities/starknet/Event";
 import { Context } from "./../context";
-import { Indexer, RealmEvent } from "./../types";
+import { BastionEvent, Indexer, RealmEvent } from "./../types";
 import { BigNumber } from "ethers";
 import { hash } from "starknet";
 import { OrderType } from "@prisma/client";
+import { RealmHistory } from "@prisma/client";
 
 type ContractEventHandler = {
   name: string;
@@ -97,7 +98,7 @@ export default class BaseContractIndexer implements Indexer<Event> {
     data,
     timestamp,
     transactionHash,
-  }: RealmEvent): Promise<void> {
+  }: RealmEvent): Promise<RealmHistory> {
     const realm = await this.context.prisma.realm.findFirst({
       where: { realmId },
     });
@@ -105,7 +106,7 @@ export default class BaseContractIndexer implements Indexer<Event> {
     const realmName = realm?.name ?? "";
     const realmOrder = (realm?.orderType as OrderType) ?? undefined;
 
-    await this.context.prisma.realmHistory.upsert({
+    return await this.context.prisma.realmHistory.upsert({
       where: {
         eventId_eventType: { eventId: eventId, eventType: eventType },
       },
@@ -123,4 +124,23 @@ export default class BaseContractIndexer implements Indexer<Event> {
       },
     });
   }
+
+  async saveBastionHistory({
+    bastionId,
+    realmHistoryEventId,
+    realmHistoryEventType,
+  }: BastionEvent): Promise<void> {
+
+    await this.context.prisma.bastionHistory.create({
+      data: {
+        bastionId: bastionId,
+        realmHistory: {
+          connect: {
+            eventId_eventType: { eventId: realmHistoryEventId, eventType: realmHistoryEventType }
+          },
+        },
+      },
+    }
+    )
+  } 
 }

@@ -41,3 +41,11 @@ export interface RealmEvent {
   timestamp: Date;
   transactionHash: string;
 }
+
+export interface BastionEvent {
+  bastionId: number;
+  realmHistoryEventId: string,
+  realmHistoryEventType: string,
+}
+
+

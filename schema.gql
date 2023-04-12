@@ -134,6 +134,36 @@ type Bastion {
   longitude: Float!
 }
 
+"""The Bastion History Model"""
+type BastionHistory {
+  bastionId: Int!
+  realmHistory: RealmHistory!
+  realmHistoryEventId: String!
+  realmHistoryEventType: String!
+}
+
+input BastionHistoryOrderByWithRelationInput {
+  bastionId: SortOrder
+  realmHistory: RealmHistoryOrderByWithRelationInput
+  realmHistoryEventId: SortOrder
+  realmHistoryEventType: SortOrder
+}
+
+input BastionHistoryRelationFilter {
+  is: BastionHistoryWhereInput
+  isNot: BastionHistoryWhereInput
+}
+
+input BastionHistoryWhereInput {
+  AND: [BastionHistoryWhereInput!]
+  NOT: [BastionHistoryWhereInput!]
+  OR: [BastionHistoryWhereInput!]
+  bastionId: IntFilter
+  realmHistory: RealmHistoryRelationFilter
+  realmHistoryEventId: StringFilter
+  realmHistoryEventType: StringFilter
+}
+
 type BastionLocation {
   armies: [Army!]!
   bastionId: Int!
@@ -941,6 +971,7 @@ type Query {
   economyResourceMintedTotals: [ResourceAmount!]!
   economySettledRealmsTotal: Int!
   exchangeRates(cursor: ExchangeRateWhereUniqueInput, distinct: [ExchangeRateScalarFieldEnum!], orderBy: [ExchangeRateOrderByWithRelationInput!], skip: Int, take: Int, where: ExchangeRateWhereInput): [ExchangeRate!]!
+  getBastionHistory(filter: BastionHistoryWhereInput, skip: Float = 0, take: Float = 20): [BastionHistory!]!
   getBuildingCostById: BuildingCost!
   getBuildingCosts: [BuildingCost!]!
   getBuildingsByRealmId(id: Float!): [Building!]!
@@ -1152,6 +1183,7 @@ input RealmHistoryOrderByWithAggregationInput {
 }
 
 input RealmHistoryOrderByWithRelationInput {
+  BastionHistory: BastionHistoryOrderByWithRelationInput
   data: SortOrder
   eventId: SortOrder
   eventType: SortOrder
@@ -1162,6 +1194,11 @@ input RealmHistoryOrderByWithRelationInput {
   realmOwner: SortOrder
   timestamp: SortOrder
   transactionHash: SortOrder
+}
+
+input RealmHistoryRelationFilter {
+  is: RealmHistoryWhereInput
+  isNot: RealmHistoryWhereInput
 }
 
 enum RealmHistoryScalarFieldEnum {
@@ -1205,6 +1242,7 @@ input RealmHistorySumOrderByAggregateInput {
 
 input RealmHistoryWhereInput {
   AND: [RealmHistoryWhereInput!]
+  BastionHistory: BastionHistoryRelationFilter
   NOT: [RealmHistoryWhereInput!]
   OR: [RealmHistoryWhereInput!]
   data: JsonFilter
